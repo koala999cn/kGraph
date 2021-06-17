@@ -1,37 +1,31 @@
 # kGraph
 
 #### 介绍
-basic graph algorithm library
+
+基于C++模板实现的图基本算法
+
 
 #### 软件架构
-软件架构说明
 
+base\，基础支持数据结构和算法
+core\，核心图算法
+test\，测试代码
+GraphX.h，定义了一些基础的图类型
 
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+代码样例参考test目录下的测试代码
 
 
-#### 特技
+#### 功能
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+1.  稠密图、稀疏图模板类型
+2.  深度优先、广度优先迭代器
+3.  连通、强连通检测
+4.  二分图检测
+5.  桥、割点检测
+6.  拓扑排序
+7.  传递闭包
+8.  最小生成树
+9.  最优路径
