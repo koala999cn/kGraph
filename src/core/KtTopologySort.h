@@ -23,13 +23,8 @@ public:
 
         // 计算各顶点的入度
         std::vector<unsigned> ins(V, 0);
-        for(unsigned v = 0; v < V; v++) { 
-            typename DAG::adj_vertex_iter iter(dag, v);
-            while(!iter.isEnd()) {
-                ins[*iter]++;
-                ++iter;
-            }
-        }
+		for (unsigned v = 0; v < V; v++)
+			ins[v] = dag.indegree(v);
         
         // 将源点推入队列q
         std::queue<unsigned> q; // 源点队列
@@ -37,12 +32,13 @@ public:
             if(ins[v] == 0) q.push(v);
 		assert(!q.empty());
 
+
         // 按照FIFO顺序，对源点进行拓扑排序
         for(unsigned i = 0; !q.empty(); i++) {
             unsigned v = q.front(); q.pop();
             ts_[i] = v; 
             tsI_[v] = i;
-            typename DAG::adj_vertex_iter iter(dag, v);
+            auto iter = dag.adjIter(v);
 			for (; !iter.isEnd(); ++iter)
                 if(0 == --ins[*iter]) 
 					q.push(*iter);
@@ -66,20 +62,20 @@ private:
 
 
 // 基于Dfs算法的逆拓扑排序
-// DFS中的后序编号可以为任何DAG得到一个逆拓扑排序
-template<typename DAG>
+// DFS中的后序编号可以得到一个逆拓扑排序
+// 适用于非DAG
+template<typename GRAPH>
 class KtTopologySortInv
 {
-	static_assert(DAG::isDigraph(), "KtTopologySortInv must instantiated with Digraph.");
+	static_assert(GRAPH::isDigraph(), "KtTopologySortInv must instantiated with Digraph.");
 
 public:
-    KtTopologySortInv(const DAG& dag) : dfs_(dag, 0) {
-		//assert(dag.hasLoop());
+    KtTopologySortInv(const GRAPH& g) : dfs_(g, 0) {
 
         while(!dfs_.isEnd())
             ++dfs_;
         
-        unsigned V = dag.order();
+        unsigned V = g.order();
         popI_.resize(V);
 		for (unsigned v = 0; v < V; v++) {
 			assert(relabel(v) < V);
@@ -98,6 +94,6 @@ public:
 
 
 private:
-    KtDfsIter<DAG, true> dfs_;
+    KtDfsIter<GRAPH, true> dfs_;
     std::vector<unsigned> popI_;
 };

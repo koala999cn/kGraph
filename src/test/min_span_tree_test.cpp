@@ -11,12 +11,15 @@ void min_span_tree_test_(const GRAPH& g)
 	KtMstPrim<GRAPH, WEIGHTOR> prim(g);
 	KtMstKruskal<GRAPH, WEIGHTOR> kurs(g);
 	KtMstBoruvka<GRAPH, WEIGHTOR> boru(g);
+	KtMstPfs<GRAPH, WEIGHTOR> pfs(g);
 
-	printf("      prim = %f, kurs = %f, boru = %f", prim.dist(), kurs.dist(), boru.dist());
+	printf("      prim = %f, kurs = %f, boru = %f, pfs = %f", prim.dist(), kurs.dist(), boru.dist(), pfs.dist());
 	fflush(stdout);
 
 	if (!almostEqual(prim.dist(), kurs.dist()) || 
-		!almostEqual(kurs.dist(), boru.dist()))
+		!almostEqual(prim.dist(), boru.dist()) ||
+		!almostEqual(prim.dist(), pfs.dist() )
+		)
 		test_failed(g);
 
 	printf("  > passed\n"); fflush(stdout);
@@ -43,21 +46,4 @@ void min_span_tree_test()
 	printf("   random graph V = %d, E = %d\n", dg.order(), dg.size());
 	fflush(stdout);
 	min_span_tree_test_<GraphDd, KtWeightorMin<KtWeightSelf<double>, KtAdder<double>>>(dg);
-
-
-#if 0
-	KtMstPrim<GraphDd> prim(g);   
-	assert(prim.ok());
-	std::vector<GraphDd::edge> mst;
-	for (unsigned i = 0; i < g.order() - 1; i++)
-		mst.push_back(prim[i]);
-	std::sort(mst.begin(), mst.end(), [](const auto& x, const auto& y) { return x.second < y.second; });
-	assert(mst[0] == GraphDd::edge(7, 1));
-	assert(mst[1] == GraphDd::edge(0, 2));
-	assert(mst[2] == GraphDd::edge(4, 3));
-	assert(mst[3] == GraphDd::edge(7, 4));
-	assert(mst[4] == GraphDd::edge(3, 5));
-	assert(mst[5] == GraphDd::edge(7, 6));
-	assert(mst[6] == GraphDd::edge(0, 7));
-#endif
 }

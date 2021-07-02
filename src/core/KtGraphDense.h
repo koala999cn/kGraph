@@ -12,7 +12,10 @@ public:
     using super_ = KtGraphBase<KtMatrix<T>, direction>;
     using typename super_::value_type;
 
-    using super_::KtGraphBase; // µ¼Èë»ùÀàµÄ¹¹Ôìº¯Êı
+    using super_::KtGraphBase; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ìº¯ï¿½ï¿½
+    using super_::adjMat_;
+    using super_::order;
+    using super_::null_;
 
     class adj_vertex_iter
     {
@@ -56,7 +59,7 @@ public:
     };
 
 
-	virtual unsigned outdegree(unsigned v) const { 
+	virtual unsigned outdegree(unsigned v) const override { 
 		auto begin = adjMat_.rowBegin(v), end = adjMat_.rowEnd(v);
 		return order() - std::count(begin, end, null_);
 	}

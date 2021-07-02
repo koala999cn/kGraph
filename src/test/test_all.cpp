@@ -14,43 +14,8 @@ extern void topology_sort_test();
 extern void strongly_connected_test();
 extern void min_span_tree_test();
 extern void shortest_path_test();
+extern void maxflow_test();
 
-
-#if 0
-
-void TestEuler()
-{
-	GraphSi g(8);
-	g.addEdge(0, 2), g.addEdge(0, 5), g.addEdge(0, 7);
-	g.addEdge(1, 7);
-	g.addEdge(2, 6);
-	g.addEdge(3, 4), g.addEdge(3, 5);
-	g.addEdge(4, 5), g.addEdge(4, 6), g.addEdge(4, 7);
-
-	printf("KtEulerIter test: V = %d...", g.order());
-	fflush(stdout);
-
-	KtEulerIter<GraphSi> euler(g, 0);
-	std::vector<unsigned> edge;
-	while (!euler.isEnd()) {
-		const char* state = "none";
-		if (euler.isBacking())
-			state = "backing";
-		else if (euler.isCycling())
-			state = "cycling";
-		else if (euler.isFirstVisiting())
-			state = "firsting";
-		//printf("%d(%s) - ", *euler, state); fflush(stdout);
-		edge.push_back(*euler);
-		++euler;
-	}
-	assert(edge.size() == g.size() * 2 + 1);
-	for (size_t i = 0; i < g.order(); i++)
-		assert(euler.isDead(i));
-
-	printf("  OK\n"); fflush(stdout);
-}
-#endif
 
 int main(int argc, char const *argv[])
 {
@@ -66,7 +31,9 @@ int main(int argc, char const *argv[])
 	strongly_connected_test(); printf("\n");
 	min_span_tree_test(); printf("\n");
 	shortest_path_test(); printf("\n");
+	maxflow_test(); printf("\n");
 
+	
 	printf(" :) All passed! press any key to exit.\n");
 	getchar();
 

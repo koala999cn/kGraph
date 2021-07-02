@@ -5,6 +5,7 @@
 #include "../test/test_util.h"
 #include "KtDfsIterX.h" 
 #include "KtBfsIter.h"
+#include "KtWeightor.h"
 
 
 template<typename GRAPH_BASE> 
@@ -22,34 +23,31 @@ public:
     using bfs_iter = KtBfsIter<KtGraphImpl, fullGraph, modeEdge>;
 
 
-    // µ¼Èë»ùÀàµÄ¹¹Ôìº¯Êý
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ìº¯ï¿½ï¿½
     using GRAPH_BASE::GRAPH_BASE;
 
-	// µ¼Èë»ùÀàµÄÓÐ¹Ø³ÉÔ±º¯Êý
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¹Ø³ï¿½Ô±ï¿½ï¿½ï¿½ï¿½
     using GRAPH_BASE::order;
     using GRAPH_BASE::size;
     using GRAPH_BASE::addEdge;
     using GRAPH_BASE::hasEdge;
     using GRAPH_BASE::getEdge;
+	using GRAPH_BASE::eraseEdge;
     using GRAPH_BASE::isDigraph;
+	using GRAPH_BASE::indegree;
+	using GRAPH_BASE::outdegree;
 
 
-	template<typename GRAPH>
+	// @GRAPH: ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
+	// @WEIGHTOR: ï¿½ï¿½È¨Öµ×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	template<typename GRAPH, typename WEIGHTOR = KtWeightSelf<value_type>>
 	GRAPH copy() const {
 		GRAPH g(order());
+		bfs_iter<true, true> bfs(*this, 0);
+		for (; !bfs.isEnd(); ++bfs)
+			g.addEdge(bfs.from(), *bfs, WEIGHTOR{}(bfs.value()));
 
-		auto V = order();
-		for (unsigned i = 0; i < V; i++) {
-			unsigned jMax = isDigraph() ? V : i + 1;
-			for (unsigned j = 0; j < jMax; j++)
-				if (hasEdge(i, j)) {
-					const auto& val = getEdge(i, j);
-					g.addEdge(i, j, val);
-					if (!isDigraph() && g.isDigraph()) // Ö§³ÖÎÞÏòÍ¼×ªÓÐÏòÍ¼
-						g.addEdge(j, i, val);
-				}
-		}
-
+		assert(g.size() == size());
 		return g;
 	}
 
@@ -65,6 +63,7 @@ public:
     }
 
 
+	// É¾ï¿½ï¿½ï¿½Ô»ï¿½
     void eraseSelfloop() {
         auto V = order();
         for(unsigned i = 0; i < V; i++) 
@@ -73,7 +72,7 @@ public:
     }
 
 
-    // Ò»¸öÓÐÏòÍ¼ÊÇDAG£¬µ±ÇÒ½öµ±ÔÚÊ¹ÓÃDFS¼ì²éÃ¿Ìõ±ßÊ±Î´Óöµ½ÈÎºÎ»Ø±ß
+    // Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½DAGï¿½ï¿½ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½DFSï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½Ê±Î´ï¿½ï¿½ï¿½ï¿½ï¿½ÎºÎ»Ø±ï¿½
     bool hasLoop() const {
         dfs_iter<true, true, true> iter(*this, 0);
         while(!iter.isEnd()) {
@@ -86,8 +85,9 @@ public:
     }
     
 
+	// É¾ï¿½ï¿½ï¿½ï¿½
     void eraseLoop() {
-        // É¾³ý»Ø±ß. ×Ô»·Ò²ÊÇ»Ø±ß
+        // É¾ï¿½ï¿½ï¿½Ø±ï¿½. ï¿½Ô»ï¿½Ò²ï¿½Ç»Ø±ï¿½
 		dfs_iter<true, true> iter(*this, 0);
         while(!iter.isEnd()) {
             if(iter.isBack())
@@ -97,7 +97,7 @@ public:
     }
 
 
-	// ·µ»Ø±ß¼¯ºÏ
+	// ï¿½ß¼ï¿½
 	template<typename WEIGHTOR>
     auto edges() const {
 		using edge_type = std::pair<std::pair<unsigned, unsigned>, typename WEIGHTOR::weight_type>;
@@ -111,7 +111,7 @@ public:
     }
 
 
-    // ¼ÆËãµ±Ç°Í¼µÄÄæ
+    // ï¿½ï¿½ï¿½ãµ±Ç°Í¼ï¿½ï¿½ï¿½ï¿½
 	template<typename GRAPH>
 	GRAPH reverse() const {
 		GRAPH gR(order());
@@ -128,7 +128,11 @@ public:
     }
 
 
-	// ÅÐ¶ÏÊÇ·ñÁ¬Í¨Í¼
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Þ»ï¿½Í¼
+	bool isDag() const { return isDigraph() && !hasLoop(); }
+
+
+	// ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Í¨Í¼
 	bool isConnected() const {
 		bfs_iter<> iter(*this, 0);
 		unsigned V(0);
@@ -139,10 +143,37 @@ public:
 	}
 
 
+	// ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Ú½Ó¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	auto adjIter(unsigned v) const {
+		return adj_vertex_iter(*this, v);
+	}
 
-    // ÇÅÒ²³ÉÎª¹Ø½Ú±ß(articulation edge)£¬Èç¹ûÉ¾³ýÕâÌõ±ß½«°ÑÒ»¸öÁ¬Í¨Í¼·Ö½âÎª²»Ïà½»µÄÁ½¸ö×ÓÍ¼¡£
-    // Ã»ÓÐÇÅµÄÍ¼³ÆÎª±ßÁ¬Í¨¡£
-    // ÔÚÈÎºÎDFSÊ÷ÖÐ£¬Ò»ÌõÊ÷±ßv-wÊÇÒ»¸öÇÅ£¬Ìõ¼þÊÇµ±ÇÒ½öµ±²»´æÔÚ»Ø±ß½«wµÄÒ»¸ö×ÓËïÓëwµÄÒ»¸ö×æÏÈÏàÁ¬½Ó
+
+	// ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ã¼¯ï¿½ï¿½
+	auto sources() const {
+		std::vector<unsigned> s;
+		for (unsigned v = 0; v < order(); v++)
+			if (indegree(v) == 0)
+				s.push_back(v);
+
+		return s;
+	}
+
+
+	// ï¿½ï¿½ï¿½Ø»ï¿½ã¼¯ï¿½ï¿½
+	auto sinks() const {
+		std::vector<unsigned> s;
+		for (unsigned v = 0; v < order(); v++)
+			if (outdegree(v) == 0)
+				s.push_back(v);
+
+		return s;
+	}
+
+
+    // ï¿½ï¿½Ò²ï¿½ï¿½Îªï¿½Ø½Ú±ï¿½(articulation edge)ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Í¨Í¼ï¿½Ö½ï¿½Îªï¿½ï¿½ï¿½à½»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½
+    // Ã»ï¿½ï¿½ï¿½Åµï¿½Í¼ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
+    // ï¿½ï¿½ï¿½Îºï¿½DFSï¿½ï¿½ï¿½Ð£ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½v-wï¿½ï¿½Ò»ï¿½ï¿½ï¿½Å£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½ï¿½Ò½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú»Ø±ß½ï¿½wï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     auto bridges() const {
         std::vector<std::pair<unsigned, unsigned>> res;
         KtDfsIterX<KtGraphImpl, true> iter(*this, 0);
@@ -160,21 +191,21 @@ public:
     }
 
 
-	// ¸îµã(cut-point)Ò²³Æ¹Ø½Úµã(articulation point)£¬Èç¹ûÉ¾³ý¸Ã¶¥µã£¬½«°ÑÒ»¸öÁ¬Í¨Í¼·Ö½âÎªÖÁÉÙÁ½¸ö²»Ïà½»µÄ×ÓÍ¼
-	// Ã»ÓÐ¸îµãµÄÍ¼³ÆÎªÖØÁ¬Í¨(Biconnected)»ò¶¥µãÁ¬Í¨
-	// ÖØÁ¬Í¨Í¼ÖÐµÄÃ¿Ò»¶Ô¶¥µã£¬¶¼ÓÉÁ½Ìõ²»Ïà½»µÄÂ·¾¶ÏàÁ¬
+	// ï¿½ï¿½ï¿½(cut-point)Ò²ï¿½Æ¹Ø½Úµï¿½(articulation point)ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ã£¬ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Í¨Í¼ï¿½Ö½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à½»ï¿½ï¿½ï¿½ï¿½Í¼
+	// Ã»ï¿½Ð¸ï¿½ï¿½ï¿½Í¼ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½Í¨(Biconnected)ï¿½ò¶¥µï¿½ï¿½ï¿½Í¨
+	// ï¿½ï¿½ï¿½ï¿½Í¨Í¼ï¿½Ðµï¿½Ã¿Ò»ï¿½Ô¶ï¿½ï¿½ã£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à½»ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	auto cutpoints() const {
 		assert(isConnected());
 		unsigned root(0);
 		std::vector<unsigned> res;
-		unsigned sons_of_root(0); // ¸ù½ÚµãµÄ×ÓÊ÷ÊýÁ¿
+		unsigned sons_of_root(0); // ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		KtDfsIterX<KtGraphImpl, false> iter(*this, root);
 		while (!iter.isEnd()) {
 			unsigned p = iter.from();
-			if (p == root && iter.isTree()) // ºöÂÔpopping×´Ì¬ 
+			if (p == root && iter.isTree()) // ï¿½ï¿½ï¿½ï¿½popping×´Ì¬ 
 				++sons_of_root;
 
-			if (p != -1 && p != root && iter.isPopping()) {
+			if (p != -1 && p != root/*ï¿½ï¿½ï¿½Úµï¿½ï¿½Úºï¿½ï¿½æ´¦ï¿½ï¿½*/ && iter.isPopping()) {
 				unsigned w = *iter;
 				if (iter.lowIndex(w) >= iter.pushIndex(p))
 					res.push_back(p);
@@ -183,7 +214,7 @@ public:
 			++iter;
 		}
 
-		if (sons_of_root > 1) res.push_back(root);  // Èç¹û¸ù½ÚµãÓÐ¶à¸ö×ÓÊ÷£¬¸ù½ÚµãÎª¸îµã
+		if (sons_of_root > 1) res.push_back(root);  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Îªï¿½ï¿½ï¿½
 		std::sort(res.begin(), res.end());
 		res.erase(std::unique(res.begin(), res.end()), res.end());
 

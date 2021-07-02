@@ -2,11 +2,11 @@
 #include "KtDfsIter.h"
 
 
-// KtDfsIterµÄ¼ÓÇ¿°æ£¬×ÜÊÇstopAtPopping£¬Ö÷ÒªÐÂÔö2ÏîÐÂ¹¦ÄÜÖ§³Ö£º
-//   Ò»ÊÇÐÂÔö¶¥µãµÄ×îÐ¡Ç°Ðò±àºÅÖ§³Ö£¨lowÖµ£©£¬±íÊ¾¸Ã¶¥µãÎª¸ùµÄ×ÓÊ÷ÖÐÈÎºÎ»Ø±ßËùÒýÓÃµÄ×îÐ¡Ç°Ðò±àºÅ£¨orderÖµ£©
-//   ¶þÊÇÐÂÔöÅÐ¶Ïµ±Ç°¶¥µãÓëÆä¸¸¶¥µãÊÇ·ñÎªÇÅµÄÖ§³Ö
-// lowÖµ¶¨Òå£º low(v) = min(pushOrder[v], low[w], pushOrder[k])  
-//   Ê½ÖÐ£ºwÊÇ¶¥µãvµÄº¢×Ó½Úµã£¬kÊÇ¶¥µãvµÄ»Ø±ß×æÏÈ½Úµã
+// KtDfsIterï¿½Ä¼ï¿½Ç¿ï¿½æ£¬ï¿½ï¿½ï¿½ï¿½stopAtPoppingï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½Ö§ï¿½Ö£ï¿½
+//   Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡Ç°ï¿½ï¿½ï¿½ï¿½Ö§ï¿½Ö£ï¿½lowÖµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ã¶ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎºÎ»Ø±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½Ð¡Ç°ï¿½ï¿½ï¿½Å£ï¿½orderÖµï¿½ï¿½
+//   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ïµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä¸¸ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Îªï¿½Åµï¿½Ö§ï¿½ï¿½
+// lowÖµï¿½ï¿½ï¿½å£º low(v) = min(pushOrder[v], low[w], pushOrder[k])  
+//   Ê½ï¿½Ð£ï¿½wï¿½Ç¶ï¿½ï¿½ï¿½vï¿½Äºï¿½ï¿½Ó½Úµã£¬kï¿½Ç¶ï¿½ï¿½ï¿½vï¿½Ä»Ø±ï¿½ï¿½ï¿½ï¿½È½Úµï¿½
 template<typename GRAPH, bool fullGraph = false>
 class KtDfsIterX : public KtDfsIter<GRAPH, false, true, true>
 {
@@ -25,9 +25,10 @@ public:
 	using super_::isPushing;
 	using super_::isPopping;
 	using super_::isBack;
+    using super_::firstUnvisited;
 
 
-    // ÖØÐ´¸¸ÀàµÄ++²Ù×÷·ûÖØÔØ
+    // ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½++ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void operator++() { 
         super_::operator++();
 
@@ -36,7 +37,7 @@ public:
             
             if(isPushing()) {
                 assert(pushIndex(w) == -1);
-                low_[w] = pushingIndex(); // ³õÊ¼»¯low(v) = pushOrder[v]
+                low_[w] = pushingIndex(); // ï¿½ï¿½Ê¼ï¿½ï¿½low(v) = pushOrder[v]
             }
             else {
 				unsigned v = from();
@@ -57,7 +58,7 @@ public:
     }
 
 
-    // ÖØÐ´¸¸ÀàµÄbegin·½·¨£¬ÒÔÍ¬²½¸üÐÂlowÖµ
+    // ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½beginï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lowÖµ
     void begin(unsigned v) {
         super_::begin(v);
         low_[v] = pushingIndex();
@@ -80,5 +81,5 @@ public:
 
 
 private:
-    std::vector<unsigned> low_; // ´æ´¢¸÷½ÚµãÕ¹¿ª×ÓËï½ÚµãËùÁ¬½Ó½ÚµãµÄ×îÐ¡ÐòºÅ
+    std::vector<unsigned> low_; // ï¿½æ´¢ï¿½ï¿½ï¿½Úµï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó½Úµï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½
 };

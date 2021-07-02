@@ -17,7 +17,8 @@ void cutpoints_test_(const GRAPH& g)
 		bool cut = std::find(c.begin(), c.end(), v) != c.end();
 		GRAPH gn(g);
 		gn.eraseVertex(v);
-		if(cut && gn.isConnected())
+		bool con = gn.isConnected();
+		if(cut && con || !cut && !con)
 			test_failed(gn);
 	}
 }

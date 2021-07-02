@@ -15,7 +15,7 @@ class KtGraphBase
 public:
     typedef typename MAT_TYPE::value_type value_type;
 
-    KtGraphBase() : V_(0), E_(0), null_(0) {} 
+    KtGraphBase() : E_(0), null_(0) {} 
     KtGraphBase(const KtGraphBase&) = default;
     KtGraphBase(KtGraphBase&&) = default;
     KtGraphBase& operator=(const KtGraphBase&) = default;
@@ -23,7 +23,6 @@ public:
 
     explicit KtGraphBase(unsigned numVertex, value_type nullValue = value_type{0}) : 
         adjMat_(numVertex, numVertex, nullValue),
-        V_(numVertex),
         E_(0),
         null_(nullValue) {}
 
@@ -31,13 +30,13 @@ public:
 
     // 重置图为numVertex顶点，并清空所有边
     void reset(unsigned numVertex, value_type nullValue = value_type(0)) {
-        V_ = numVertex, E_ = 0;
+        E_ = 0;
         null_ = nullValue;
         adjMat_.reset(numVertex, numVertex, null_);
     }
 
     // 返回图的阶，即顶点数目
-    unsigned order() const { return V_; }
+    unsigned order() const { return adjMat_.rows(); }
 
     // 返回图的边数
     unsigned size() const { return E_; }
@@ -111,7 +110,7 @@ public:
 		}
 	}
 
-	// 度
+	// 度. 注：对于有向图的自环，度为2，1个入度+1个出度
 	unsigned degree(unsigned v) const {
 		auto d = outdegree(v);
 		if (direction) d += indegree(v);
@@ -121,18 +120,23 @@ public:
 
 	// 删除顶点v及其邻边
 	void eraseVertex(unsigned v) {
-		auto d = degree(v);
-		if (direction && hasEdge(v, v)) --d;
+		auto d = degree(v); // 与v相邻的边数
+		if (direction && hasEdge(v, v)) --d; // 修正有向自环的边数
 		adjMat_.eraseRow(v);
 		adjMat_.eraseCol(v);
-		--V_;
 		E_ -= d;
+	}
+
+
+	// 增加1个孤立点，返回新增顶点的编号
+	void addVertex() {
+		adjMat_.appendRow(null_);
+		adjMat_.appendCol(null_);
 	}
 
 
 protected:
     MAT_TYPE adjMat_; // 邻接矩阵
     value_type null_; // 矩阵元素等于null_时，代表无连接
-    unsigned V_; // 顶点数量
     unsigned E_; // 边数量
 };

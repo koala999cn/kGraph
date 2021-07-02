@@ -45,7 +45,7 @@ public:
             iter(g.adjMat_.rowBegin(v)), end(g.adjMat_.rowEnd(v)) {}
 
     public:
-        unsigned operator*() { return iter->first; } 
+        unsigned operator*() const { return iter->first; } 
 
 		auto value() const { return iter->second; }
 		auto value() { return iter->second; }
@@ -59,7 +59,7 @@ public:
     };
 
 
-	virtual unsigned outdegree(unsigned v) const {
+	virtual unsigned outdegree(unsigned v) const override {
 		return adjMat_.getSizeOfRow(v);
 	}
 };
