@@ -17,8 +17,8 @@ class KtBfsIter
 
 public:
 
-	// graph -- 待遍历的图
-	// startVertex -- 遍历的起始顶点，-1表示只构建迭代器，需要另外调用begin方法开始遍历
+    // graph -- 待遍历的图
+    // startVertex -- 遍历的起始顶点，-1表示只构建迭代器，需要另外调用begin方法开始遍历
     KtBfsIter(const GRAPH& graph, unsigned startVertex)
         : graph_(graph),
           v0_(-1),
@@ -89,16 +89,16 @@ public:
     }
 
 
-	// 与当前顶点（to顶点）构成边的from顶点
+    // 与当前顶点（to顶点）构成边的from顶点
     unsigned from() const {
         assert(!isEnd());
         return todo_.empty() ? -1 : todo_.front().second;
     }
 
 
-	auto value() const {
-		return todo_.front().first.value();
-	}
+    auto value() const {
+        return todo_.front().first.value();
+    }
 
 
     bool isEnd() const { return v0_ == -1; }
@@ -109,17 +109,17 @@ public:
         assert(isEnd() && !isPushed_[v]);
         v0_ = v;
 
-		if (modeEdge) ++(*this); // skip v0
+        if (modeEdge) ++(*this); // skip v0
     }
 
 
-	bool isPushed(unsigned v) const { return isPushed_[v]; }
-	bool isPopped(unsigned v) const { return isPopped_[v]; }
+    bool isPushed(unsigned v) const { return isPushed_[v]; }
+    bool isPopped(unsigned v) const { return isPopped_[v]; }
 
 private:
     const GRAPH& graph_;
 
-	// 待处理的邻接顶点迭代器。使用pair结构，主要是为了方便高效实现from方法
+    // 待处理的邻接顶点迭代器。使用pair结构，主要是为了方便高效实现from方法
     std::queue<std::pair<adj_vertex_iter, unsigned>> todo_;
 
     unsigned v0_; // 起始顶点

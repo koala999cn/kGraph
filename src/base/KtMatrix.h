@@ -37,46 +37,46 @@ public:
     }
 
 
-	unsigned rows() const { return rows_; }
-	unsigned cols() const { return cols_; }
+    unsigned rows() const { return rows_; }
+    unsigned cols() const { return cols_; }
 
 
     auto rowBegin(unsigned row) const { return std::next(data_.begin(), row * cols_); }
     auto rowEnd(unsigned row) const { return std::next(data_.begin(), (row + 1) * cols_); }
 
-	void eraseRow(unsigned row) { data_.erase(rowBegin(row), rowEnd(row)); --rows_; }
-	void eraseCol(unsigned col) {
-		--cols_;
-		auto iter = std::next(data_.begin(), col);
-		for (unsigned r = 0; r < rows_; r++) {
-			iter = data_.erase(iter);
-			if(r != rows_-1)
-				iter = std::next(iter, cols_);
-		}
-	}
+    void eraseRow(unsigned row) { data_.erase(rowBegin(row), rowEnd(row)); --rows_; }
+    void eraseCol(unsigned col) {
+        --cols_;
+        auto iter = std::next(data_.begin(), col);
+        for (unsigned r = 0; r < rows_; r++) {
+            iter = data_.erase(iter);
+            if(r != rows_-1)
+                iter = std::next(iter, cols_);
+        }
+    }
 
 
-	// @val: 新增行的初始值
-	void appendRow(const value_type& val) {
-		data_.resize(data_.size() + cols_, val);
-		++rows_;
-	}
+    // @val: 新增行的初始值
+    void appendRow(const value_type& val) {
+        data_.resize(data_.size() + cols_, val);
+        ++rows_;
+    }
 
 
-	// @val: 新增列的初始值
-	void appendCol(const value_type& val) {
-		data_.resize(data_.size() + rows_);
-		value_type* p = data_.data();
-		for (unsigned r = rows_; r > 1/*第一行数据不用移动*/; r--) {
-			value_type* src = p + r * cols_;
-			value_type* dst = src + cols_;
-			*--dst = val;
-			for (unsigned c = 0; c < cols_; c++)
-				*--dst = *--src;
-		}
+    // @val: 新增列的初始值
+    void appendCol(const value_type& val) {
+        data_.resize(data_.size() + rows_);
+        value_type* p = data_.data();
+        for (unsigned r = rows_; r > 1/*第一行数据不用移动*/; r--) {
+            value_type* src = p + r * cols_;
+            value_type* dst = src + cols_;
+            *--dst = val;
+            for (unsigned c = 0; c < cols_; c++)
+                *--dst = *--src;
+        }
 
-		++cols_;
-	}
+        ++cols_;
+    }
 
 
 private:

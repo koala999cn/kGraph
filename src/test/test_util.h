@@ -7,50 +7,50 @@
 template<typename GRAPH>
 void dump(const GRAPH& g, const char* path, bool dumpValue)
 {
-	std::ofstream of(path);
+    std::ofstream of(path);
 
-	auto V = g.order();
-	for (unsigned v = 0; v < V; v++) {
-		typename GRAPH::adj_vertex_iter iter(g, v);
-		std::string s = std::to_string(v);
-		s += ", ";
-		bool empty_line(true);
-		for (; !iter.isEnd(); ++iter) {
-			if (!g.isDigraph() && *iter < v)
-				continue; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½Ö»ï¿½ï¿½Ê¾v <= wï¿½Ä±ï¿½
+    auto V = g.order();
+    for (unsigned v = 0; v < V; v++) {
+        typename GRAPH::adj_vertex_iter iter(g, v);
+        std::string s = std::to_string(v);
+        s += ", ";
+        bool empty_line(true);
+        for (; !iter.isEnd(); ++iter) {
+            if (!g.isDigraph() && *iter < v)
+                continue; // ¶ÔÓÚÎÞÏòÍ¼£¬Ö»ÏÔÊ¾v <= wµÄ±ß
 
-			of << '(' << s << *iter;
-			if (dumpValue) of << ", " << iter.value();
-			of << ") ";
-			empty_line = false;
-		}
+            of << '(' << s << *iter;
+            if (dumpValue) of << ", " << iter.value();
+            of << ") ";
+            empty_line = false;
+        }
 
-		if (!empty_line)
-			of << '\n';
-	}
+        if (!empty_line)
+            of << '\n';
+    }
 }
 
 
-// ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ã¸Ãºï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½
+// ²âÊÔÊ§°ÜÊ±µ÷ÓÃ¸Ãº¯Êý´òÓ¡ÐÅÏ¢¡¢ÍË³ö³ÌÐò
 template<typename GRAPH>
 void test_failed(const GRAPH& g, bool detail = false)
 {
-	printf("  > :( failed\n");
-	printf("   dumping failed graph to 'graph_dump.txt'...\n");
-	dump(g, "graph_dump.txt", detail);
-	printf("press any key to exit.\n");
-	fflush(stdout);
-	getchar();
-	exit(1);
+    printf("  > :( failed\n");
+    printf("   dumping failed graph to 'graph_dump.txt'...\n");
+    dump(g, "graph_dump.txt", detail);
+    printf("press any key to exit.\n");
+    fflush(stdout);
+    getchar();
+    exit(1);
 }
 
 
 
-// ï¿½ï¿½ï¿½ï¿½[x0, x1]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// ·µ»Ø[x0, x1]Çø¼äµÄËæ»úÊý
 double rand(double x0, double x1);
 
 
-// ï¿½ï¿½pï¿½Ä¸ï¿½ï¿½Ê·ï¿½ï¿½ï¿½true.
+// ÒÔpµÄ¸ÅÂÊ·µ»Øtrue.
 // 0 <= p <= 1
 bool rand_p(double p);
 
@@ -58,64 +58,64 @@ bool rand_p(double p);
 template<typename GRAPH>
 GRAPH randGraph(unsigned V, unsigned E)
 {
-	GRAPH g(V);
-	double p = static_cast<double>(E) / (V * V);
-	if (!g.isDigraph()) p *= 2; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ï¿½É¸ï¿½ï¿½Ê·ï¿½ï¿½ï¿½
-	for (unsigned i = 0; i < V; i++) {
-		unsigned jMax = g.isDigraph() ? V : i + 1;
-		for (unsigned j = 0; j < jMax; j++)
-			if (rand_p(p)) {
-				int r = 0;
-				while (r == 0) r = rand();
-				using value_type = typename GRAPH::value_type;
-				value_type val(std::is_floating_point<value_type>::value ? value_type(r) / RAND_MAX : r);
-				g.addEdge(i, j, val);
-			}
-	}
+    GRAPH g(V);
+    double p = static_cast<double>(E) / (V * V);
+    if (!g.isDigraph()) p *= 2; // ¶ÔÓÚÎÞÏòÍ¼£¬±ßµÄÉú³É¸ÅÂÊ·­±¶
+    for (unsigned i = 0; i < V; i++) {
+        unsigned jMax = g.isDigraph() ? V : i + 1;
+        for (unsigned j = 0; j < jMax; j++)
+            if (rand_p(p)) {
+                int r = 0;
+                while (r == 0) r = rand();
+                using value_type = typename GRAPH::value_type;
+                value_type val(std::is_floating_point<value_type>::value ? value_type(r) / RAND_MAX : r);
+                g.addEdge(i, j, val);
+            }
+    }
 
-	return g;
+    return g;
 }
 
 
 #include "../core/KtConnected.h"
-// ï¿½ï¿½Í¼gï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó±ß£ï¿½ï¿½Ô±ï¿½Ö¤gÎªï¿½ï¿½Í¨Í¼
+// ÔÚÍ¼gµÄ»ù´¡ÉÏÔö¼Ó±ß£¬ÒÔ±£Ö¤gÎªÁ¬Í¨Í¼
 template<typename GRAPH>
 void makeConnect(GRAPH& g)
 {
-	KtConnected<GRAPH> cc(g);
-	if (cc.count() > 1) {
-		std::vector<unsigned> v(cc.count());
-		unsigned cnt(1);
-		for (unsigned i = 0; i < g.order(); i++) {
-			if (cnt == cc[i]) {
-				v.push_back(i); // Ñ¹ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-				if (cnt++ == cc.count())
-					break;
-			}
-		}
+    KtConnected<GRAPH> cc(g);
+    if (cc.count() > 1) {
+        std::vector<unsigned> v(cc.count());
+        unsigned cnt(1);
+        for (unsigned i = 0; i < g.order(); i++) {
+            if (cnt == cc[i]) {
+                v.push_back(i); // Ñ¹ÈëÃ¿¸öÁ¬Í¨·ÖÁ¿µÄµÚ1¸ö¶¥µã
+                if (cnt++ == cc.count())
+                    break;
+            }
+        }
 
-		for (unsigned i = 1; i < v.size(); i++)
-			g.addEdge(v[i - 1], v[i]);
+        for (unsigned i = 1; i < v.size(); i++)
+            g.addEdge(v[i - 1], v[i]);
 
-		assert(g.isConnected());
-	}
+        assert(g.isConnected());
+    }
 }
 
 
 
-// ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½Í¼g1, g2ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
+// ÅÐ¶ÏÁ½¸öÍ¼g1, g2ÊÇ·ñÏàµÈ
 template<typename G1, typename G2>
 bool isSame(const G1& g1, const G2& g2)
 {
-	if (g1.order() != g2.order() || g1.size() != g2.size())
-		return false;
+    if (g1.order() != g2.order() || g1.size() != g2.size())
+        return false;
 
-	for (unsigned v = 0; v < g1.order(); v++)
-		for (unsigned w = 0; w < g1.order(); w++)
-			if (g1.getEdge(v, w) != g2.getEdge(v, w))
-				return false;
+    for (unsigned v = 0; v < g1.order(); v++)
+        for (unsigned w = 0; w < g1.order(); w++)
+            if (g1.getEdge(v, w) != g2.getEdge(v, w))
+                return false;
 
-	return true;
+    return true;
 }
 
 

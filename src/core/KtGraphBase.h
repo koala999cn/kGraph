@@ -88,51 +88,51 @@ public:
     }
 
 
-	// 出度
-	virtual unsigned outdegree(unsigned v) const {
-		unsigned d(0);
-		for (unsigned i = 0; i < order(); i++)
-			if (hasEdge(v, i)) ++d;
-		return d;
-	}
+    // 出度
+    virtual unsigned outdegree(unsigned v) const {
+        unsigned d(0);
+        for (unsigned i = 0; i < order(); i++)
+            if (hasEdge(v, i)) ++d;
+        return d;
+    }
 
 
-	// 入度
-	unsigned indegree(unsigned v) const {
-		if (!direction) {
-			return outdegree(v);
-		}
-		else {
-			unsigned d(0);
-			for (unsigned i = 0; i < order(); i++)
-				if (hasEdge(i, v)) ++d;
-			return d;
-		}
-	}
+    // 入度
+    unsigned indegree(unsigned v) const {
+        if (!direction) {
+            return outdegree(v);
+        }
+        else {
+            unsigned d(0);
+            for (unsigned i = 0; i < order(); i++)
+                if (hasEdge(i, v)) ++d;
+            return d;
+        }
+    }
 
-	// 度. 注：对于有向图的自环，度为2，1个入度+1个出度
-	unsigned degree(unsigned v) const {
-		auto d = outdegree(v);
-		if (direction) d += indegree(v);
-		return d;
-	}
-
-
-	// 删除顶点v及其邻边
-	void eraseVertex(unsigned v) {
-		auto d = degree(v); // 与v相邻的边数
-		if (direction && hasEdge(v, v)) --d; // 修正有向自环的边数
-		adjMat_.eraseRow(v);
-		adjMat_.eraseCol(v);
-		E_ -= d;
-	}
+    // 度. 注：对于有向图的自环，度为2，1个入度+1个出度
+    unsigned degree(unsigned v) const {
+        auto d = outdegree(v);
+        if (direction) d += indegree(v);
+        return d;
+    }
 
 
-	// 增加1个孤立点，返回新增顶点的编号
-	void addVertex() {
-		adjMat_.appendRow(null_);
-		adjMat_.appendCol(null_);
-	}
+    // 删除顶点v及其邻边
+    void eraseVertex(unsigned v) {
+        auto d = degree(v); // 与v相邻的边数
+        if (direction && hasEdge(v, v)) --d; // 修正有向自环的边数
+        adjMat_.eraseRow(v);
+        adjMat_.eraseCol(v);
+        E_ -= d;
+    }
+
+
+    // 增加1个孤立点，返回新增顶点的编号
+    void addVertex() {
+        adjMat_.appendRow(null_);
+        adjMat_.appendCol(null_);
+    }
 
 
 protected:

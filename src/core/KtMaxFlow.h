@@ -6,345 +6,345 @@
 #include "../GraphX.h"
 
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½st-ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¶ï¿½Ê¹ï¿½Ã´ï¿½sï¿½ï¿½tï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
-// ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½-Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨
+// ×î´óÁ÷£º¸ø¶¨Ò»¸öst-Íø£¬ÕÒ³öÒ»¸öÁ÷£¬´Ó¶øÊ¹µÃ´Ósµ½tµÄÈÎºÎÆäËûÁ÷¶¼²»»áÓÐ¸ü´óµÄÁ÷Öµ¡£
+// Ö÷ÒªÓÐÁ½´óÀàËã·¨£ºÒ»ÊÇÀ©³äÂ·¾¶×î´óÁ÷Ëã·¨£¬¶þÊÇÔ¤Á÷-Ñ¹Èë×î´óÁ÷Ëã·¨
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½residual networkï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½Í¬ï¿½Ä¶ï¿½ï¿½ã£¬
-// ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ÐµÄ¸ï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¶ï¿½ï¿½å£ºï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ÐµÄ¸ï¿½ï¿½ï¿½ï¿½ï¿½v-wï¿½ï¿½
-//    ï¿½ï¿½fÎªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½cÎªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã´ï¿½ï¿½
-//    ï¿½ï¿½ï¿½ï¿½ï¿½f != cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð°ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªc-fï¿½ï¿½Ç°ï¿½ï¿½v-wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-//    ï¿½ï¿½ï¿½ï¿½ï¿½f != 0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð°ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªfï¿½Ä»Ø±ï¿½w-vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½É»ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// ÒÔÉÏÁ½´óÀàËã·¨¾ùÒÀÀµÓÚ¡¾ÓàÁôÍø£¨residual network£©¡¿£º¸ø¶¨Ò»¸öÁ÷ÍøÂçºÍÒ»¸öÁ÷£¬Á÷µÄÓàÁôÍøÓÐ×ÅÔ­ÍøÏàÍ¬µÄ¶¥µã£¬
+// ¶ÔÓÚÔ­ÍøÖÐµÄ¸÷Ìõ±ß£¬ÓàÁôÍøÖÐ½«ÓÐ1Ìõ»ò2Ìõ±ß£¬ÓÐÈçÏÂ¶¨Òå£º¶ÔÓÚÔ­ÍøÖÐµÄ¸÷Ìõ±ßv-w£¬
+//    ÁîfÎªÁ÷Á¿£¬cÎªÈÝÁ¿£¬ ÄÇÃ´£º
+//    ¢ÙÈç¹ûf != c£¬ÔòÔÚÓàÁôÍøÖÐ°üÀ¨Ò»ÌõÈÝÁ¿Îªc-fµÄÇ°±ßv-w£»£¨´ú±íÓàÁôÁ¿£¬¼´¸ÃÌõ±ß»¹¿ÉÀ©³ä»òÑ¹ÈëµÄÁ÷Á¿£©
+//    ¢ÚÈç¹ûf != 0£¬ÔòÔÚÓàÁôÍøÖÐ°üÀ¨Ò»ÌõÈÝÁ¿ÎªfµÄ»Ø±ßw-v¡££¨´ú±íµ±Ç°Á¿£¬¼´¸ÃÌõ±ßÒÑÓÐµÄÁ÷Á¿£¬Ò²¼´¿É»ØÍËµÄÁ÷Á¿£©
 
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½à£¬Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// ×î´óÁ÷µÄ»ùÀà£¬ÊµÏÖÓàÁôÍø»ù±¾²Ù×÷
 template<typename GRAPH, typename WEIGHTOR>
 class KtMaxFlow
 {
 protected:
-	using flow_type = typename WEIGHTOR::weight_type;
-	using RGRAPH = DigraphSx<flow_type>; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    using flow_type = typename WEIGHTOR::weight_type;
+    using RGRAPH = DigraphSx<flow_type>; // ÓàÁôÍøÀàÐÍ
 
 
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½
-	//   1. gÎªstï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½1ï¿½ï¿½Ô´ï¿½ã¡¢1ï¿½ï¿½ï¿½ï¿½ã£»
-	//   2. ï¿½ï¿½v-wÎªgï¿½Ä±ß£ï¿½ï¿½ï¿½w-vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Ä±ß¡ï¿½
-	KtMaxFlow(const GRAPH& g, unsigned s, unsigned t)
-		: graph_(g), // ï¿½ï¿½ï¿½ï¿½Ô­Í¼ï¿½ï¿½ï¿½ï¿½
-		  rg_(g.template copy<RGRAPH, WEIGHTOR>()) { // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-		assert(s != t);
-	}
+    // ¶ÔÊäÈëgµÄÏÞÖÆ£º
+    //   1. gÎªstÍø£¬¼´ÓÐÇÒ½öÓÐ1¸öÔ´µã¡¢1¸ö»ãµã£»
+    //   2. Èôv-wÎªgµÄ±ß£¬Ôòw-v²»ÄÜÊÇgµÄ±ß¡£
+    KtMaxFlow(const GRAPH& g, unsigned s, unsigned t)
+        : graph_(g), // ±£´æÔ­Í¼ÒýÓÃ
+          rg_(g.template copy<RGRAPH, WEIGHTOR>()) { // ¹¹ÔìÓàÁôÍø
+        assert(s != t);
+    }
 
 
 public:
 
-	// ï¿½ï¿½ï¿½Ø±ï¿½v-wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	auto cap(unsigned v, unsigned w) const {
-		return WEIGHTOR{}(graph_.getEdge(v, w));
-	}
+    // ·µ»Ø±ßv-wµÄÍøÈÝÁ¿
+    auto cap(unsigned v, unsigned w) const {
+        return WEIGHTOR{}(graph_.getEdge(v, w));
+    }
 
 
-	// ï¿½ï¿½ï¿½Ø±ï¿½v-wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	auto flow(unsigned v, unsigned w) const {
-		assert(graph_.hasEdge(v, w));
-		return rg_.getEdge(w, v);
-	}
+    // ·µ»Ø±ßv-wµÄÍøÁ÷Á¿
+    auto flow(unsigned v, unsigned w) const {
+        assert(graph_.hasEdge(v, w));
+        return rg_.getEdge(w, v);
+    }
 
 
-	// ï¿½ï¿½ï¿½Ø±ï¿½v-wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ := cap - flow
-	auto residual(unsigned v, unsigned w) const {
-		assert(graph_.hasEdge(v, w));
-		return rg_.getEdge(v, w);
-	}
+    // ·µ»Ø±ßv-wµÄÓàÁôÁ¿ := cap - flow
+    auto residual(unsigned v, unsigned w) const {
+        assert(graph_.hasEdge(v, w));
+        return rg_.getEdge(v, w);
+    }
 
 
-	// ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	auto outflow(unsigned v) const {
-		flow_type f(0);
+    // ·µ»Ø¶¥µãvµÄÁ÷³öÁ¿
+    auto outflow(unsigned v) const {
+        flow_type f(0);
 
-		auto iter = graph_.adjIter(v);
-		for (; !iter.isEnd(); ++iter)
-			f += flow(v, *iter);
+        auto iter = graph_.adjIter(v);
+        for (; !iter.isEnd(); ++iter)
+            f += flow(v, *iter);
 
-		return f;
-	}
-
-
-	// ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	auto inflow(unsigned v) const {
-		flow_type f(0);
-
-		for (unsigned w = 0; w < graph_.order(); w++)
-			if (graph_.hasEdge(w, v))
-				f += flow(w, v);
-
-		return f;
-	}
+        return f;
+    }
 
 
-	// ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½vï¿½Ä¾ï¿½ï¿½ï¿½ï¿½ï¿½ = ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
-	auto netflow(unsigned v) const {
-		return inflow(v) - outflow(v);
-	}
+    // ·µ»Ø¶¥µãvµÄÁ÷ÈëÁ¿
+    auto inflow(unsigned v) const {
+        flow_type f(0);
+
+        for (unsigned w = 0; w < graph_.order(); w++)
+            if (graph_.hasEdge(w, v))
+                f += flow(w, v);
+
+        return f;
+    }
 
 
-protected:
-
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½v-wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½delta
-	void addFlow_(unsigned v, unsigned w, flow_type delta) {
-		assert(rg_.hasEdge(v, w));
-		flow_type f = rg_.getEdge(v, w);
-		f -= delta; // ï¿½ï¿½ï¿½ï¿½ï¿½ßµÄ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½delta
-		if (f == 0)
-			rg_.eraseEdge(v, w);
-		else
-			rg_.setEdge(v, w, f);
-
-		// ï¿½ï¿½Ó¦ï¿½Ø±ßµÄ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½delta
-		if (rg_.hasEdge(w, v))
-			rg_.setEdge(w, v, rg_.getEdge(w, v) + delta);
-		else
-			rg_.addEdge(w, v, delta);
-	}
+    // ·µ»Ø¶¥µãvµÄ¾»Á÷Á¿ = Á÷ÈëÁ¿ - Á÷³öÁ¿ 
+    auto netflow(unsigned v) const {
+        return inflow(v) - outflow(v);
+    }
 
 
 protected:
-	const GRAPH& graph_; // Ô­Í¼
-	RGRAPH rg_; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
+    // ¶ÔÓàÁôÍøµÄ±ßv-wÔö¼ÓÍøÁ÷delta
+    void addFlow_(unsigned v, unsigned w, flow_type delta) {
+        assert(rg_.hasEdge(v, w));
+        flow_type f = rg_.getEdge(v, w);
+        f -= delta; // ¸ÃÌõ±ßµÄ¿ÉÔö¹ãÁ÷Á¿¼õÉÙdelta
+        if (f == 0)
+            rg_.eraseEdge(v, w);
+        else
+            rg_.setEdge(v, w, f);
+
+        // ¶ÔÓ¦»Ø±ßµÄ¿ÉÔö¹ãÁ÷Á¿Ôö¼Ódelta
+        if (rg_.hasEdge(w, v))
+            rg_.setEdge(w, v, rg_.getEdge(w, v) + delta);
+        else
+            rg_.addEdge(w, v, delta);
+    }
+
+
+protected:
+    const GRAPH& graph_; // Ô­Í¼
+    RGRAPH rg_; // ÓàÁôÍø
 };
 
 
 
-// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½Ä»ï¿½ï¿½ï¿½
-// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨Ò²ï¿½ï¿½Ford-Fulkersonï¿½ã·¨
-// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Å´ï¿½Ô´ï¿½ãµ½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½Ã·ï¿½ï¿½ï¿½
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Þ¿ÕµÄ»Ø±ßµï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½Í¬Ê±ï¿½ï¿½ï¿½Ù»Ø±ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É»Ø±ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡Öµï¿½ï¿½ï¿½ï¿½ï¿½Æ¡ï¿½
-// ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ç°ï¿½ß±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ø±ß±ï¿½Îªï¿½Õ¡ï¿½
+// À©³äÂ·¾¶×î´óÁ÷Ëã·¨µÄ»ùÀà
+// À©³äÂ·¾¶×î´óÁ÷Ëã·¨Ò²³ÆFord-FulkersonËã·¨
+// ÕâÊÇÒ»ÖÖÑØ×Å´ÓÔ´µãµ½»ãµãµÄÂ·¾¶Öð½¥Ôö¼ÓÁ÷µÄÍ¨ÓÃ·½·¨
+// ¶ÔÓÚÈÎÒâÎÞÂúµÄÇ°±ßÇÒÎÞ¿ÕµÄ»Ø±ßµÄÂ·¾¶£¬¿ÉÒÔÍ¨¹ýÔö¼ÓÇ°±ßÖÐµÄÁ÷£¬Í¬Ê±¼õÉÙ»Ø±ßÖÐµÄÁ÷À´Ôö¼ÓÍøÖÐµÄÁ÷Á¿¡£
+// ¿ÉÒÔÔö¼ÓµÄÁ÷Á¿ÓÉ»Ø±ßÖÐµÄÁ÷ºÍÇ°±ßÖÐÎ´ÓÃÈÝÁ¿µÄ×îÐ¡ÖµËùÏÞÖÆ¡£
+// ÔÚÐÂµÄÁ÷ÖÐ£¬ÖÁÉÙÂ·¾¶ÉÏÓÐÒ»ÌõÇ°±ß±»³äÂú£¬»òÕßÓÐÒ»Ìõ»Ø±ß±äÎª¿Õ¡£
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½È¨Öµï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½tï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
+// ¼ò¶øÑÔÖ®£¬ÓàÁôÍøµÄ±ßÈ¨Öµ¾ÍÊÇ¿ÉÔö¹ãµÄÁ÷Á¿Öµ£¬ÔÚÓàÁôÍøÖÐËÑË÷sµ½tµÄÂ·¾¶£¬¼´ÎªÔö¹ãÂ·¾¶¡£
 
-// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½Ö£ï¿½
-//   Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ä¡£
-//   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ùµï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ä¡£
+// Ôö¹ãÂ·¾¶ËÑË÷Ëã·¨³£¼ûÓÐ2ÖÖ£º
+//   Ò»ÊÇ×î´óÈÝÁ¿À©³äÂ·¾¶£¬¼´ÑØ×Å¿ÉÒÔÊ¹Á÷µÃµ½×î´óÔö³¤µÄÂ·¾¶À©³ä¡£
+//   ¶þÊÇ×î¶ÌÀ©³äÂ·¾¶£¬¼´¼´ÑØ×Å±ßÊý×îÉÙµÄÂ·¾¶À©³ä¡£
 
-// Ford-Fulkersonï¿½ã·¨ï¿½Îºï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½V*M,
-// ï¿½Ò³ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ÎªO(V*E*M)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªO(V^2*M)ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½MÎªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// Ford-FulkersonËã·¨ÈÎºÎÊµÏÖËùÐèµÄÀ©³äÂ·¾¶ÊýÄ¿×î¶àµÈÓÚV*M,
+// ÕÒ³öÒ»¸ö×î´óÁ÷ËùÐèÊ±¼äÎªO(V*E*M)£¬¶ÔÓÚÏ¡ÊèÍøÔòÎªO(V^2*M)¡£ÆäÖÐ£¬MÎªÍøÖÐ×î´óµÄ±ßÈÝÁ¿¡£
 template<typename GRAPH, class WEIGHTOR>
 class KtPathAugment : public KtMaxFlow<GRAPH, WEIGHTOR>
 {
 protected:
-	using super_ = KtMaxFlow<GRAPH, WEIGHTOR>;
-	using super_::super_; // ï¿½ï¿½ï¿½ë¹¹ï¿½ìº¯ï¿½ï¿½
-	using super_::rg_;
-	using super_::addFlow_;
-	using typename super_::flow_type;
-	using typename super_::RGRAPH;
+    using super_ = KtMaxFlow<GRAPH, WEIGHTOR>;
+    using super_::super_; // µ¼Èë¹¹Ôìº¯Êý
+    using super_::rg_;
+    using super_::addFlow_;
+    using typename super_::flow_type;
+    using typename super_::RGRAPH;
 
 
 protected:
 
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½pathRï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½Ð¡ï¿½ï¿½
-	flow_type minFlow_(const std::vector<unsigned>& pathR) const {
-		auto iter = pathR.begin();
-		unsigned w = *iter++;
-		unsigned v = *iter++;
-		flow_type d = rg_.getEdge(v, w);
+    // ·µ»ØÓàÁôÍøÄæÂ·¾¶pathRµÄ¿ÉÔö¹ãÍøÂçÁ÷£ºÂ·¾¶ÉÏµÄ×îÐ¡±ß
+    flow_type minFlow_(const std::vector<unsigned>& pathR) const {
+        auto iter = pathR.begin();
+        unsigned w = *iter++;
+        unsigned v = *iter++;
+        flow_type d = rg_.getEdge(v, w);
 
-		while (iter != pathR.end()) {
-			w = v;
-			v = *iter++;
-			flow_type x = rg_.getEdge(v, w);
-			if (x < d) d = x;
-		}
+        while (iter != pathR.end()) {
+            w = v;
+            v = *iter++;
+            flow_type x = rg_.getEdge(v, w);
+            if (x < d) d = x;
+        }
 
-		return d;
-	}
+        return d;
+    }
 
 
-	// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½pathRï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	void augment_(const std::vector<unsigned>& pathR, flow_type delta) {
-		// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½delta
-		auto iter = pathR.begin();
-		auto w = *iter++;
-		unsigned v;
-		for (; iter != pathR.end(); w = v, ++iter) {
-			v = *iter;
-			addFlow_(v, w, delta);
-		}
-	}
+    // ¶ÔÄæÂ·¾¶pathR½øÐÐÔö¹ã
+    void augment_(const std::vector<unsigned>& pathR, flow_type delta) {
+        // ÑØ×ÅÂ·¾¶Ôö¹ãdelta
+        auto iter = pathR.begin();
+        auto w = *iter++;
+        unsigned v;
+        for (; iter != pathR.end(); w = v, ++iter) {
+            v = *iter;
+            addFlow_(v, w, delta);
+        }
+    }
 };
 
 
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ã·¨
-// ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2*E*lgMï¿½ï¿½ï¿½Ò³ï¿½Ï¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ÎªO(V^2*lgM*lgV)ï¿½ï¿½
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ÃµÄµï¿½ï¿½ï¿½Ô¶Ô¶Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ÃµÄµï¿½ï¿½ï¿½ï¿½ï¿½
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÒ»ï¿½ï¿½ï¿½Ô¸ßµÄ¿ï¿½ï¿½ï¿½ï¿½ï¿½
+// »ùÓÚÓÅÏÈ¶ÓÁÐËÑË÷µÄ×î´óÈÝÁ¿À©³äÂ·¾¶Ëã·¨
+// ¸ÃËã·¨ËùÐèµÄÀ©³äÂ·¾¶ÊýÄ¿×î¶àµÈÓÚ2*E*lgM£¬ÕÒ³öÏ¡ÊèÍøÖÐÒ»¸ö×î´óÁ÷ËùÐèÊ±¼äÎªO(V^2*lgM*lgV)¡£
+// ¶ÔÐí¶àÊµ¼ÊÇé¿ö£¬×î´óÈÝÁ¿À©³äÂ·¾¶Ëã·¨ËùÓÃµÄµü´úÔ¶Ô¶Ð¡ÓÚ×î¶ÌÀ©³äÂ·¾¶Ëã·¨ËùÓÃµÄµü´ú£¬
+// ²»¹ý¶ÔÓÚÕÒµ½¸÷ÌõÂ·¾¶µÄ¹¤×÷ÔòÐèÒªÒ»¸öÉÔ¸ßµÄ¿ªÏú¡£
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtMaxFlowPfs : public KtPathAugment<GRAPH, WEIGHTOR>
 {
 public:
-	using super_ = KtPathAugment<GRAPH, WEIGHTOR>;
-	using super_::rg_;
-	using super_::augment_;
-	using super_::minFlow_;	
-	using typename super_::flow_type;
-	using typename super_::RGRAPH;
+    using super_ = KtPathAugment<GRAPH, WEIGHTOR>;
+    using super_::rg_;
+    using super_::augment_;
+    using super_::minFlow_;    
+    using typename super_::flow_type;
+    using typename super_::RGRAPH;
 
 
-	KtMaxFlowPfs(const GRAPH& g, unsigned s, unsigned t) : super_(g, s, t) {
-		
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÂ·ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½Ð¡Öµ
-		struct adder {
-			auto operator()(const flow_type& f1, const flow_type& f2) const {
-				return std::min(f1, f2);
-			}
-		};
+    KtMaxFlowPfs(const GRAPH& g, unsigned s, unsigned t) : super_(g, s, t) {
+        
+        // ¿ÉÔö¹ãÁ÷Á¿ÎªÂ·¾¶ÉÏµÄ×îÐ¡Öµ
+        struct adder {
+            auto operator()(const flow_type& f1, const flow_type& f2) const {
+                return std::min(f1, f2);
+            }
+        };
 
-		// È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
-		using weightor = KtWeightorMax<KtWeightSelf<flow_type>, adder>;
+        // È¡¿ÉÔö¹ãÁ÷Á¿×î´óµÄÂ·¾¶
+        using weightor = KtWeightorMax<KtWeightSelf<flow_type>, adder>;
 
-		while (true) {
-			KtSptPfs<RGRAPH, weightor> pfs(rg_, s);
-			auto path = pfs.pathR(t);
-			if (path.size() < 2)
-				break;
-			assert(path.back() == s && path.front() == t);
+        while (true) {
+            KtSptPfs<RGRAPH, weightor> pfs(rg_, s);
+            auto path = pfs.pathR(t);
+            if (path.size() < 2)
+                break;
+            assert(path.back() == s && path.front() == t);
 
-			// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¨Öµ
-			assert(pfs.dist(t) == minFlow_(path));
-			augment_(path, pfs.dist(t));
-		}
-	}
+            // Ôö¹ãÂ·¾¶£¬¸üÐÂÓàÁôÍøµÄÈ¨Öµ
+            assert(pfs.dist(t) == minFlow_(path));
+            augment_(path, pfs.dist(t));
+        }
+    }
 };
 
 
 
-// ï¿½ï¿½ï¿½Ú¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½Ò²ï¿½ï¿½Edmonds-Karpï¿½ã·¨
-// ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½V*E/2ï¿½ï¿½ï¿½Ò³ï¿½Ï¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ÎªO(V^3)ï¿½ï¿½
+// »ùÓÚ¹ã¶ÈÓÅÏÈËÑË÷µÄ×î¶ÌÀ©³äÂ·¾¶Ëã·¨£¬Ò²³ÆEdmonds-KarpËã·¨
+// ¸ÃËã·¨ËùÐèµÄÀ©³äÂ·¾¶ÊýÄ¿×î¶àµÈÓÚV*E/2£¬ÕÒ³öÏ¡ÊèÍøÖÐÒ»¸ö×î´óÁ÷ËùÐèÊ±¼äÎªO(V^3)¡£
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtMaxFlowBfs : public KtPathAugment<GRAPH, WEIGHTOR>
 {
 public:
-	using super_ = KtPathAugment<GRAPH, WEIGHTOR>;
-	using super_::rg_;
-	using super_::augment_;
-	using super_::minFlow_;
-	using typename super_::flow_type;
-	using typename super_::RGRAPH;
+    using super_ = KtPathAugment<GRAPH, WEIGHTOR>;
+    using super_::rg_;
+    using super_::augment_;
+    using super_::minFlow_;
+    using typename super_::flow_type;
+    using typename super_::RGRAPH;
 
 
-	KtMaxFlowBfs(const GRAPH& g, unsigned s, unsigned t) : super_(g, s, t) {
+    KtMaxFlowBfs(const GRAPH& g, unsigned s, unsigned t) : super_(g, s, t) {
 
-		// È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ùµï¿½Â·ï¿½ï¿½
-		using weightor = KtWeightorMin<KtWeightUnit<flow_type>, KtAdder<typename KtWeightUnit<flow_type>::weight_type>>;
+        // È¡±ßÊý×îÉÙµÄÂ·¾¶
+        using weightor = KtWeightorMin<KtWeightUnit<flow_type>, KtAdder<typename KtWeightUnit<flow_type>::weight_type>>;
 
-		while (true) {
-			KtSptPfs<RGRAPH, weightor> bfs(rg_, s);
-			auto path = bfs.pathR(t);
-			if (path.size() < 2)
-				break;
-			assert(path.back() == s && path.front() == t);
+        while (true) {
+            KtSptPfs<RGRAPH, weightor> bfs(rg_, s);
+            auto path = bfs.pathR(t);
+            if (path.size() < 2)
+                break;
+            assert(path.back() == s && path.front() == t);
 
-			// ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¨Öµ
-			augment_(path, minFlow_(path));
-		}
-	}
+            // Ôö¹ãÂ·¾¶£¬¸üÐÂÓàÁôÍøµÄÈ¨Öµ
+            augment_(path, minFlow_(path));
+        }
+    }
 };
 
 
 
-// Ô¤ï¿½ï¿½-Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨
-// ï¿½ï¿½Ô¤ï¿½ï¿½(preflow)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ï£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½Ð¡ï¿½Úµï¿½ï¿½Ú¸Ã±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-//    ï¿½ï¿½ï¿½Ò¶ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ã£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-// ï¿½ï¿½ï¿½î¶¯ï¿½ï¿½ï¿½ï¿½(active vertex)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ã£¨Ô¼ï¿½ï¿½Ô´ï¿½ï¿½Í»ï¿½ï¿½ï¿½Ç²ï¿½ï¿½î¶¯ï¿½Ä£ï¿½ï¿½ï¿½
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(excess flow)ï¿½ï¿½ï¿½î¶¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½î¡£
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶È¡ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ã±»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ß¶ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½h(t) = 0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ã¿ï¿½ï¿½ï¿½ï¿½u-vï¿½ï¿½ï¿½ï¿½h(u) <= h(v) + 1ï¿½ï¿½
-// ï¿½ï¿½ï¿½Ï¸ï¿½ß¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½h(u) = h(v) + 1ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½u-vï¿½ï¿½
+// Ô¤Á÷-Ñ¹Èë×î´óÁ÷Ëã·¨
+// ¡¾Ô¤Á÷(preflow)¡¿Á÷ÍøÂçÖÐÂú×ãÒÔÏÂÌõ¼þµÄÕý±ßÁ÷µÄ¼¯ºÏ£¬¼´¸÷Ìõ±ßÉÏµÄÁ÷Ð¡ÓÚµÈÓÚ¸Ã±ßÈÝÁ¿£¬
+//    ¶øÇÒ¶ÔÓÚÃ¿¸öÄÚ²¿¶¥µã£¬Á÷ÈëÁ¿´óÓÚµÈÓÚÁ÷³öÁ¿¡£
+// ¡¾»î¶¯¶¥µã(active vertex)¡¿Á÷ÈëÁ¿´óÓÚÁ÷³öÁ¿µÄÄÚ²¿¶¥µã£¨Ô¼¶¨Ô´µãºÍ»ãµãÊÇ²»»î¶¯µÄ£©¡£
+// ¡¾³¬¶îÁ¿(excess flow)¡¿»î¶¯¶¥µãµÄÁ÷ÈëÁ¿ÓëÁ÷³öÁ¿Ö®²î¡£
+// ¡¾¶¥µã¸ß¶È¡¿Ã¿¸ö¶¥µã±»¸³ÓèÒ»¸ö¸ß¶ÈÖµ£¬ÆäÖÐ£º»ãµãh(t) = 0£¬ÓàÁôÍøÖÐµÄÃ¿Ìõ±ßu-v¾ùÓÐh(u) <= h(v) + 1¡£
+// ¡¾ºÏ¸ñ±ß¡¿ÓàÁôÍøÖÐÂú×ãh(u) = h(v) + 1µÄÒ»Ìõ±ßu-v¡£
 
-// ï¿½ã·¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½ï¿½Ú±ß£ï¿½ï¿½ï¿½
-// -- ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶Èºï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½Ô´ï¿½ï¿½Ä±ß³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0ï¿½ï¿½ï¿½ï¿½
-// -- Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½Â²ï¿½ï¿½è£¬Ö±ï¿½ï¿½Ã»ï¿½Ð»î¶¯ï¿½ï¿½ï¿½ï¿½ÎªÖ¹ï¿½ï¿½
-//    1. Ñ¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½î¶¯ï¿½ï¿½ï¿½ã£»
-//    2. ï¿½ï¿½ï¿½ë¿ªï¿½Ã¶ï¿½ï¿½ï¿½ÄºÏ¸ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ»ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-//    3. ï¿½ï¿½ï¿½Ã»ï¿½ÐºÏ¸ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½Ä¸ß¶È¡ï¿½
-// ï¿½ã·¨Ê±ï¿½ä¸´ï¿½Ó¶ï¿½ÎªO(V^2*E)
-// ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½Ã»ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ß¶Èºï¿½ï¿½ï¿½ï¿½ï¿½Ê²Ã´ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½î¶¯ï¿½ï¿½ï¿½ã¡¢ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ï¸ï¿½ß¡ï¿½Ã¿ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÈµÈ£ï¿½
-// Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Ä²ï¿½Í¬Ñ¡ï¿½ñ£¬¿ÉµÃµï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ã·¨Êµï¿½Ö¡ï¿½
+// Ëã·¨¿ò¼ÜÈçÏÂ£¨»ùÓÚ±ß£©£º
+// -- ³õÊ¼»¯£º´ÓÈÎÒâ¸ß¶Èº¯Êý¿ªÊ¼£¬²¢ÇÒ³ýÁËÁ¬½Óµ½Ô´µãµÄ±ß³äÂúÖÁÆäÈÝÁ¿Íâ£¬ËùÓÐÆäËû±ßÎª0Á÷¡£
+// -- Ñ­»·ÒÔÏÂ²½Öè£¬Ö±ÖÁÃ»ÓÐ»î¶¯¶¥µãÎªÖ¹£º
+//    1. Ñ¡ÔñÒ»¸ö»î¶¯¶¥µã£»
+//    2. ¶ÔÀë¿ª¸Ã¶¥µãµÄºÏ¸ñ±ß£¨Èç¹ûÓÐµÄ»°£©Ñ¹ÈëÁ÷£»
+//    3. Èç¹ûÃ»ÓÐºÏ¸ñ±ß£¬ÔòÔö¼Ó¶¥µãµÄ¸ß¶È¡£
+// Ëã·¨Ê±¼ä¸´ÔÓ¶ÈÎªO(V^2*E)
+// ÒÔÉÏËã·¨²¢Ã»ÓÐÖ¸¶¨¸ß¶Èº¯ÊýÊÇÊ²Ã´¡¢ÈçºÎÑ¡Ôñ»î¶¯¶¥µã¡¢ÈçºÎÑ¡ÔñºÏ¸ñ±ß¡¢Ã¿´ÎÑ¹Èë¶àÉÙÁ÷µÈµÈ£¬
+// Í¨¹ý¶ÔÒÔÉÏÑ¡ÏîµÄ²»Í¬Ñ¡Ôñ£¬¿ÉµÃµ½²»Í¬µÄËã·¨ÊµÏÖ¡£
 
-// ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨Ñ¡ï¿½ï¿½
-//    1. Ñ¡ï¿½ï¿½Ò»ï¿½ï¿½ï¿½î¶¯ï¿½ï¿½ï¿½ï¿½ó£¬³ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ÄºÏ¸ï¿½ß£ï¿½Ö±ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½Îªï¿½Ç»î¶¯ï¿½ï¿½ï¿½ï¿½ï¿½ÞºÏ¸ï¿½ï¿½ÎªÖ¹ï¿½ï¿½
-//    2. Ã¿ï¿½Î¾ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// »ùÓÚ¶¥µãµÄËã·¨Ñ¡Ôñ£º
+//    1. Ñ¡ÔñÒ»¸ö»î¶¯¶¥µãºó£¬³ÖÐøÑ¡ÔñËüµÄºÏ¸ñ±ß£¬Ö±ÖÁ¸Ã¶¥µã±äÎª·Ç»î¶¯»òÔÙÎÞºÏ¸ñ±ßÎªÖ¹¡£
+//    2. Ã¿´Î¾¡¿ÉÄÜÑ¹Èë¶àµÄÁ÷Á¿¡£
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½Êµï¿½Ö£ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½å»¯Ñ¡ï¿½î£º
-//    1. Ê¹ï¿½ï¿½FIFOï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½î¶¯ï¿½ï¿½ï¿½ã¡£
-//    2. Ô´ï¿½ï¿½ß¶È³ï¿½Ê¼ï¿½ï¿½ÎªVï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0ï¿½ï¿½
+// ÒÔÏÂÊÇÒ»¸ö»ùÓÚ¶¥µãËã·¨µÄÊµÏÖ£¬²¢½øÒ»²½¾ßÌå»¯Ñ¡Ïî£º
+//    1. Ê¹ÓÃFIFO¶ÓÁÐÒÀÐòÑ¡Ôñ»î¶¯¶¥µã¡£
+//    2. Ô´µã¸ß¶È³õÊ¼»¯ÎªV£¬ÆäËûÎª0¡£
 
-// TODO: 1. Ê¹ï¿½Ã»ï¿½ï¿½Ú¸ß¶ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½È¶ï¿½ï¿½Ð´ï¿½ï¿½ï¿½FIFOï¿½ï¿½ï¿½Ð£ï¿½ï¿½Ü»ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¡ï¿½
-//       2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½Êµï¿½Ö¡ï¿½ 
+// TODO: 1. Ê¹ÓÃ»ùÓÚ¸ß¶ÈÖµµÄÓÅÏÈ¶ÓÁÐ´úÌæFIFO¶ÓÁÐ£¬ÄÜ»ñµÃ¸üºÃÐÔÄÜ¡£
+//       2. ¸ü·º»¯µÄ´úÂëÊµÏÖ¡£ 
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtMaxFlowPre : public KtMaxFlow<GRAPH, WEIGHTOR>
 {
 public:
-	using super_ = KtMaxFlow<GRAPH, WEIGHTOR>;
-	using super_::rg_;
-	using super_::addFlow_;
-	using super_::netflow;
-	using typename super_::flow_type;
+    using super_ = KtMaxFlow<GRAPH, WEIGHTOR>;
+    using super_::rg_;
+    using super_::addFlow_;
+    using super_::netflow;
+    using typename super_::flow_type;
 
 
-	KtMaxFlowPre(const GRAPH& g, unsigned s, unsigned t) : super_(g, s, t) {
+    KtMaxFlowPre(const GRAPH& g, unsigned s, unsigned t) : super_(g, s, t) {
 
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ß¶ï¿½
-		std::vector<unsigned> height(g.order(), 0);	
-		height[s] = g.order();
+        // ¸÷¶¥µãµÄ¸ß¶È
+        std::vector<unsigned> height(g.order(), 0);    
+        height[s] = g.order();
 
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½ï¿½ï¿½
-		// Ô´ï¿½ï¿½Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Îªï¿½ã¹»ï¿½ï¿½ï¿½Ô±ï¿½ï¿½Úµï¿½Ò»ï¿½ï¿½Ñ­ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½Ï¸ï¿½ß¡ï¿½
-		std::vector<flow_type> excessFlow(g.order(), 0);
-		excessFlow[s] = std::numeric_limits<flow_type>::max();
+        // ¸÷¶¥µãµÄ³¬¶îÁ¿
+        // Ô´µãµÄ³¬¶îÁ¿³õÊ¼»¯Îª×ã¹»´ó£¬ÒÔ±ãÔÚµÚÒ»´ÎÑ­»·Ê±¾¡×î´óÁ÷Á¿Ñ¹ÈëºÏ¸ñ±ß¡£
+        std::vector<flow_type> excessFlow(g.order(), 0);
+        excessFlow[s] = std::numeric_limits<flow_type>::max();
 
-		// ï¿½î¶¯ï¿½ï¿½ï¿½ã¼¯ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ÎªÔ´ï¿½ï¿½
-		std::queue<unsigned> activeVert; 
-		activeVert.push(s);
+        // »î¶¯¶¥µã¼¯£¬³õÊ¼»¯ÎªÔ´µã
+        std::queue<unsigned> activeVert; 
+        activeVert.push(s);
 
 
-		// Ô¤ï¿½ï¿½-Ñ¹ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½Ñ­ï¿½ï¿½
-		while (!activeVert.empty()) {
+        // Ô¤Á÷-Ñ¹ÈëËã·¨Ö÷Ñ­»·
+        while (!activeVert.empty()) {
 
-			unsigned v = activeVert.front(); activeVert.pop();
-			if (excessFlow[v] == 0)
-				continue;
+            unsigned v = activeVert.front(); activeVert.pop();
+            if (excessFlow[v] == 0)
+                continue;
 
-			auto iter = rg_.adjIter(v);
+            auto iter = rg_.adjIter(v);
 
-			// ï¿½ï¿½ï¿½ï¿½addFlow_ï¿½á¶¯Ì¬É¾ï¿½ï¿½ï¿½ß£ï¿½ï¿½â½«ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í³Ò»ï¿½Õ¼ï¿½ï¿½Ú½Óµï¿½
-			std::vector<std::pair<unsigned, flow_type>> adjs;
-			for (; !iter.isEnd(); ++iter)
-				adjs.emplace_back(*iter, iter.value());
+            // ÓÉÓÚaddFlow_»á¶¯Ì¬É¾Ôö±ß£¬Õâ½«ÆÆ»µµü´úÆ÷Êý¾Ý£¬ËùÒÔÏÈÍ³Ò»ÊÕ¼¯ÁÚ½Óµã
+            std::vector<std::pair<unsigned, flow_type>> adjs;
+            for (; !iter.isEnd(); ++iter)
+                adjs.emplace_back(*iter, iter.value());
 
-			for(const auto& i : adjs) {
-				unsigned w = i.first;
-				auto pushFlow = std::min(i.second, excessFlow[v]);
+            for(const auto& i : adjs) {
+                unsigned w = i.first;
+                auto pushFlow = std::min(i.second, excessFlow[v]);
 
-				// ï¿½ÔºÏ¸ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½
-				if (pushFlow > 0 && (v == s || height[v] == height[w] + 1)) {
-					addFlow_(v, w, pushFlow);
-					excessFlow[v] -= pushFlow, excessFlow[w] += pushFlow;
-					if (w != s && w != t) {
-						assert(netflow(w) == excessFlow[w]);
-						activeVert.push(w);
-					}
-				}
-			}
+                // ¶ÔºÏ¸ñ±ß½øÐÐÁ÷Ñ¹Èë²Ù×÷
+                if (pushFlow > 0 && (v == s || height[v] == height[w] + 1)) {
+                    addFlow_(v, w, pushFlow);
+                    excessFlow[v] -= pushFlow, excessFlow[w] += pushFlow;
+                    if (w != s && w != t) {
+                        assert(netflow(w) == excessFlow[w]);
+                        activeVert.push(w);
+                    }
+                }
+            }
 
-			// ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Ð³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¶ï¿½Ã»ï¿½ÐºÏ¸ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Ä¸ß¶È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â½ï¿½vï¿½Óµï¿½ï¿½î¶¯ï¿½ï¿½ï¿½ã¼¯
-			if (v != s && v != t && excessFlow[v] > 0) {
-				assert(netflow(v) == excessFlow[v]);
-				height[v]++;
-				activeVert.push(v);
-			}
-		}
-	}
+            // Èç¹ûvÈÔÓÐ³¬¶îÁ¿£¨±Ø¶¨Ã»ÓÐºÏ¸ñ±ß£©£¬Ôö¼ÓvµÄ¸ß¶È£¬²¢ÖØÐÂ½«v¼Óµ½»î¶¯¶¥µã¼¯
+            if (v != s && v != t && excessFlow[v] > 0) {
+                assert(netflow(v) == excessFlow[v]);
+                height[v]++;
+                activeVert.push(v);
+            }
+        }
+    }
 };
 

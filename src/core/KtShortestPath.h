@@ -3,72 +3,72 @@
 #include "KtWeightor.h"
 
 
-// ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ã·¨
-// ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½Ä¹Ø¼ï¿½ï¿½Ç¶ï¿½ï¿½ã´¦ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ò£¬¶ï¿½Ó¦ï¿½ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Dfsï¿½ï¿½Bfsï¿½ï¿½Pfsï¿½ï¿½Tsï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½
-// ï¿½ï¿½Í¬Êµï¿½Öµï¿½Ê±ï¿½ä¸´ï¿½Ó¶ï¿½ï¿½ï¿½ï¿½Â£ï¿½
-// ï¿½ï¿½Ô´ï¿½ï¿½
-//   Dijkstraï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·Ç¸ï¿½È¨Öµï¿½ï¿½O(V^2)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½
-//   PFSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·Ç¸ï¿½È¨Öµï¿½ï¿½O(E*lgV)ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ß½ï¿½Öµ
-//   TSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ»ï¿½Í¼ï¿½ï¿½O(E)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-//   Bellman-Fordï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½Í¼ï¿½ï¿½O(V*E)ï¿½ï¿½ï¿½Ð¸Ä½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-// È«Ô´ï¿½ï¿½
-//    Dijkstraï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·Ç¸ï¿½È¨Öµï¿½ï¿½O(V^3)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Í¬
-//    PFSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú·Ç¸ï¿½È¨Öµï¿½ï¿½O(V*E*lgV)ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ß½ï¿½Öµ
-//    DFSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ»ï¿½Í¼ï¿½ï¿½O(V*E)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Í¬
-//    Floydï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½Í¼ï¿½ï¿½O(V^3)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Í¬
-//    Johnsonï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½ï¿½ï¿½Í¼ï¿½ï¿½O(V*E*lgV)ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ß½ï¿½Öµ
-// ×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¨Öµï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Æ«ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í³Ò»ï¿½ï¿½Johnsonï¿½ï¿½Î´Êµï¿½ï¿½
+// ×î¶ÌÂ·¾¶Ëã·¨
+// ´ËÀàËã·¨µÄ¹Ø¼üÊÇ¶¥µã´¦ÀíµÄË³Ðò£¬¶ÔÓ¦ÓÐË³Ðò±éÀú¡¢Dfs¡¢Bfs¡¢Pfs¡¢TsµÈ·½·¨¡£
+// ²»Í¬ÊµÏÖµÄÊ±¼ä¸´ÔÓ¶ÈÈçÏÂ£º
+// µ¥Ô´£º
+//   Dijkstra£¬ÊÊÓÃÓÚ·Ç¸ºÈ¨Öµ£¬O(V^2)£¬³íÃÜÍ¼×îÓÅ
+//   PFS£¬ÊÊÓÃÓÚ·Ç¸ºÈ¨Öµ£¬O(E*lgV)£¬±£ÊØ±ß½çÖµ
+//   TS£¬ÊÊÓÃÓÚÎÞ»·Í¼£¬O(E)£¬×îÓÅ
+//   Bellman-Ford£¬ÊÊÓÃÓÚÎÞ¸º»·Í¼£¬O(V*E)£¬ÓÐ¸Ä½øÓàµØÂð£¿
+// È«Ô´£º
+//    Dijkstra£¬ÊÊÓÃÓÚ·Ç¸ºÈ¨Öµ£¬O(V^3)£¬¶ÔËùÓÐÍ¼¾ùÏàÍ¬
+//    PFS£¬ÊÊÓÃÓÚ·Ç¸ºÈ¨Öµ£¬O(V*E*lgV)£¬±£ÊØ±ß½çÖµ
+//    DFS£¬ÊÊÓÃÓÚÎÞ»·Í¼£¬O(V*E)£¬¶ÔËùÓÐÍ¼¾ùÏàÍ¬
+//    Floyd£¬ÊÊÓÃÓÚÎÞ¸º»·Í¼£¬O(V^3)£¬¶ÔËùÓÐÍ¼¾ùÏàÍ¬
+//    Johnson£¬ÊÊÓÃÓÚÎÞ¸º»·Í¼£¬O(V*E*lgV)£¬±£ÊØ±ß½çÖµ
+// ×¢£ºÓÉÓÚÈ¨ÖµµÄÁãÖµºÍÆ«ÒÆ×ª»»ÄÑÒÔÍ³Ò»£¬JohnsonÉÐÎ´ÊµÏÖ
 
 
 
-// ï¿½ï¿½Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ä»ï¿½ï¿½à£ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½v0ï¿½ï¿½Ô´ï¿½ã£©ï¿½ï¿½Í¼gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
+// µ¥Ô´×î¶ÌÂ·¾¶µÄ»ùÀà£º¼ÆËãÆðÊ¼¶¥µãv0£¨Ô´µã£©µ½Í¼gÖÐÆäËû¸÷¶¥µãµÄ×î¶ÌÂ·¾¶
 template<typename GRAPH, class WEIGHTOR>
 class KtSpt
 {
     static_assert(GRAPH::isDigraph(), "KvSpt must be instantiated with Digraph.");
-	using weight_type = typename WEIGHTOR::weight_type;
+    using weight_type = typename WEIGHTOR::weight_type;
 
 public:
     KtSpt(const GRAPH& g, unsigned v0) :
         v0_(v0),
         spt_(g.order(), -1),
-		dist_(g.order(), WEIGHTOR{}.worst_weight) {}
+        dist_(g.order(), WEIGHTOR{}.worst_weight) {}
 
-    // ï¿½ï¿½ï¿½Ø´ï¿½Ô´ï¿½ãµ½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)
+    // ·µ»Ø´ÓÔ´µãµ½¶¥µãvµÄ×î¶ÌÂ·¾¶(ÄæÐò)
     auto pathR(unsigned v) const {
         std::vector<unsigned> p;
-		unsigned s = v;
-		do {
-			p.push_back(s);
-			s = spt_[s];
-		} while (s != v0_ && s != v && s != -1);
+        unsigned s = v;
+        do {
+            p.push_back(s);
+            s = spt_[s];
+        } while (s != v0_ && s != v && s != -1);
 
-		// s == -1ï¿½ï¿½ï¿½ï¿½Ê¾Ã»ï¿½Ð»ï¿½Â·ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½Õ»ï¿½É¹ï¿½
-		// s == v0ï¿½ï¿½ï¿½ï¿½Ê¾v0ï¿½ï¿½ï¿½Ú»ï¿½Â·ï¿½ï¿½ï¿½ï¿½Òªï¿½Ö¶ï¿½ï¿½ï¿½v0ï¿½ï¿½Õ»
-		// s == vï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ú¾ï¿½ï¿½ï¿½vï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ê§ï¿½Ë´ï¿½v0->vï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½Õ»ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ë»ï¿½Îªï¿½ï¿½vÎªï¿½ï¿½Ö¹ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½
-		if(s != -1) p.push_back(s);
+        // s == -1£¬±íÊ¾Ã»ÓÐ»·Â·£¬Â·¾¶ÈëÕ»³É¹¦
+        // s == v0£¬±íÊ¾v0´æÔÚ»·Â·£¬ÐèÒªÊÖ¶¯½«v0ÈëÕ»
+        // s == v£¬±íÊ¾´æÔÚ¾­¹ývµÄ¸º»·£¬ÕâÊ±¶ªÊ§ÁË´Óv0->vµÄ×î¶ÌÂ·¾¶£¬Õ»ÖÐÂ·¾¶ÍË»¯ÎªÒÔvÎªÆðÖ¹µãµÄ¸º»·¡£
+        if(s != -1) p.push_back(s);
 
         return p;
     }
 
 
-    // ï¿½ï¿½ï¿½Ø´ï¿½Ô´ï¿½ãµ½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½
-	weight_type dist(unsigned v) const {
+    // ·µ»Ø´ÓÔ´µãµ½¶¥µãvµÄ×î¶Ì¾àÀë
+    weight_type dist(unsigned v) const {
         return dist_[v];
     }
 
 
 protected:
 
-    // ï¿½ï¿½ï¿½É³ï¿½. ï¿½Ð¶ï¿½v0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(v, w)ï¿½ï¿½wï¿½ï¿½Â·ï¿½ï¿½ï¿½Ç·ï¿½Èµï¿½Ç°ï¿½ï¿½wï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-    // wtÎªï¿½ï¿½(v, w)ï¿½ï¿½È¨Öµ
+    // ±ßËÉ³Ú. ÅÐ¶Ïv0¾­¹ý±ß(v, w)µ½wµÄÂ·¾¶ÊÇ·ñ±Èµ±Ç°µ½wµÄÂ·¾¶¸üºÃ
+    // wtÎª±ß(v, w)µÄÈ¨Öµ
     bool relax_(unsigned v, unsigned w, weight_type wt) {
-		if (spt_[v] != -1) {
-			if (v != v0_)
-				wt = WEIGHTOR{}.acc(wt, dist_[v]);
-		}
-		else if (v != v0_)
-			return false;
+        if (spt_[v] != -1) {
+            if (v != v0_)
+                wt = WEIGHTOR{}.acc(wt, dist_[v]);
+        }
+        else if (v != v0_)
+            return false;
 
         if(WEIGHTOR{}.comp(wt, dist_[w])) {
             dist_[w] = wt, spt_[w] = v;
@@ -79,153 +79,152 @@ protected:
     }
 
 protected:
-    unsigned v0_; // Ô´ï¿½ï¿½
-    std::vector<unsigned> spt_; // (spt_[i], i)ï¿½ï¿½Ê¾ï¿½ï¿½Ô´ï¿½ï¿½v0_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
-    std::vector<weight_type> dist_; // dist_[i]ï¿½ï¿½Ê¾ï¿½ï¿½Ô´ï¿½ï¿½v0_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½
+    unsigned v0_; // Ô´µã
+    std::vector<unsigned> spt_; // (spt_[i], i)±íÊ¾´ÓÔ´µãv0_µ½¶¥µãiµÄ×î¶ÌÂ·¾¶ÉÏµÄ×îºóÒ»Ìõ±ß
+    std::vector<weight_type> dist_; // dist_[i]±íÊ¾´ÓÔ´µãv0_µ½¶¥µãiµÄ×î¶Ì¾àÀë
 };
 
 
-// ï¿½ï¿½ï¿½Ú¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½Êµï¿½ï¿½
-// ï¿½ï¿½ï¿½ï¿½Eï¿½Ï´ï¿½ï¿½ï¿½Ð»ï¿½Í¼Ê±ï¿½ï¿½ï¿½Ù¶È·Ç³ï¿½ï¿½ï¿½
-// ï¿½ï¿½ï¿½ï¿½DAGï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½Ã²ï¿½Æ±ï¿½TSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-// NOTE: ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ò£¬»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÞµÝ¹ï¿½
+// »ùÓÚ¹ã¶ÈÓÅÏÈËÑË÷µÄµ¥Ô´×î¶ÌÂ·¾¶ÊµÏÖ
+// ´¦ÀíE½Ï´óµÄÓÐ»·Í¼Ê±£¬ËÙ¶È·Ç³£Âý
+// ´¦ÀíDAG½ÏÓÐÓÅÊÆ£¬Ã²ËÆ±ÈTS·½·¨»¹¿ì
+// NOTE: µ±ÓÐ¸º»·µÄÊ±ºò£¬»áÏÝÈëÎÞÏÞµÝ¹é
 #include "KtBfsIter.h"
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSptBfs : public KtSpt<GRAPH, WEIGHTOR>
 {
 public:
     KtSptBfs(const GRAPH& g, unsigned v0) : KtSpt<GRAPH, WEIGHTOR>(g, v0) {
-		bfs_(g, v0);
+        bfs_(g, v0);
     }
 
 private:
 
-	void bfs_(const GRAPH& g, unsigned v) {
-		KtBfsIter<GRAPH, false, true> iter(g, v);
-		for (; !iter.isEnd(); ++iter) {
-			unsigned v = iter.from(), w = *iter;
+    void bfs_(const GRAPH& g, unsigned v) {
+        KtBfsIter<GRAPH, false, true> iter(g, v);
+        for (; !iter.isEnd(); ++iter) {
+            unsigned v = iter.from(), w = *iter;
 
-			// ï¿½ï¿½ï¿½relax_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ³ï¿½Õ»ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ô³ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bfs
-			if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(iter.value())) && iter.isPopped(w))
-				bfs_(g, w); 
-		}
-	}
+            // Èç¹ûrelax_¸üÐÂÁËÒÑ³öÕ»µÄ¶¥µãÐÅÏ¢£¬ÔòÐèÒª¶Ô³öÕ»¶¥µãÖØÐÂbfs
+            if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(iter.value())) && iter.isPopped(w))
+                bfs_(g, w); 
+        }
+    }
 };
 
 
-// ï¿½Ù¶È±ï¿½bfsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¶à£¬ï¿½ï¿½ï¿½ï¿½
+// ËÙ¶È±Èbfs»¹Âý£¬ÂýºÜ¶à£¬ÆúÁÆ
 #include "KtDfsIter.h"
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSptDfs : public KtSpt<GRAPH, WEIGHTOR>
 {
 public:
-	KtSptDfs(const GRAPH& g, unsigned v0) : KtSpt<GRAPH, WEIGHTOR>(g, v0) {
-		dfs_(g, v0);
-	}
+    KtSptDfs(const GRAPH& g, unsigned v0) : KtSpt<GRAPH, WEIGHTOR>(g, v0) {
+        dfs_(g, v0);
+    }
 
 private:
-	void dfs_(const GRAPH& g, unsigned v) {
-		KtDfsIter<GRAPH, false, true> iter(g, v);
-		for (; !iter.isEnd(); ++iter) {
-			unsigned v = iter.from(), w = *iter;
+    void dfs_(const GRAPH& g, unsigned v) {
+        KtDfsIter<GRAPH, false, true> iter(g, v);
+        for (; !iter.isEnd(); ++iter) {
+            unsigned v = iter.from(), w = *iter;
 
-			if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(iter.value())))
-				if (!iter.isTree() && w != v)
-					dfs_(g, w); // TODO: ï¿½ï¿½ï¿½Ö²ï¿½Í¬ï¿½ï¿½ï¿½ÍµÄ±ß£ï¿½ï¿½ï¿½ß£ï¿½ï¿½Â±ß£ï¿½ï¿½Ø±ß£ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Å»ï¿½
-		}
-	}
-};
-
-
-
-// ï¿½ï¿½ï¿½ï¿½Dijkstraï¿½ã·¨ï¿½Äµï¿½Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½Êµï¿½ï¿½
-// NOTE: ï¿½ï¿½ï¿½ã·¨ï¿½ï¿½Ö§ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½Ö§ï¿½Ö¸ï¿½È¨Öµï¿½ï¿½ï¿½ï¿½ÎªÒ»ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½È¨Öµï¿½ï¿½
-// ï¿½ï¿½ï¿½Ü»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ö®Ç°ï¿½ï¿½ï¿½Ìµï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ»ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½
-// Ò²ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ·ï¿½ï¿½Ð¶Ïµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ç²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì£ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÄ¸ï¿½È¨Öµï¿½ï¿½ï¿½Ü»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtSptDijkstra : public KtSpt<GRAPH, WEIGHTOR>
-{
-	using super_ = KtSpt<GRAPH, WEIGHTOR>;
-	using super_::v0_;
-	using super_::spt_;
-	using super_::dist_;
-
-public:
-    KtSptDijkstra(const GRAPH& g, unsigned v0) : super_(g, v0) {
-
-        std::vector<bool> vis(g.order(), false); // ï¿½ï¿½ï¿½Ú±ï¿½ï¿½Ô´ï¿½ï¿½v0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ñ¼ï¿½ï¿½ï¿½
-
-		unsigned v = v0;
-		while (v != -1) { 
-			vis[v] = true;
-
-			// ï¿½ï¿½ï¿½É³ï¿½
-			for (unsigned w = 0; w < g.order(); w++)
-				if ((!vis[w] || w == v0_/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½v0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½*/) && g.hasEdge(v, w))
-					KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w)));
-
-
-			// ï¿½ï¿½vis[i]ï¿½ï¿½ï¿½ï¿½falseï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ð£ï¿½Ñ°ï¿½Ò¾ï¿½ï¿½ï¿½v0Â·ï¿½ï¿½ï¿½ï¿½ï¿½ÅµÄ¶ï¿½ï¿½ï¿½. TODO: Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½È¶ï¿½ï¿½ï¿½Êµï¿½ï¿½
-			v = -1;
-			for (unsigned w = 0; w < g.order(); w++)
-				if (!vis[w] && (v == -1 || WEIGHTOR{}.comp(dist_[w], dist_[v])))
-					v = w;
-
-			if (v == -1 || spt_[v] == -1/*ï¿½ï¿½v0ï¿½ï¿½ï¿½ï¿½Í¨*/) break; // all done
-		}
+            if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(iter.value())))
+                if (!iter.isTree() && w != v)
+                    dfs_(g, w); // TODO: Çø·Ö²»Í¬ÀàÐÍµÄ±ß£¨¿ç±ß£¬ÏÂ±ß£¬»Ø±ß£©£¬½øÒ»²½ÓÅ»¯
+        }
     }
 };
 
 
 
-// TODO: Êµï¿½ï¿½KtPfsIter
+// »ùÓÚDijkstraËã·¨µÄµ¥Ô´×î¶ÌÂ·¾¶ÊµÏÖ
+// NOTE: ¸ÃËã·¨²»Ö§³Ö¸º»·£¬Ò²²»Ö§³Ö¸ºÈ¨Öµ£¬ÒòÎªÒ»µ©³öÏÖ¸ºÈ¨Öµ£¬
+// ¿ÉÄÜ»á³öÏÖÒ»Ìõ±ÈÖ®Ç°¸ü¶ÌµÄÂ·¾¶£¬Õâ»áÆÆ»µÊ¼ÖÕÑÓ×Å×î¶ÌÂ·¾¶Éú³¤µÄ×¼Ôò
+// Ò²¾ÍÊÇËµ£¬ÎÒÃÇÎÞ·¨ÅÐ¶Ïµ±Ç°µÄ×î¶ÌÂ·¾¶ÊÇ²»ÊÇÕæµÄ×î¶Ì£¬ÒòÎªºóÃæ³öÏÖµÄ¸ºÈ¨Öµ¿ÉÄÜ»áÈÃÆäËûÂ·¾¶¸ü¶Ì
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtSptPfs : public KtSpt<GRAPH, WEIGHTOR>
+class KtSptDijkstra : public KtSpt<GRAPH, WEIGHTOR>
 {
-	using super_ = KtSpt<GRAPH, WEIGHTOR>;
-	using super_::v0_;
-	using super_::dist_;
+    using super_ = KtSpt<GRAPH, WEIGHTOR>;
+    using super_::v0_;
+    using super_::spt_;
+    using super_::dist_;
 
 public:
-	KtSptPfs(const GRAPH& g, unsigned v0) : super_(g, v0) {
-		using element_type = std::pair<unsigned, typename WEIGHTOR::weight_type>;
-		struct Comp {
-			bool operator()(const element_type& a, const element_type& b) {
-				return WEIGHTOR{}.comp(b.second, a.second); // ï¿½ï¿½ï¿½È¶ï¿½ï¿½ÐµÄ±È½Ïºï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È½Ï£ï¿½ï¿½ï¿½ï¿½Ü±ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ï¿½Ú¶ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½
-			}
-		};
+    KtSptDijkstra(const GRAPH& g, unsigned v0) : super_(g, v0) {
 
-		using priority_queue = std::priority_queue<element_type, std::vector<element_type>, Comp>;
-		priority_queue pq; pq.emplace(v0, dist_[v0]);
-		std::vector<bool> vis(g.order(), false); // ï¿½ï¿½ï¿½Ú±ï¿½ï¿½Ô´ï¿½ï¿½v0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ñ¼ï¿½ï¿½ï¿½
+        std::vector<bool> vis(g.order(), false); // ÓÃÓÚ±ê¼ÇÔ´µãv0µ½¶¥µãiµÄ×î¶ÌÂ·¾¶ÊÇ·ñÒÑ¼ÆËã
 
-		while (!pq.empty()) {
+        unsigned v = v0;
+        while (v != -1) { 
+            vis[v] = true;
 
-			unsigned v = pq.top().first; pq.pop();
-			if (vis[v]) continue;
-			vis[v] = true;
+            // ±ßËÉ³Ú
+            for (unsigned w = 0; w < g.order(); w++)
+                if ((!vis[w] || w == v0_/*ÔÊÐí¼ÆËãv0µ½×ÔÉí»·Â·µÄ×î¶ÌÂ·¾¶*/) && g.hasEdge(v, w))
+                    KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w)));
 
-			// ï¿½ï¿½ï¿½É³ï¿½
-			for (unsigned w = 0; w < g.order(); w++)
-				if ((!vis[w] || w == v0_/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½v0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½*/) && g.hasEdge(v, w))
-					if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w))))
-						pq.emplace(w, dist_[w]);
-		}
-	}
+
+            // ÔÚvis[i]µÈÓÚfalseµÄ¼¯ºÏÖÐ£¬Ñ°ÕÒ¾àÀëv0Â·¾¶×îÓÅµÄ¶¥µã. TODO: Ê¹ÓÃÓÅÏÈ¶ÓÁÐÊµÏÖ
+            v = -1;
+            for (unsigned w = 0; w < g.order(); w++)
+                if (!vis[w] && (v == -1 || WEIGHTOR{}.comp(dist_[w], dist_[v])))
+                    v = w;
+
+            if (v == -1 || spt_[v] == -1/*Óëv0²»Á¬Í¨*/) break; // all done
+        }
+    }
 };
 
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ï¿½Äµï¿½Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½Êµï¿½Ö£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½DAG.
-// ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ì£¬Ð§ï¿½Ê»ï¿½ï¿½È²ï¿½ï¿½ï¿½bfsï¿½ï¿½ï¿½ï¿½
+
+template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
+class KtSptPfs : public KtSpt<GRAPH, WEIGHTOR>
+{
+    using super_ = KtSpt<GRAPH, WEIGHTOR>;
+    using super_::v0_;
+    using super_::dist_;
+
+public:
+    KtSptPfs(const GRAPH& g, unsigned v0) : super_(g, v0) {
+        using element_type = std::pair<unsigned, typename WEIGHTOR::weight_type>;
+        struct Comp {
+            bool operator()(const element_type& a, const element_type& b) {
+                return WEIGHTOR{}.comp(b.second, a.second); // ÓÅÏÈ¶ÓÁÐµÄ±È½Ïº¯ÊýÐèÒª·´¹ýÀ´±È½Ï£¬²ÅÄÜ±£Ö¤×îÓÅÔªËØÔÚ¶ÓÁÐ¶¥¶Ë
+            }
+        };
+
+        using priority_queue = std::priority_queue<element_type, std::vector<element_type>, Comp>;
+        priority_queue pq; pq.emplace(v0, dist_[v0]);
+        std::vector<bool> vis(g.order(), false); // ÓÃÓÚ±ê¼ÇÔ´µãv0µ½¶¥µãiµÄ×î¶ÌÂ·¾¶ÊÇ·ñÒÑ¼ÆËã
+
+        while (!pq.empty()) {
+
+            unsigned v = pq.top().first; pq.pop();
+            if (vis[v]) continue;
+            vis[v] = true;
+
+            // ±ßËÉ³Ú
+            for (unsigned w = 0; w < g.order(); w++)
+                if ((!vis[w] || w == v0_/*ÔÊÐí¼ÆËãv0µ½×ÔÉí»·Â·µÄ×î¶ÌÂ·¾¶*/) && g.hasEdge(v, w))
+                    if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w))))
+                        pq.emplace(w, dist_[w]);
+        }
+    }
+};
+
+
+// »ùÓÚÍØÆËÅÅÐòËã·¨µÄµ¥Ô´×î¶ÌÂ·¾¶ÊµÏÖ£¬½öÊÊÓÃÓÚDAG.
+// ÔËÐÐËÙ¶ÈÃ»ÓÐÏëÏñÖÐ¿ì£¬Ð§ÂÊ»¹±È²»ÉÏbfs·½·¨
 #include "KtTopologySort.h"
 template<typename DAG, class WEIGHTOR = default_wtor<DAG>>
 class KtSptTs : public KtSpt<DAG, WEIGHTOR>
 {
 public:
     KtSptTs(const DAG& g, unsigned v0) : KtSpt<DAG, WEIGHTOR>(g, v0) {
-		assert(!g.hasLoop());
+        assert(!g.hasLoop());
         KtTopologySort<DAG> ts(g);
-        unsigned j = ts.relabel(v0); // jÖ®Ç°ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½ï¿½Ô£ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½v0ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ð¿É´ï¿½Â·ï¿½ï¿½
+        unsigned j = ts.relabel(v0); // jÖ®Ç°µÄ¶¥µã¿ÉÒÔºöÂÔ£¬ÒòÎª°´ÕÕÍØÆËÅÅÐò£¬v0ÓëËüÃÇÃ»ÓÐ¿É´ïÂ·¾¶
         for(unsigned v = ts[j++]; j < g.order(); v = ts[j++]) {
             typename DAG::adj_vertex_iter iter(g, v);
             while(!iter.isEnd()) {
@@ -238,172 +237,172 @@ public:
 
 
 
-// ï¿½ï¿½ï¿½ï¿½Bellman-Fordï¿½ã·¨ï¿½Äµï¿½Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½Êµï¿½ï¿½
-// NOTE: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¨Öµï¿½Äµï¿½Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½â£¬Ê±ï¿½ä¸´ï¿½Ó¶ï¿½O(VE)ï¿½ï¿½
-// ï¿½ï¿½ï¿½Ú³ï¿½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä²»ï¿½ï¿½Floydï¿½ã·¨ï¿½ï¿½ï¿½Ã£ï¿½Floydï¿½ã·¨ï¿½ï¿½Òªï¿½Ò³ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½Ô´ï¿½ï¿½
-// ï¿½ï¿½ï¿½ï¿½Ï¡ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Floydï¿½ã·¨ï¿½ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½È¨Öµï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Dijkstraï¿½ã·¨ï¿½ï¿½Ô¼Vï¿½ï¿½ï¿½ï¿½
+// »ùÓÚBellman-FordËã·¨µÄµ¥Ô´×î¶ÌÂ·¾¶ÊµÏÖ
+// NOTE: ¿ÉÓÃÀ´½â¾ö°üº¬¸ºÈ¨ÖµµÄµ¥Ô´×î¶ÌÂ·¾¶ÎÊÌâ£¬Ê±¼ä¸´ÔÓ¶ÈO(VE)¡£
+// ¶ÔÓÚ³íÃÜÍ¼£¬ÆäÔËÐÐÊ±¼ä²»±ÈFloydËã·¨¸üºÃ£¬FloydËã·¨ÔòÒªÕÒ³öÈ«²¿×î¶ÌÂ·¾¶£¬¶ø²»½ö½öÊÇµ¥Ô´¡£
+// ¶ÔÓÚÏ¡ÊèÍ¼£¬ÆäÔËÐÐÊ±¼ä×î¶à±ÈFloydËã·¨¿ìV±¶£¬µ«¶ÔÓÚÎÞ¸ºÈ¨ÖµµÄÍ¼£¬ÆäÔËÐÐÊ±¼ä±ÈDijkstraËã·¨ÂýÔ¼V±¶¡£
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSptBellmanFord : public KtSpt<GRAPH, WEIGHTOR>
 {
 public:
-	KtSptBellmanFord(const GRAPH& g, unsigned v0) : KtSpt<GRAPH, WEIGHTOR>(g, v0) {
-		std::queue<unsigned> q;
-		unsigned V = g.order();
-		q.push(v0); q.push(V); // ï¿½ï¿½ï¿½ÖµVï¿½ï¿½ï¿½ï¿½Ç°Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½é´¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½
-		unsigned N = 0;
-		while (!q.empty()) {
-			unsigned v = q.front(); q.pop();
-			while (v == V) {
-				if (N++ > V) return; // ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½È³ï¿½ï¿½ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ï¶ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½
-				q.push(V);
-				v = q.front(); q.pop();
-			}
+    KtSptBellmanFord(const GRAPH& g, unsigned v0) : KtSpt<GRAPH, WEIGHTOR>(g, v0) {
+        std::queue<unsigned> q;
+        unsigned V = g.order();
+        q.push(v0); q.push(V); // ±ê¼ÇÖµV½«µ±Ç°Ò»Åú¶¥µãÓëÏÂÒ»Åú¶¥µã·Ö¸ô£¬²¢Ê¹µÃ¿ÉÒÔÔÚV±é´¦ÀíºóÖÕÖ¹¡£
+        unsigned N = 0;
+        while (!q.empty()) {
+            unsigned v = q.front(); q.pop();
+            while (v == V) {
+                if (N++ > V) return; // ´æÔÚÒ»Ìõ³¤¶È³¬¹ýVµÄ×î¶ÌÂ·¾¶£¬Õâ±íÊ¾¿Ï¶¨´æÔÚ¸º»·¡£
+                q.push(V);
+                v = q.front(); q.pop();
+            }
 
-			typename GRAPH::adj_vertex_iter iter(g, v);
-			for (; !iter.isEnd(); ++iter)
-				if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, *iter, WEIGHTOR{}(iter.value()))
-					&& *iter != v/*ï¿½ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ã£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½Õ¹ï¿½ï¿½*/)
-					q.push(*iter);
-		}
-	}
-};
-
-
-
-// È«Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½Ä»ï¿½ï¿½à£ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¶¥ï¿½ãµ½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½
-template<typename GRAPH, class WEIGHTOR>
-class KtAllSpt
-{
-	using weight_type = typename WEIGHTOR::weight_type;
-
-public:
-	KtAllSpt(const GRAPH& g) 
-		: spt_(g.order(), std::vector<unsigned>(g.order(), -1)),
-		dst_(g.order(), std::vector<weight_type>(g.order(), WEIGHTOR{}.worst_weight)) {}
-
-
-	weight_type dist(unsigned v, unsigned w) const {
-		return dst_[v][w];
-	}
-
-
-	// ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½wï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)
-	auto pathR(unsigned v, unsigned w) const {
-		std::vector<unsigned> p;
-		unsigned s = w;
-		do {
-			p.push_back(s);
-			s = spt_[v][s];
-		} while (s != v && s != w && s != -1 );
-		if (s != -1) p.push_back(s);
-
-		return p;
-	}
-
-
-protected:
-
-	// Â·ï¿½ï¿½ï¿½É³ï¿½. ï¿½Ð¶ï¿½sï¿½ï¿½ï¿½ï¿½xï¿½Ùµï¿½tï¿½ï¿½Â·ï¿½ï¿½ï¿½Ç·ï¿½Èµï¿½Ç°sï¿½ï¿½tï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	bool relax_(unsigned s, unsigned t, unsigned x) {
-		assert(x != s && x != t); // sï¿½ï¿½ï¿½Üµï¿½ï¿½ï¿½tï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½Ì»ï¿½Â·
-		const auto dst = WEIGHTOR{}.acc(dst_[s][x], dst_[x][t]);
-		if (WEIGHTOR{}.comp(dst, dst_[s][t])) { // dstï¿½ï¿½dst_[s][t]ï¿½ï¿½ï¿½ï¿½
-			dst_[s][t] = dst;
-			spt_[s][t] = spt_[x][t];
-			return true;
-		}
-
-		return false;
-	}
-
-
-protected:
-
-	template<typename T> using vector = std::vector<T>;
-	vector<vector<unsigned>> spt_;
-	vector<vector<weight_type>> dst_;
-};
-
-
-
-// FloydÊµï¿½ï¿½È«Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½
-// Ê±ï¿½ä¸´ï¿½Ó¶ï¿½O(V^3)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú³ï¿½ï¿½ï¿½Í¼
-// ï¿½ï¿½ï¿½ï¿½Ï¡ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Dijkstraï¿½ã·¨ï¿½ï¿½ï¿½ãµ¥Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½Ãµï¿½È«Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½
-// NOTE: ï¿½ï¿½ï¿½ã·¨Î´ï¿½ï¿½È¨Öµï¿½ï¿½ï¿½ÎºÎ¼ï¿½ï¿½è£¬ï¿½ï¿½Ë¼ï¿½Ê¹ï¿½ï¿½ï¿½Ú¸ï¿½È¨ÖµÒ²ï¿½ï¿½ï¿½ï¿½Ð§ï¿½Ä¡ï¿½
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½Ò³ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
-template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtAllSptFloyd : public KtAllSpt<GRAPH, WEIGHTOR>
-{
-	using super_ = KtAllSpt<GRAPH, WEIGHTOR>;
-	using super_::spt_;
-	using super_::dst_;
-
-public:
-    KtAllSptFloyd(const GRAPH& g) : super_(g) {
-
-		// ï¿½ï¿½ï¿½ß³ï¿½Ê¼ï¿½ï¿½spt_ï¿½ï¿½dst_
-		KtBfsIter<GRAPH, true, true> iter(g, 0);
-		for (; !iter.isEnd(); ++iter) {
-			unsigned v = iter.from(), w = *iter;
-			spt_[v][w] = v;
-			dst_[v][w] = WEIGHTOR{}(iter.value());
-		}
-
-        const unsigned V = g.order();
-
-		// ï¿½Ð¶ï¿½Â·ï¿½ï¿½s->x->tï¿½Ç·ï¿½ï¿½Â·ï¿½ï¿½s->tï¿½ï¿½ï¿½ï¿½
-		for (unsigned x = 0; x < V; x++)
-			for (unsigned s = 0; s < V; s++)
-				if (spt_[s][x] != -1 && s != x) // ï¿½ï¿½s->xï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½s==xï¿½ï¿½ï¿½ï¿½ï¿½Ô¹ï¿½
-					for (unsigned t = 0; t < V; t++)
-						if(t != x) KtAllSpt<GRAPH, WEIGHTOR>::relax_(s, t, x);
+            typename GRAPH::adj_vertex_iter iter(g, v);
+            for (; !iter.isEnd(); ++iter)
+                if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, *iter, WEIGHTOR{}(iter.value()))
+                    && *iter != v/*ºöÂÔ×Ô»·¶¥µã£¬±ÜÃâÖØ¸´Õ¹¿ª*/)
+                    q.push(*iter);
+        }
     }
 };
 
 
 
-// DFSÊµï¿½ï¿½È«Ô´ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½DAG
-// Ê±ï¿½ä¸´ï¿½Ó¶ï¿½O(V*E)
-// ï¿½Ù¶È±ï¿½TSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¶ï¿½
+// È«Ô´×î¶ÌÂ·¾¶µÄ»ùÀà£º¼ÆËãÈÎÒâ¶¥µãµ½Í¼ÖÐÆäËû¸÷¶¥µãµÄ×î¶ÌÂ·¾¶
+template<typename GRAPH, class WEIGHTOR>
+class KtAllSpt
+{
+    using weight_type = typename WEIGHTOR::weight_type;
+
+public:
+    KtAllSpt(const GRAPH& g) 
+        : spt_(g.order(), std::vector<unsigned>(g.order(), -1)),
+        dst_(g.order(), std::vector<weight_type>(g.order(), WEIGHTOR{}.worst_weight)) {}
+
+
+    weight_type dist(unsigned v, unsigned w) const {
+        return dst_[v][w];
+    }
+
+
+    // ·µ»Øvµ½wµÄ×î¶ÌÂ·¾¶(ÄæÐò)
+    auto pathR(unsigned v, unsigned w) const {
+        std::vector<unsigned> p;
+        unsigned s = w;
+        do {
+            p.push_back(s);
+            s = spt_[v][s];
+        } while (s != v && s != w && s != -1 );
+        if (s != -1) p.push_back(s);
+
+        return p;
+    }
+
+
+protected:
+
+    // Â·¾¶ËÉ³Ú. ÅÐ¶Ïs¾­¹ýxÔÙµ½tµÄÂ·¾¶ÊÇ·ñ±Èµ±Ç°sµ½tµÄÂ·¾¶¸üºÃ
+    bool relax_(unsigned s, unsigned t, unsigned x) {
+        assert(x != s && x != t); // s¿ÉÄÜµÈÓÚt£¬ÓÃÓÚ¼ÆËã×î¶Ì»·Â·
+        const auto dst = WEIGHTOR{}.acc(dst_[s][x], dst_[x][t]);
+        if (WEIGHTOR{}.comp(dst, dst_[s][t])) { // dst±Èdst_[s][t]¸üÓÅ
+            dst_[s][t] = dst;
+            spt_[s][t] = spt_[x][t];
+            return true;
+        }
+
+        return false;
+    }
+
+
+protected:
+
+    template<typename T> using vector = std::vector<T>;
+    vector<vector<unsigned>> spt_;
+    vector<vector<weight_type>> dst_;
+};
+
+
+
+// FloydÊµÏÖÈ«Ô´×î¶ÌÂ·¾¶
+// Ê±¼ä¸´ÔÓ¶ÈO(V^3)£¬ÊÊÓÃÓÚ³íÃÜÍ¼
+// ¶ÔÓÚÏ¡ÊèÍ¼£¬¿ÉÖð¸ö¶¥µãÓÃDijkstraËã·¨¼ÆËãµ¥Ô´×î¶ÌÂ·¾¶£¬´Ó¶øµÃµ½È«Ô´×î¶ÌÂ·¾¶
+// NOTE: ¸ÃËã·¨Î´¶ÔÈ¨Öµ×÷ÈÎºÎ¼ÙÉè£¬Òò´Ë¼´Ê¹´æÔÚ¸ºÈ¨ÖµÒ²ÊÇÓÐÐ§µÄ¡£
+// Èç¹û²»´æÔÚ¸º»·£¬Ôò»á¼ÆËã³ö×î¶ÌÂ·¾¶£»·ñÔò£¬Ö»ÄÜÕÒ³öÒ»Ìõ²»°ü¹ý¸º»·µÄ×î¶ÌÂ·¾¶¡£
+template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
+class KtAllSptFloyd : public KtAllSpt<GRAPH, WEIGHTOR>
+{
+    using super_ = KtAllSpt<GRAPH, WEIGHTOR>;
+    using super_::spt_;
+    using super_::dst_;
+
+public:
+    KtAllSptFloyd(const GRAPH& g) : super_(g) {
+
+        // °´±ß³õÊ¼»¯spt_ºÍdst_
+        KtBfsIter<GRAPH, true, true> iter(g, 0);
+        for (; !iter.isEnd(); ++iter) {
+            unsigned v = iter.from(), w = *iter;
+            spt_[v][w] = v;
+            dst_[v][w] = WEIGHTOR{}(iter.value());
+        }
+
+        const unsigned V = g.order();
+
+        // ÅÐ¶¨Â·¾¶s->x->tÊÇ·ñ±ÈÂ·¾¶s->t¸üÓÅ
+        for (unsigned x = 0; x < V; x++)
+            for (unsigned s = 0; s < V; s++)
+                if (spt_[s][x] != -1 && s != x) // Èôs->x²»Í¨£¬»òÕßs==x£¬ÔòÂÔ¹ý
+                    for (unsigned t = 0; t < V; t++)
+                        if(t != x) KtAllSpt<GRAPH, WEIGHTOR>::relax_(s, t, x);
+    }
+};
+
+
+
+// DFSÊµÏÖÈ«Ô´×î¶ÌÂ·¾¶£¬½öÊÊÓÃÓÚDAG
+// Ê±¼ä¸´ÔÓ¶ÈO(V*E)
+// ËÙ¶È±ÈTS·½·¨¿ìºÜ¶à
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtAllSptDfs : public KtAllSpt<GRAPH, WEIGHTOR>
 {
-	using super_ = KtAllSpt<GRAPH, WEIGHTOR>;
-	using super_::spt_;
-	using super_::dst_;
+    using super_ = KtAllSpt<GRAPH, WEIGHTOR>;
+    using super_::spt_;
+    using super_::dst_;
 
 public:
-	KtAllSptDfs(const GRAPH& g) : super_(g), done_(g.order(), false) {
-		assert(!g.hasLoop());
+    KtAllSptDfs(const GRAPH& g) : super_(g), done_(g.order(), false) {
+        assert(!g.hasLoop());
 
-		for (unsigned v = 0; v < g.order(); v++)
-			if(!done_[v]) dfs_(g, v);
-	}
-
-private:
-	void dfs_(const GRAPH& g, unsigned v) {
-		done_[v] = true;
-
-		typename GRAPH::adj_vertex_iter iter(g, v);
-		for (; !iter.isEnd(); ++iter) {
-			unsigned w = *iter;
-			auto wt = WEIGHTOR{}(iter.value());
-			if (WEIGHTOR{}.comp(wt, dst_[v][w])) {
-				dst_[v][w] = wt;
-				spt_[v][w] = v;
-			}
-
-			if (!done_[w]) dfs_(g, w);
-
-			if (w != v) {
-				for (unsigned i = 0; i < g.order(); i++)
-					if (spt_[w][i] != -1 && w != i)
-						KtAllSpt<GRAPH, WEIGHTOR>::relax_(v, i, w);
-			}
-		}
-	}
+        for (unsigned v = 0; v < g.order(); v++)
+            if(!done_[v]) dfs_(g, v);
+    }
 
 private:
-	std::vector<bool> done_;
+    void dfs_(const GRAPH& g, unsigned v) {
+        done_[v] = true;
+
+        typename GRAPH::adj_vertex_iter iter(g, v);
+        for (; !iter.isEnd(); ++iter) {
+            unsigned w = *iter;
+            auto wt = WEIGHTOR{}(iter.value());
+            if (WEIGHTOR{}.comp(wt, dst_[v][w])) {
+                dst_[v][w] = wt;
+                spt_[v][w] = v;
+            }
+
+            if (!done_[w]) dfs_(g, w);
+
+            if (w != v) {
+                for (unsigned i = 0; i < g.order(); i++)
+                    if (spt_[w][i] != -1 && w != i)
+                        KtAllSpt<GRAPH, WEIGHTOR>::relax_(v, i, w);
+            }
+        }
+    }
+
+private:
+    std::vector<bool> done_;
 };
 

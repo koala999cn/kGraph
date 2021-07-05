@@ -13,7 +13,7 @@
 template<typename DAG>
 class KtTopologySort
 {
-	static_assert(DAG::isDigraph(), "KtTopologySort must instantiated with Digraph.");
+    static_assert(DAG::isDigraph(), "KtTopologySort must instantiated with Digraph.");
 
 public:
     KtTopologySort(const DAG& dag) {
@@ -23,14 +23,14 @@ public:
 
         // 计算各顶点的入度
         std::vector<unsigned> ins(V, 0);
-		for (unsigned v = 0; v < V; v++)
-			ins[v] = dag.indegree(v);
+        for (unsigned v = 0; v < V; v++)
+            ins[v] = dag.indegree(v);
         
         // 将源点推入队列q
         std::queue<unsigned> q; // 源点队列
         for(unsigned v = 0; v < V; v++) 
             if(ins[v] == 0) q.push(v);
-		assert(!q.empty());
+        assert(!q.empty());
 
 
         // 按照FIFO顺序，对源点进行拓扑排序
@@ -39,9 +39,9 @@ public:
             ts_[i] = v; 
             tsI_[v] = i;
             auto iter = dag.adjIter(v);
-			for (; !iter.isEnd(); ++iter)
+            for (; !iter.isEnd(); ++iter)
                 if(0 == --ins[*iter]) 
-					q.push(*iter);
+                    q.push(*iter);
         }
     }
 
@@ -67,7 +67,7 @@ private:
 template<typename GRAPH>
 class KtTopologySortInv
 {
-	static_assert(GRAPH::isDigraph(), "KtTopologySortInv must instantiated with Digraph.");
+    static_assert(GRAPH::isDigraph(), "KtTopologySortInv must instantiated with Digraph.");
 
 public:
     KtTopologySortInv(const GRAPH& g) : dfs_(g, 0) {
@@ -77,10 +77,10 @@ public:
         
         unsigned V = g.order();
         popI_.resize(V);
-		for (unsigned v = 0; v < V; v++) {
-			assert(relabel(v) < V);
-			popI_[relabel(v)] = v;
-		}
+        for (unsigned v = 0; v < V; v++) {
+            assert(relabel(v) < V);
+            popI_[relabel(v)] = v;
+        }
     }
 
 

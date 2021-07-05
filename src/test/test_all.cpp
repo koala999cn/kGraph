@@ -19,23 +19,23 @@ extern void maxflow_test();
 
 int main(int argc, char const *argv[])
 {
-	sparse_graph_test(); printf("\n");
-	bfs_test(); printf("\n");
-	dfs_test(); printf("\n");
-	connected_component_test(); printf("\n");
-	bipartite_test(); printf("\n");
-	bridge_test(); printf("\n");
-	cutpoints_test(); printf("\n");
-	transitive_closure_test(); printf("\n");
-	topology_sort_test(); printf("\n");
-	strongly_connected_test(); printf("\n");
-	min_span_tree_test(); printf("\n");
-	shortest_path_test(); printf("\n");
-	maxflow_test(); printf("\n");
+    sparse_graph_test(); printf("\n");
+    bfs_test(); printf("\n");
+    dfs_test(); printf("\n");
+    connected_component_test(); printf("\n");
+    bipartite_test(); printf("\n");
+    bridge_test(); printf("\n");
+    cutpoints_test(); printf("\n");
+    transitive_closure_test(); printf("\n");
+    topology_sort_test(); printf("\n");
+    strongly_connected_test(); printf("\n");
+    min_span_tree_test(); printf("\n");
+    shortest_path_test(); printf("\n");
+    maxflow_test(); printf("\n");
 
-	
-	printf(" :) All passed! press any key to exit.\n");
-	getchar();
+    
+    printf(" :) All passed! press any key to exit.\n");
+    getchar();
 
     return 0;
 }

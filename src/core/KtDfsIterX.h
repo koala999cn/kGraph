@@ -2,11 +2,11 @@
 #include "KtDfsIter.h"
 
 
-// KtDfsIterï¿½Ä¼ï¿½Ç¿ï¿½æ£¬ï¿½ï¿½ï¿½ï¿½stopAtPoppingï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½Â¹ï¿½ï¿½ï¿½Ö§ï¿½Ö£ï¿½
-//   Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡Ç°ï¿½ï¿½ï¿½ï¿½Ö§ï¿½Ö£ï¿½lowÖµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ã¶ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎºÎ»Ø±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½Ð¡Ç°ï¿½ï¿½ï¿½Å£ï¿½orderÖµï¿½ï¿½
-//   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ïµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä¸¸ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Îªï¿½Åµï¿½Ö§ï¿½ï¿½
-// lowÖµï¿½ï¿½ï¿½å£º low(v) = min(pushOrder[v], low[w], pushOrder[k])  
-//   Ê½ï¿½Ð£ï¿½wï¿½Ç¶ï¿½ï¿½ï¿½vï¿½Äºï¿½ï¿½Ó½Úµã£¬kï¿½Ç¶ï¿½ï¿½ï¿½vï¿½Ä»Ø±ï¿½ï¿½ï¿½ï¿½È½Úµï¿½
+// KtDfsIterµÄ¼ÓÇ¿°æ£¬×ÜÊÇstopAtPopping£¬Ö÷ÒªÐÂÔö2ÏîÐÂ¹¦ÄÜÖ§³Ö£º
+//   Ò»ÊÇÐÂÔö¶¥µãµÄ×îÐ¡Ç°Ðò±àºÅÖ§³Ö£¨lowÖµ£©£¬±íÊ¾¸Ã¶¥µãÎª¸ùµÄ×ÓÊ÷ÖÐÈÎºÎ»Ø±ßËùÒýÓÃµÄ×îÐ¡Ç°Ðò±àºÅ£¨orderÖµ£©
+//   ¶þÊÇÐÂÔöÅÐ¶Ïµ±Ç°¶¥µãÓëÆä¸¸¶¥µãÊÇ·ñÎªÇÅµÄÖ§³Ö
+// lowÖµ¶¨Òå£º low(v) = min(pushOrder[v], low[w], pushOrder[k])  
+//   Ê½ÖÐ£ºwÊÇ¶¥µãvµÄº¢×Ó½Úµã£¬kÊÇ¶¥µãvµÄ»Ø±ß×æÏÈ½Úµã
 template<typename GRAPH, bool fullGraph = false>
 class KtDfsIterX : public KtDfsIter<GRAPH, false, true, true>
 {
@@ -18,17 +18,17 @@ public:
         low_[v] = pushingIndex(); 
     }
 
-	using super_::pushingIndex;
-	using super_::pushIndex;
-	using super_::from;
-	using super_::isEnd;
-	using super_::isPushing;
-	using super_::isPopping;
-	using super_::isBack;
+    using super_::pushingIndex;
+    using super_::pushIndex;
+    using super_::from;
+    using super_::isEnd;
+    using super_::isPushing;
+    using super_::isPopping;
+    using super_::isBack;
     using super_::firstUnvisited;
 
 
-    // ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½++ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    // ÖØÐ´¸¸ÀàµÄ++²Ù×÷·ûÖØÔØ
     void operator++() { 
         super_::operator++();
 
@@ -37,28 +37,28 @@ public:
             
             if(isPushing()) {
                 assert(pushIndex(w) == -1);
-                low_[w] = pushingIndex(); // ï¿½ï¿½Ê¼ï¿½ï¿½low(v) = pushOrder[v]
+                low_[w] = pushingIndex(); // ³õÊ¼»¯low(v) = pushOrder[v]
             }
             else {
-				unsigned v = from();
-				if (v != -1) {
-					if (isBack()) {
-						if (low_[v] > pushIndex(w))
-							low_[v] = pushIndex(w); // low(v) = min(low[v], pushOrder[k])   
-					}
-					else if (low_[v] > low_[w])
-						low_[v] = low_[w]; // low(v) = min(low[v], low[w]) 
-				}
+                unsigned v = from();
+                if (v != -1) {
+                    if (isBack()) {
+                        if (low_[v] > pushIndex(w))
+                            low_[v] = pushIndex(w); // low(v) = min(low[v], pushOrder[k])   
+                    }
+                    else if (low_[v] > low_[w])
+                        low_[v] = low_[w]; // low(v) = min(low[v], low[w]) 
+                }
             }  
         }
-		else if (fullGraph) {
-			unsigned unvisted = firstUnvisited();
-			if (unvisted != -1) begin(unvisted);
-		}
+        else if (fullGraph) {
+            unsigned unvisted = firstUnvisited();
+            if (unvisted != -1) begin(unvisted);
+        }
     }
 
 
-    // ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½beginï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lowÖµ
+    // ÖØÐ´¸¸ÀàµÄbegin·½·¨£¬ÒÔÍ¬²½¸üÐÂlowÖµ
     void begin(unsigned v) {
         super_::begin(v);
         low_[v] = pushingIndex();
@@ -81,5 +81,5 @@ public:
 
 
 private:
-    std::vector<unsigned> low_; // ï¿½æ´¢ï¿½ï¿½ï¿½Úµï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó½Úµï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½
+    std::vector<unsigned> low_; // ´æ´¢¸÷½ÚµãÕ¹¿ª×ÓËï½ÚµãËùÁ¬½Ó½ÚµãµÄ×îÐ¡ÐòºÅ
 };

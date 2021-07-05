@@ -12,7 +12,7 @@ public:
     using super_ = KtGraphBase<KtMatrix<T>, direction>;
     using typename super_::value_type;
 
-    using super_::KtGraphBase; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ìº¯ï¿½ï¿½
+    using super_::KtGraphBase; // µ¼Èë»ùÀàµÄ¹¹Ôìº¯Êý
     using super_::adjMat_;
     using super_::order;
     using super_::null_;
@@ -25,11 +25,11 @@ public:
         adj_vertex_iter& operator=(const adj_vertex_iter&) = default;
         adj_vertex_iter& operator=(adj_vertex_iter&&) = default;
         
-		// dummy empty iter
-		adj_vertex_iter(const KtGraphDense& g) : v_(-1), null_(g.null_),
-			iter_(g.adjMat_.rowEnd(0)), end_(g.adjMat_.rowEnd(0)) {}
+        // dummy empty iter
+        adj_vertex_iter(const KtGraphDense& g) : v_(-1), null_(g.null_),
+            iter_(g.adjMat_.rowEnd(0)), end_(g.adjMat_.rowEnd(0)) {}
 
-		// iter of v
+        // iter of v
         adj_vertex_iter(const KtGraphDense& g, unsigned v) : v_(0), null_(g.null_),
             iter_(g.adjMat_.rowBegin(v)), end_(g.adjMat_.rowEnd(v)) { 
             while(!isEnd() && *iter_ == g.null_) { // skip null element
@@ -59,9 +59,9 @@ public:
     };
 
 
-	virtual unsigned outdegree(unsigned v) const override { 
-		auto begin = adjMat_.rowBegin(v), end = adjMat_.rowEnd(v);
-		return order() - std::count(begin, end, null_);
-	}
+    virtual unsigned outdegree(unsigned v) const override { 
+        auto begin = adjMat_.rowBegin(v), end = adjMat_.rowEnd(v);
+        return order() - std::count(begin, end, null_);
+    }
 };
 

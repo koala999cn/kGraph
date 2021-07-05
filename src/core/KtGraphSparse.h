@@ -14,11 +14,11 @@ public:
     using super_::hasEdge;
     using super_::E_;
 
-    // ¼Ì³Ð¹¹Ôìº¯Êý
+    // ç»§æ‰¿æž„é€ å‡½æ•°
     using super_::KtGraphBase;
 
 
-	// É¾³ý±ßv-w
+    // åˆ é™¤è¾¹v-w
     void eraseEdge(unsigned v, unsigned w) {
         if(hasEdge(v, w)) {
             adjMat_.setDefault(v, w);
@@ -36,19 +36,19 @@ public:
         adj_vertex_iter& operator=(const adj_vertex_iter&) = default;
         adj_vertex_iter& operator=(adj_vertex_iter&&) = default; 
 
-		// dummy empty iter
-		adj_vertex_iter(const KtGraphSparse& g) : 
-			iter(g.adjMat_.rowEnd(0)), end(g.adjMat_.rowEnd(0)) {}
+        // dummy empty iter
+        adj_vertex_iter(const KtGraphSparse& g) : 
+            iter(g.adjMat_.rowEnd(0)), end(g.adjMat_.rowEnd(0)) {}
 
-		// iter of v
+        // iter of v
         adj_vertex_iter(const KtGraphSparse& g, unsigned v) : 
             iter(g.adjMat_.rowBegin(v)), end(g.adjMat_.rowEnd(v)) {}
 
     public:
         unsigned operator*() const { return iter->first; } 
 
-		auto value() const { return iter->second; }
-		auto value() { return iter->second; }
+        auto value() const { return iter->second; }
+        auto value() { return iter->second; }
 
         void operator++() { ++iter; }
 
@@ -59,8 +59,8 @@ public:
     };
 
 
-	virtual unsigned outdegree(unsigned v) const override {
-		return adjMat_.getSizeOfRow(v);
-	}
+    virtual unsigned outdegree(unsigned v) const override {
+        return adjMat_.getSizeOfRow(v);
+    }
 };
 
