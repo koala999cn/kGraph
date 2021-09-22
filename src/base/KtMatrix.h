@@ -1,14 +1,20 @@
 #pragma once
 #include <vector>
 
-// Ò»¸ö¼òµ¥µÄ¾ØÕóÄ£°åÊµÏÖ
+
+// ä¸€ä¸ªç®€å•çš„çŸ©é˜µæ¨¡æ¿å®ç°
 template<typename T, bool row_major = true>
 class KtMatrix
 {
+    static_assert(row_major, "col-major not supported yet");
+
 public:
-    typedef T value_type;
-    typedef typename std::vector<value_type>::iterator element_iterator;
-    typedef typename std::vector<value_type>::const_iterator const_element_iterator;
+    using container = std::vector<T>;
+    using value_type = typename container::value_type;
+    using reference = typename container::reference;
+    using const_reference = typename container::const_reference;
+    using element_iterator = typename container::iterator;
+    using const_element_iterator = typename container::const_iterator;
 
 
     KtMatrix() : rows_(0), cols_(0) {}
@@ -17,34 +23,65 @@ public:
     KtMatrix& operator=(const KtMatrix&) = default;
     KtMatrix& operator=(KtMatrix&&) = default;
 
-    KtMatrix(unsigned rows, unsigned cols, const T& initValue) :
+    KtMatrix(unsigned rows, unsigned cols, const_reference initValue) :
         rows_(rows), cols_(cols) {
         data_.assign(rows * cols, initValue);
     }
 
-    const T& operator()(unsigned row, unsigned col) const {
+    const_reference operator()(unsigned row, unsigned col) const {
         return row_major ? data_[row * cols_ + col] : data_[col * rows_ + row];
     }
 
-    T& operator()(unsigned row, unsigned col) {
+    reference operator()(unsigned row, unsigned col) {
         return row_major ? data_[row * cols_ + col] : data_[col * rows_ + row];
     }
 
 
-    void reset(unsigned rows, unsigned cols, const T& val) {
+    void resize(unsigned rows, unsigned cols, const_reference init_val) {
         rows_ = rows, cols_ = cols;
-        data_.assign(rows * cols, val);
+        data_.assign(rows * cols, init_val);
     }
 
+    void reserve(unsigned rows, unsigned cols) { data_.reserve(rows * cols); }
 
-    unsigned rows() const { return rows_; }
-    unsigned cols() const { return cols_; }
+    unsigned rows() const { return rows_; } // è¡Œæ•°
+    unsigned cols() const { return cols_; } // åˆ—æ•°
+
+
+    void insert(unsigned row, unsigned col, const_reference val) {
+        data_[row * cols_ + col] = val;
+    }
 
 
     auto rowBegin(unsigned row) const { return std::next(data_.begin(), row * cols_); }
-    auto rowEnd(unsigned row) const { return std::next(data_.begin(), (row + 1) * cols_); }
+    auto rowBegin(unsigned row) { return std::next(data_.begin(), row * cols_); }
 
-    void eraseRow(unsigned row) { data_.erase(rowBegin(row), rowEnd(row)); --rows_; }
+    auto rowEnd(unsigned row) const { return std::next(data_.begin(), (row + 1) * cols_); }
+    auto rowEnd(unsigned row) { return std::next(data_.begin(), (row + 1) * cols_); }
+
+    // å°†ç¬¬rowè¡Œèµ‹å€¼ä¸ºval
+    void assignRow(unsigned row, const_reference val) {
+        std::fill(rowBegin(row), rowEnd(row), val);
+    }
+
+    // å°†ç¬¬colåˆ—èµ‹å€¼ä¸ºval
+    void assignCol(unsigned col, const_reference val) {
+        auto iter = rowBegin(0);
+        std::advance(iter, col);
+        for (auto r = 1u; r < rows(); r++) {
+            *iter = val;
+            std::advance(iter, rows());
+        } 
+
+        *iter = val;
+    }
+
+
+    void eraseRow(unsigned row) { 
+        data_.erase(rowBegin(row), rowEnd(row)); 
+        --rows_; 
+    }
+
     void eraseCol(unsigned col) {
         --cols_;
         auto iter = std::next(data_.begin(), col);
@@ -56,18 +93,18 @@ public:
     }
 
 
-    // @val: ĞÂÔöĞĞµÄ³õÊ¼Öµ
-    void appendRow(const value_type& val) {
+    // @val: æ–°å¢è¡Œçš„åˆå§‹å€¼
+    void appendRow(const_reference val) {
         data_.resize(data_.size() + cols_, val);
         ++rows_;
     }
 
 
-    // @val: ĞÂÔöÁĞµÄ³õÊ¼Öµ
-    void appendCol(const value_type& val) {
+    // @val: æ–°å¢åˆ—çš„åˆå§‹å€¼
+    void appendCol(const_reference val) {
         data_.resize(data_.size() + rows_);
         value_type* p = data_.data();
-        for (unsigned r = rows_; r > 1/*µÚÒ»ĞĞÊı¾İ²»ÓÃÒÆ¶¯*/; r--) {
+        for (unsigned r = rows_; r > 1/*ç¬¬ä¸€è¡Œæ•°æ®ä¸ç”¨ç§»åŠ¨*/; r--) {
             value_type* src = p + r * cols_;
             value_type* dst = src + cols_;
             *--dst = val;
@@ -81,5 +118,5 @@ public:
 
 private:
     unsigned rows_, cols_;
-    std::vector<value_type> data_;
+    container data_;
 };
