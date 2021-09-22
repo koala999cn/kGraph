@@ -1,7 +1,7 @@
 #pragma once
 #include "KtBfsIter.h"
 
-// Í¼µÄÁ¬Í¨·ÖÁ¿
+// å›¾çš„è¿é€šåˆ†é‡
 
 template<typename GRAPH>
 class KtConnected
@@ -14,32 +14,32 @@ public:
           cc_(g.order(), -1) {
 
         KtBfsIter<GRAPH, true> bfs(g, 0);
-        unsigned id(0);
+        unsigned id(-1);
         for (; !bfs.isEnd(); ++bfs) {
             if (bfs.from() == -1)
                 ++id;
             cc_[*bfs] = id;
         }
 
-        count_ = id;
+        count_ = id + 1;
     }
 
 
-    // ·µ»ØÁ¬Í¨·ÖÁ¿ÊıÁ¿
+    // è¿”å›è¿é€šåˆ†é‡æ•°é‡
     auto count() const { return count_; }
 
-    // ¶¥µãvºÍ¶¥µãwÊÇ·ñÁ¬Í¨
+    // é¡¶ç‚¹vå’Œé¡¶ç‚¹wæ˜¯å¦è¿é€š
     bool reachable(unsigned v, unsigned w) const {
         return cc_[v] == cc_[w];;
     }
 
-    // ·µ»Ø½ÚµãvËùÔÚÁ¬Í¨·ÖÁ¿µÄid, 0 <= id < count().
+    // è¿”å›èŠ‚ç‚¹væ‰€åœ¨è¿é€šåˆ†é‡çš„id, 0 <= id < count().
     unsigned operator[](unsigned v) const {
         return cc_[v];
     }
 
 
 private:
-    unsigned count_; // Á¬Í¨·ÖÁ¿µÄÊıÁ¿
-    std::vector<unsigned> cc_; // cc_[i]±íÊ¾¶¥µãi¶ÔÓ¦µÄÁ¬Í¨·ÖÁ¿ĞòºÅ
+    unsigned count_; // è¿é€šåˆ†é‡çš„æ•°é‡
+    std::vector<unsigned> cc_; // cc_[i]è¡¨ç¤ºé¡¶ç‚¹iå¯¹åº”çš„è¿é€šåˆ†é‡åºå·
 };
