@@ -9,7 +9,7 @@ void bipartite_test()
     printf("bipartite test...\n");
     fflush(stdout);
 
-    GraphDi g(9, 0);
+    GraphDi g(9);
     g.addEdge(0, 5);
     g.addEdge(1, 5), g.addEdge(1, 6);
     g.addEdge(2, 7), g.addEdge(2, 8);
