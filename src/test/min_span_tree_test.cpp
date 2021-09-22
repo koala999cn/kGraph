@@ -39,11 +39,11 @@ void min_span_tree_test()
     g.addEdge(6, 7, 0.25);
     printf("   specific graph V = %d, E = %d\n", g.order(), g.size());
     fflush(stdout);
-    min_span_tree_test_<GraphDd, KtWeightorMin<KtWeightSelf<double>, KtAdder<double>>>(g);
+    min_span_tree_test_<GraphDd, default_min_wtor<GraphDd>>(g);
 
 
     GraphDd dg = randGraph<GraphDd>(300, 10000); 
     printf("   random graph V = %d, E = %d\n", dg.order(), dg.size());
     fflush(stdout);
-    min_span_tree_test_<GraphDd, KtWeightorMin<KtWeightSelf<double>, KtAdder<double>>>(dg);
+    min_span_tree_test_<GraphDd, default_min_wtor<GraphDd>>(dg);
 }
