@@ -15,6 +15,7 @@ public:
 
     using typename GRAPH_BASE::value_type;
     using typename GRAPH_BASE::adj_vertex_iter;
+    using typename GRAPH_BASE::vertex_index_t;
 
     template<bool fullGraph = false, bool modeEdge = false, bool stopAtPopping = false>
     using dfs_iter = KtDfsIter<KtGraphImpl, fullGraph, modeEdge, stopAtPopping>;
@@ -22,6 +23,7 @@ public:
     template<bool fullGraph = false, bool modeEdge = false>
     using bfs_iter = KtBfsIter<KtGraphImpl, fullGraph, modeEdge>;
 
+    using edge_iter = bfs_iter<true, true>; // TODO: 移到基类
 
     // 导入基类的构造函数
     using GRAPH_BASE::GRAPH_BASE;
@@ -42,7 +44,7 @@ public:
     // @WEIGHTOR: 边权值转换函数子
     template<typename GRAPH, typename WEIGHTOR = KtWeightSelf<value_type>>
     GRAPH copy() const {
-        GRAPH g(order());
+        GRAPH g(order()); g.reserve(order(), size());
         bfs_iter<true, true> bfs(*this, 0);
         for (; !bfs.isEnd(); ++bfs)
             g.addEdge(bfs.from(), *bfs, WEIGHTOR{}(bfs.value()));
@@ -67,8 +69,7 @@ public:
     void eraseSelfloop() {
         auto V = order();
         for(unsigned i = 0; i < V; i++) 
-            if(hasEdge(i, i)) 
-                eraseEdge(i, i);
+            eraseEdge(i, i); 
     }
 
 
@@ -113,16 +114,11 @@ public:
 
     // 计算当前图的逆
     template<typename GRAPH>
-    GRAPH reverse() const {
-        GRAPH gR(order());
-        for(unsigned v = 0; v < order(); v++) {
-            adj_vertex_iter iter(*this, v);
-            while(!iter.isEnd()) {
-                auto w = *iter;
-                gR.addEdge(w, v, iter.value());
-                ++iter;
-            }
-        }
+    GRAPH inverse() const {
+        GRAPH gR(order()); gR.reserve(order(), size());
+        bfs_iter<true, true> iter(*this, 0);
+        for (; !iter.isEnd(); ++iter)
+            gR.addEdge(*iter, iter.from(), iter.value());
 
         return gR;
     }
@@ -130,6 +126,12 @@ public:
 
     // 有向无环图
     bool isDag() const { return isDigraph() && !hasLoop(); }
+
+
+    // 返回v的邻接顶点迭代器
+    auto adjIter(unsigned v) const {
+        return adj_vertex_iter(*this, v);
+    }
 
 
     // 判断是否连通图
@@ -143,9 +145,14 @@ public:
     }
 
 
-    // 返回v的邻接顶点迭代器
-    auto adjIter(unsigned v) const {
-        return adj_vertex_iter(*this, v);
+    // 顶点v是否可达w，即是否存在一条从v到w的路径
+    bool isReachable(vertex_index_t v, vertex_index_t w) const {
+        bfs_iter<> iter(*this, v);
+        for (; !iter.isEnd(); ++iter)
+            if (*iter == w)
+                return true;
+
+        return false;
     }
 
 
