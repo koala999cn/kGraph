@@ -25,7 +25,7 @@ void sparse_graph_test()
     fflush(stdout);
     for (unsigned i = 0; i < V; i++)
         for (unsigned j = 0; j < V; j++)
-            if (sparse.hasEdge(i, j) && rand_p(0.5)) { // ÒÔ50%µÄ¸ÅÂÊÉ¾³ý±ß
+            if (sparse.hasEdge(i, j) && rand_p(0.5)) { // ä»¥50%çš„æ¦‚çŽ‡åˆ é™¤è¾¹
                 sparse.eraseEdge(i, j);
                 dense.eraseEdge(i, j);
             }
@@ -52,7 +52,7 @@ void sparse_graph_test()
     fflush(stdout);
     for (unsigned i = 0; i < V; i++)
         for (unsigned j = 0; j < V; j++)
-            if (!sparse.hasEdge(i, j) && rand_p(0.5)) { // ÒÔ50%µÄ¸ÅÂÊÌí¼Ó±ß
+            if (!sparse.hasEdge(i, j) && rand_p(0.5)) { // ä»¥50%çš„æ¦‚çŽ‡æ·»åŠ è¾¹
                 sparse.addEdge(i, j);
                 dense.addEdge(i, j);
             }
@@ -62,7 +62,7 @@ void sparse_graph_test()
 
     printf("   random erase vertex");
     fflush(stdout);
-    for (unsigned i = 0; i < V / 10; i++) { // É¾³ý1/10µÄ¶¥µã
+    for (unsigned i = 0; i < V / 10; i++) { // åˆ é™¤1/10çš„é¡¶ç‚¹
         unsigned v = rand() % dense.order();
         unsigned numVertex(dense.order());
         unsigned numEdge(dense.size());
@@ -72,10 +72,6 @@ void sparse_graph_test()
             test_failed(sparse);
         if (sparse.size() != numEdge - degree)
             test_failed(sparse);
-        if (dense.order() != numVertex - 1)
-            test_failed(dense);
-        if (dense.size() != numEdge - degree)
-            test_failed(dense);
 
         if (!isSame(sparse, dense))
             test_failed(sparse);
