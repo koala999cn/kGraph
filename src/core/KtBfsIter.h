@@ -3,22 +3,22 @@
 #include <assert.h>
 
 
-// ¹ã¶ÈÓÅÏÈ±éÀú
-// Ä£°å²ÎÊı£º
-//    -- fullGraph£¬ÈôÎªtrue£¬Ôò½øĞĞÈ«Í¼µü´ú£¬·ñÔò½öµü´úÓëvÏàÁªÍ¨µÄ½Úµã»ò±ß¡£
-//    -- modeEdge£¬ÈôÎªtrue£¬Ôò¶Ô±ß½øĞĞ¹ã¶ÈÓÅÏÈ±éÀú£¬ÕâÊ±¶¥µã¿ÉÄÜ»á¶à´ÎÖØ¸´£¬µ«Ã¿Ìõ±ßÖ»»á±éÀúÒ»´Î¡£
-//                 ÈôÎªfalse£¬Ôò¶Ô¶¥µã½øĞĞ¹ã¶ÈÓÅÏÈ±éÀú£¬ÕâÊ±²»ÄÜ±£Ö¤Ã¿Ìõ±ß¶¼»á±éÀúµ½»òÖ»±éÀúÒ»´Î¡£
-// ·ÇmodeEdgeÄ£Ê½ÏÂµÄ³õÊ¼×´Ì¬£¬operator*()·µ»ØstartVertex£¬from()·½·¨·µ»Ø-1
-// modeEdgeÄ£Ê½ÏÂµÄ³õÊ¼×´Ì¬£¬operator*()·µ»ØstartVertexµÄµÚÒ»¸öÁÚ½Ó¶¥µã£¬from()·½·¨·µ»ØstartVertex
+// å¹¿åº¦ä¼˜å…ˆéå†
+// æ¨¡æ¿å‚æ•°ï¼š
+//    -- fullGraphï¼Œè‹¥ä¸ºtrueï¼Œåˆ™è¿›è¡Œå…¨å›¾è¿­ä»£ï¼Œå¦åˆ™ä»…è¿­ä»£ä¸vç›¸è”é€šçš„èŠ‚ç‚¹æˆ–è¾¹ã€‚
+//    -- modeEdgeï¼Œè‹¥ä¸ºtrueï¼Œåˆ™å¯¹è¾¹è¿›è¡Œå¹¿åº¦ä¼˜å…ˆéå†ï¼Œè¿™æ—¶é¡¶ç‚¹å¯èƒ½ä¼šå¤šæ¬¡é‡å¤ï¼Œä½†æ¯æ¡è¾¹åªä¼šéå†ä¸€æ¬¡ã€‚
+//                 è‹¥ä¸ºfalseï¼Œåˆ™å¯¹é¡¶ç‚¹è¿›è¡Œå¹¿åº¦ä¼˜å…ˆéå†ï¼Œè¿™æ—¶ä¸èƒ½ä¿è¯æ¯æ¡è¾¹éƒ½ä¼šéå†åˆ°æˆ–åªéå†ä¸€æ¬¡ã€‚
+// émodeEdgeæ¨¡å¼ä¸‹çš„åˆå§‹çŠ¶æ€ï¼Œoperator*()è¿”å›startVertexï¼Œfrom()æ–¹æ³•è¿”å›-1
+// modeEdgeæ¨¡å¼ä¸‹çš„åˆå§‹çŠ¶æ€ï¼Œoperator*()è¿”å›startVertexçš„ç¬¬ä¸€ä¸ªé‚»æ¥é¡¶ç‚¹ï¼Œfrom()æ–¹æ³•è¿”å›startVertex
 template <typename GRAPH, bool fullGraph = false, bool modeEdge = false>
 class KtBfsIter 
 {
+public:
+    using value_type = typename GRAPH::value_type;
     using adj_vertex_iter = typename GRAPH::adj_vertex_iter;
 
-public:
-
-    // graph -- ´ı±éÀúµÄÍ¼
-    // startVertex -- ±éÀúµÄÆğÊ¼¶¥µã£¬-1±íÊ¾Ö»¹¹½¨µü´úÆ÷£¬ĞèÒªÁíÍâµ÷ÓÃbegin·½·¨¿ªÊ¼±éÀú
+    // graph -- å¾…éå†çš„å›¾
+    // startVertex -- éå†çš„èµ·å§‹é¡¶ç‚¹ï¼Œ-1è¡¨ç¤ºåªæ„å»ºè¿­ä»£å™¨ï¼Œéœ€è¦å¦å¤–è°ƒç”¨beginæ–¹æ³•å¼€å§‹éå†
     KtBfsIter(const GRAPH& graph, unsigned startVertex)
         : graph_(graph),
           v0_(-1),
@@ -48,22 +48,22 @@ public:
         while (!todo_.empty()) {
             auto& iter = todo_.front().first;
 
-            // ÒÆ³öÒÑµ½Ä©Î²µÄµü´úÆ÷
+            // ç§»å‡ºå·²åˆ°æœ«å°¾çš„è¿­ä»£å™¨
             if (iter.isEnd()) {
                 isPopped_[todo_.front().second] = true;
                 todo_.pop();
                 continue;
             }
 
-            // Ìø¹ıÒÑ±éÀúµÄ¶¥µã»ò±ß
+            // è·³è¿‡å·²éå†çš„é¡¶ç‚¹æˆ–è¾¹
             if (modeEdge) {
-                if (!GRAPH::isDigraph() && isPopped_[*iter]) { // ¶ÔÓÚÎŞÏòÍ¼£¬ÈôÄ³¶¥µãÒÑ³öÕ»£¬ÔòÓëÖ®ÁÚ½ÓµÄ±ß±ØÈ»ÒÑ±éÀú
+                if (!GRAPH::isDigraph() && isPopped_[*iter]) { // å¯¹äºæ— å‘å›¾ï¼Œè‹¥æŸé¡¶ç‚¹å·²å‡ºæ ˆï¼Œåˆ™ä¸ä¹‹é‚»æ¥çš„è¾¹å¿…ç„¶å·²éå†
                     ++iter;
                     continue;
                 }
             } 
             else {
-                if (isPushed_[*iter]) { // Ìø¹ıÒÑ±éÀúµÄ¶¥µã£¬È·±£Ã¿¸ö¶¥µãÖ»±éÀúÒ»´Î
+                if (isPushed_[*iter]) { // è·³è¿‡å·²éå†çš„é¡¶ç‚¹ï¼Œç¡®ä¿æ¯ä¸ªé¡¶ç‚¹åªéå†ä¸€æ¬¡
                     ++iter;
                     continue;
                 }
@@ -74,7 +74,7 @@ public:
 
         if (todo_.empty()) {
             isPopped_[v0_] = true;
-            v0_ = -1;  // ÉèÖÃÖÕÖ¹±ê¼Ç
+            v0_ = -1;  // è®¾ç½®ç»ˆæ­¢æ ‡è®°
         }
 
         if (fullGraph && isEnd()) {
@@ -83,13 +83,13 @@ public:
         }
     }
 
-    // ·µ»Øµ±Ç°ÕıÔÚÓÎÀúµÄ¶¥µã
+    // è¿”å›å½“å‰æ­£åœ¨æ¸¸å†çš„é¡¶ç‚¹
     unsigned operator*() const {
         return todo_.empty() ? v0_ : *(todo_.front().first);
     }
 
 
-    // Óëµ±Ç°¶¥µã£¨to¶¥µã£©¹¹³É±ßµÄfrom¶¥µã
+    // ä¸å½“å‰é¡¶ç‚¹ï¼ˆtoé¡¶ç‚¹ï¼‰æ„æˆè¾¹çš„fromé¡¶ç‚¹
     unsigned from() const {
         assert(!isEnd());
         return todo_.empty() ? -1 : todo_.front().second;
@@ -104,7 +104,7 @@ public:
     bool isEnd() const { return v0_ == -1; }
 
 
-    // ´Ó¶¥µãv¿ªÊ¼½ÓĞø½øĞĞ¹ã¶ÈÓÅÏÈ±éÀú
+    // ä»é¡¶ç‚¹vå¼€å§‹æ¥ç»­è¿›è¡Œå¹¿åº¦ä¼˜å…ˆéå†
     void begin(unsigned v) {
         assert(isEnd() && !isPushed_[v]);
         v0_ = v;
@@ -119,9 +119,9 @@ public:
 private:
     const GRAPH& graph_;
 
-    // ´ı´¦ÀíµÄÁÚ½Ó¶¥µãµü´úÆ÷¡£Ê¹ÓÃpair½á¹¹£¬Ö÷ÒªÊÇÎªÁË·½±ã¸ßĞ§ÊµÏÖfrom·½·¨
+    // å¾…å¤„ç†çš„é‚»æ¥é¡¶ç‚¹è¿­ä»£å™¨ã€‚ä½¿ç”¨pairç»“æ„ï¼Œä¸»è¦æ˜¯ä¸ºäº†æ–¹ä¾¿é«˜æ•ˆå®ç°fromæ–¹æ³•
     std::queue<std::pair<adj_vertex_iter, unsigned>> todo_;
 
-    unsigned v0_; // ÆğÊ¼¶¥µã
-    std::vector<bool> isPushed_, isPopped_;  // ÓÃÓÚ±ê¼Ç¶¥µãÊÇ·ñÒÑÑ¹Õ»/³öÕ»
+    unsigned v0_; // èµ·å§‹é¡¶ç‚¹
+    std::vector<bool> isPushed_, isPopped_;  // ç”¨äºæ ‡è®°é¡¶ç‚¹æ˜¯å¦å·²å‹æ ˆ/å‡ºæ ˆ
 };
