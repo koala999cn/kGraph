@@ -1,18 +1,16 @@
 #pragma once
-
-
 #include "KtGraphBase.h"
 #include "../base/KtMatrix.h"
 
 
 template<typename T, bool direction = false> 
-class KtGraphDense : public KtGraphBase<KtMatrix<T>, direction>
+class KtGraphDense : public KtGraphBase<KtMatrix<T>, direction, false>
 {
 public:
     using super_ = KtGraphBase<KtMatrix<T>, direction>;
     using typename super_::value_type;
 
-    using super_::KtGraphBase; // µ¼Èë»ùÀàµÄ¹¹Ôìº¯Êý
+    using super_::KtGraphBase; // å¯¼å…¥åŸºç±»çš„æž„é€ å‡½æ•°
     using super_::adjMat_;
     using super_::order;
     using super_::null_;
@@ -63,5 +61,6 @@ public:
         auto begin = adjMat_.rowBegin(v), end = adjMat_.rowEnd(v);
         return order() - std::count(begin, end, null_);
     }
+
 };
 
