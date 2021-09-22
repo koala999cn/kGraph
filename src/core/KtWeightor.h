@@ -2,7 +2,7 @@
 #include <limits>
 
 
-// ÓëÈ¨ÖµÓĞ¹ØµÄ²Ù×÷£º°üÀ¨´Ó±ßÖµµ½È¨ÖµµÄ×ª»»£¬È¨ÖµµÄ±È½Ï£¬È¨ÖµµÄÀÛ¼Ó
+// ä¸æƒå€¼æœ‰å…³çš„æ“ä½œï¼šåŒ…æ‹¬ä»è¾¹å€¼åˆ°æƒå€¼çš„è½¬æ¢ï¼Œæƒå€¼çš„æ¯”è¾ƒï¼Œæƒå€¼çš„ç´¯åŠ 
 
 template<typename VALUE_TYPE>
 class KtWeightSelf
@@ -36,7 +36,7 @@ public:
 };
 
 
-// @minimum£ºÎªtrueÊ±ÔòĞ¡Öµ¸üÓÅ£¬·ñÔò´óÖµ¸üÓÅ¡£
+// @minimumï¼šä¸ºtrueæ—¶åˆ™å°å€¼æ›´ä¼˜ï¼Œå¦åˆ™å¤§å€¼æ›´ä¼˜ã€‚
 template<class WeightorBase, class Accumlate, bool minimum>
 class KtWeightor : public WeightorBase
 {
@@ -47,12 +47,12 @@ public:
         std::numeric_limits<weight_type>::min();
 
 
-    // w1ÊÇ·ñ±Èw2¸üÓÅ£¿
+    // w1æ˜¯å¦æ¯”w2æ›´ä¼˜ï¼Ÿ
     bool comp(const weight_type& w1, const weight_type& w2) const {
         return minimum ? w1 < w2 : w1 > w2;
     }
 
-    // È¨ÖµÀÛ¼Ó
+    // æƒå€¼ç´¯åŠ 
     auto acc(const weight_type& w1, const weight_type& w2) const {
         return Accumlate{}(w1, w2);
     }
@@ -68,4 +68,18 @@ using KtWeightorMax = KtWeightor<WeightorBase, Accumlate, false>;
 
 
 template<typename GRAPH>
-using default_wtor = KtWeightorMin<KtWeightSelf<typename GRAPH::value_type>, KtAdder<typename KtWeightSelf<typename GRAPH::value_type>::weight_type>>;
+using default_min_wtor = KtWeightorMin<KtWeightSelf<typename GRAPH::value_type>, KtAdder<typename KtWeightSelf<typename GRAPH::value_type>::weight_type>>;
+
+template<typename GRAPH>
+using default_max_wtor = KtWeightorMax<KtWeightSelf<typename GRAPH::value_type>, KtAdder<typename KtWeightSelf<typename GRAPH::value_type>::weight_type>>;
+
+template<typename GRAPH>
+using unit_min_wtor = KtWeightorMin<KtWeightUnit<typename GRAPH::value_type>, KtAdder<typename KtWeightUnit<typename GRAPH::value_type>::weight_type>>;
+
+template<typename GRAPH>
+using unit_max_wtor = KtWeightorMax<KtWeightUnit<typename GRAPH::value_type>, KtAdder<typename KtWeightUnit<typename GRAPH::value_type>::weight_type>>;
+
+
+template<typename GRAPH>
+using default_wtor = default_min_wtor<GRAPH>;
+

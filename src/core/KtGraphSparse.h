@@ -3,11 +3,11 @@
 #include "../base/KtSparseMatrix.h"
 
 
-template<typename T, bool direction = false> 
-class KtGraphSparse : public KtGraphBase<KtSparseMatrix<T>, direction>
+template<typename T, bool direction = false, bool parallel = false>
+class KtGraphSparse : public KtGraphBase<KtSparseMatrix<T>, direction, parallel>
 {
 public:
-    using super_ = KtGraphBase<KtSparseMatrix<T>, direction>;
+    using super_ = KtGraphBase<KtSparseMatrix<T>, direction, parallel>;
 
     using super_::value_type;
     using super_::adjMat_;
@@ -59,8 +59,8 @@ public:
     };
 
 
-    virtual unsigned outdegree(unsigned v) const override {
-        return adjMat_.getSizeOfRow(v);
+    unsigned outdegree(unsigned v) const final { // 已是最优实现，使用final标记
+        return adjMat_.nonDefaultsOfRow(v);
     }
 };
 

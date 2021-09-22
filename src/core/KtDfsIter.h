@@ -4,22 +4,23 @@
 #include "KtGraphBase.h"
 
 
-// Í³Ò»ÓĞÏòÍ¼ÓëÎŞÏòÍ¼µÄÉî¶ÈÓÅÏÈ±éÀúÄ£°å¿ò¼Ü£¬Í¨¹ıÄ£°å²ÎÊı¿ÉÖ§³Ö¶àÖÖ±éÀú·¶Ê½¡£
-// Ä£°å²ÎÊı£º
-//    -- stopAtPopping£¬ÈôÎªtrue£¬ÔòÃ¿¸ö¶¥µã³öÕ»Ê±µü´úÆ÷ÔİÍ££¬ÓÃ»§ÓĞ»ú»á´¦Àí³öÕ»¶¥µã.
-//    -- fullGraph£¬²Î¼ûKtBfsIter.
-//    -- modeEdge£¬²Î¼ûKtBfsIter.
-// µ±modeEdgeÎªtrue£¬ stopAtPoppingÎªfalseÊ±£¬ÔòÊµÖÊÎª±ßµü´úÆ÷£¬ÆğÊ¼¶¥µã±»Ìø¹ı£¬ÒÑ±£Ö¤ÆğÊ¼×´Ì¬¼´ÎªµÚÒ»Ìõ±ß
-// µ±modeEdgeÎªtrue£¬ stopAtPoppingÎªtrueÊ±£¬³õÊ¼×´Ì¬ÈÔ·µ»ØÆğÊ¼¶¥µã£¬´ËÊ±from()·µ»Ø-1.
+// ç»Ÿä¸€æœ‰å‘å›¾ä¸æ— å‘å›¾çš„æ·±åº¦ä¼˜å…ˆéå†æ¨¡æ¿æ¡†æ¶ï¼Œé€šè¿‡æ¨¡æ¿å‚æ•°å¯æ”¯æŒå¤šç§éå†èŒƒå¼ã€‚
+// æ¨¡æ¿å‚æ•°ï¼š
+//    -- stopAtPoppingï¼Œè‹¥ä¸ºtrueï¼Œåˆ™æ¯ä¸ªé¡¶ç‚¹å‡ºæ ˆæ—¶è¿­ä»£å™¨æš‚åœï¼Œç”¨æˆ·æœ‰æœºä¼šå¤„ç†å‡ºæ ˆé¡¶ç‚¹.
+//    -- fullGraphï¼Œå‚è§KtBfsIter.
+//    -- modeEdgeï¼Œå‚è§KtBfsIter.
+// å½“modeEdgeä¸ºtrueï¼Œ stopAtPoppingä¸ºfalseæ—¶ï¼Œåˆ™å®è´¨ä¸ºè¾¹è¿­ä»£å™¨ï¼Œèµ·å§‹é¡¶ç‚¹è¢«è·³è¿‡ï¼Œå·²ä¿è¯èµ·å§‹çŠ¶æ€å³ä¸ºç¬¬ä¸€æ¡è¾¹
+// å½“modeEdgeä¸ºtrueï¼Œ stopAtPoppingä¸ºtrueæ—¶ï¼Œåˆå§‹çŠ¶æ€ä»è¿”å›èµ·å§‹é¡¶ç‚¹ï¼Œæ­¤æ—¶from()è¿”å›-1.
 template<typename GRAPH, bool fullGraph = false, bool modeEdge = false, bool stopAtPopping = false>
 class KtDfsIter
 {
+public:
+    using value_type = typename GRAPH::value_type;
     using adj_vertex_iter = typename GRAPH::adj_vertex_iter;
 
-public:
 
-    // graph -- ´ı±éÀúµÄÍ¼
-    // startVertex -- ±éÀúµÄÆğÊ¼¶¥µã£¬-1±íÊ¾Ö»¹¹½¨µü´úÆ÷£¬ĞèÒªÁíÍâµ÷ÓÃbegin·½·¨¿ªÊ¼±éÀú
+    // graph -- å¾…éå†çš„å›¾
+    // startVertex -- éå†çš„èµ·å§‹é¡¶ç‚¹ï¼Œ-1è¡¨ç¤ºåªæ„å»ºè¿­ä»£å™¨ï¼Œéœ€è¦å¦å¤–è°ƒç”¨beginæ–¹æ³•å¼€å§‹éå†
     KtDfsIter(const GRAPH& graph, unsigned startVertex)
         : graph_(graph),
         v_(-1),
@@ -32,7 +33,7 @@ public:
     void operator++() {
         assert(!isEnd());
 
-        if (isPopping()) { // ´¦Àí³öÕ»¶¥µã
+        if (isPopping()) { // å¤„ç†å‡ºæ ˆé¡¶ç‚¹
             assert(popOrd_[v_] == -1);
             popOrd_[v_] = popIdx_++;
             todo_.pop_back();
@@ -47,11 +48,11 @@ public:
         }
 
 
-        // ¼ì²âµ±Ç°¶¥µãÊÇ·ñĞèÒªÌø¹ı
+        // æ£€æµ‹å½“å‰é¡¶ç‚¹æ˜¯å¦éœ€è¦è·³è¿‡
         while (todo_.size() > 1) {
             auto& iter = todo_.back().first;
 
-            // ÒÆ³ıÒÑ½áÊøµÄµü´úÆ÷
+            // ç§»é™¤å·²ç»“æŸçš„è¿­ä»£å™¨
             if (iter.isEnd()) {
                 if (!stopAtPopping) {
                     popOrd_[todo_.back().second] = popIdx_++;
@@ -65,20 +66,20 @@ public:
 
             assert(!isPopping() && !iter.isEnd());
 
-            // ·ÀÖ¹ÎŞÏòÍ¼µÄ¶¥µã»ØËİ
+            // é˜²æ­¢æ— å‘å›¾çš„é¡¶ç‚¹å›æº¯
             if (!GRAPH::isDigraph() && *iter == grandpa()) {
                 ++iter;
                 continue;
             }
 
-            // Ìø¹ıÒÑ±éÀúµÄ¶¥µã»ò±ß
+            // è·³è¿‡å·²éå†çš„é¡¶ç‚¹æˆ–è¾¹
             bool needSkip = false;
                 
             if (modeEdge) {
-                if (!GRAPH::isDigraph() && popOrd_[*iter] != -1) // ¶ÔÓÚÎŞÏòÍ¼£¬ÈôÄ³¶¥µãÒÑ³öÕ»£¬ÔòÓëÖ®ÁÚ½ÓµÄ±ß±ØÈ»ÒÑ±éÀú
+                if (!GRAPH::isDigraph() && popOrd_[*iter] != -1) // å¯¹äºæ— å‘å›¾ï¼Œè‹¥æŸé¡¶ç‚¹å·²å‡ºæ ˆï¼Œåˆ™ä¸ä¹‹é‚»æ¥çš„è¾¹å¿…ç„¶å·²éå†
                     needSkip = true;
             }
-            else if (pushOrd_[*iter] != -1)  // Ìø¹ıÒÑ±éÀúµÄ¶¥µã£¬È·±£Ã¿¸ö¶¥µãÖ»±éÀúÒ»´Î
+            else if (pushOrd_[*iter] != -1)  // è·³è¿‡å·²éå†çš„é¡¶ç‚¹ï¼Œç¡®ä¿æ¯ä¸ªé¡¶ç‚¹åªéå†ä¸€æ¬¡
                     needSkip = true;
 
             if (needSkip) {
@@ -89,13 +90,13 @@ public:
             break;
         }
 
-        // ¸üĞÂv_ºÍ½ÓĞø±éÀú
+        // æ›´æ–°v_å’Œæ¥ç»­éå†
         if (todo_.size() <= 1) {
-            v_ = -1; // ÉèÖÃÖÕÖ¹±ê¼Ç
+            v_ = -1; // è®¾ç½®ç»ˆæ­¢æ ‡è®°
 
             if (fullGraph) {
                 unsigned unvisted = firstUnvisited();
-                if(unvisted != -1) begin(unvisted); // ½ÓĞø±éÀú
+                if(unvisted != -1) begin(unvisted); // æ¥ç»­éå†
             }
         }
         else {
@@ -103,11 +104,11 @@ public:
         }
     }
 
-    // ·µ»Øµ±Ç°ÕıÔÚÓÎÀúµÄ¶¥µã
+    // è¿”å›å½“å‰æ­£åœ¨æ¸¸å†çš„é¡¶ç‚¹
     unsigned operator*() const { return v_; }
 
 
-    // Óëµ±Ç°¶¥µã£¨to¶¥µã£©¹¹³É±ßµÄfrom¶¥µã
+    // ä¸å½“å‰é¡¶ç‚¹ï¼ˆtoé¡¶ç‚¹ï¼‰æ„æˆè¾¹çš„fromé¡¶ç‚¹
     unsigned from() const {
         assert(!isEnd());
         return isPopping() ? grandpa() :
@@ -115,7 +116,7 @@ public:
     }
 
 
-    // ·µ»Ø±ß(from, to)µÄÖµ
+    // è¿”å›è¾¹(from, to)çš„å€¼
     auto value() const {
         assert(!isEnd() && from() != -1);
         return todo_.back().first.value();
@@ -125,7 +126,7 @@ public:
     bool isEnd() const { return v_ == -1; }
 
 
-    // ´Ó¶¥µãv¿ªÊ¼½ÓĞø½øĞĞ¹ã¶ÈÓÅÏÈ±éÀú
+    // ä»é¡¶ç‚¹vå¼€å§‹æ¥ç»­è¿›è¡Œå¹¿åº¦ä¼˜å…ˆéå†
     void begin(unsigned v) {
         assert(isEnd() && pushOrd_[v] == -1);
         todo_.clear();
@@ -135,19 +136,30 @@ public:
     }
 
 
-    // Ê÷±ß£¬±íÊ¾µİ¹éµ÷ÓÃ£¨¼´µÚÒ»´Î·ÃÎÊ¸Ã½Úµã£©
+    /*
+    BGLä¸­å…³äºæ ‘è¾¹ã€å›è¾¹ã€ä¸‹è¾¹ã€è·¨è¾¹çš„å®šä¹‰ï¼š
+    - Tree edges are edges in the search tree(or forest) constructed by running a graph search algorithm over a graph. 
+      An edge(u, v) is a tree edge if v was first discovered while exploring edge(u, v).
+    - Back edges connect vertices to their ancestors in a search tree. 
+      So for edge(u, v) the vertex v must be the ancestor of vertex u.
+      Self loops are considered to be back edges.
+    - Forward edges are non-tree edges(u, v) that connect a vertex u to a descendant v in a search tree.
+    - Cross edges are edges that do not fall into the above three categories.
+    */
+
+    // æ ‘è¾¹ï¼Œè¡¨ç¤ºé€’å½’è°ƒç”¨ï¼ˆå³ç¬¬ä¸€æ¬¡è®¿é—®è¯¥èŠ‚ç‚¹ï¼‰
     bool isTree() const {
         return pushOrd_[v_] == -1;
     }
 
 
-    // »Ø±ß£¬±íÊ¾µ±Ç°½ÚµãÊÇÇ°Ğò½ÚµãµÄ×æÏÈ
+    // å›è¾¹ï¼Œè¡¨ç¤ºå½“å‰èŠ‚ç‚¹æ˜¯å‰åºèŠ‚ç‚¹çš„ç¥–å…ˆ
     bool isBack() const {
         return !isTree() && !isPopping() && popOrd_[v_] == -1;
     }
 
 
-    // ÏÂ±ß£¬±íÊ¾µ±Ç°½ÚµãÊÇÇ°Ğò½ÚµãµÄ×ÓËï
+    // ä¸‹è¾¹/å‰è¾¹ï¼Œè¡¨ç¤ºå½“å‰èŠ‚ç‚¹æ˜¯å‰åºèŠ‚ç‚¹çš„å­å­™
     bool isDown() const {
         //return !isTree() && !isBack() && pushOrd_[**this] > pushOrd_[from()];
         assert(pushOrd_[from()] != -1);
@@ -155,16 +167,16 @@ public:
     }
 
 
-    // ¿ç±ß£¬±íÊ¾µ±Ç°½Úµã¼È²»ÊÇÇ°Ğò½ÚµãµÄ×æÏÈ£¬Ò²²»ÊÇ×ÓËï
+    // è·¨è¾¹ï¼Œè¡¨ç¤ºå½“å‰èŠ‚ç‚¹æ—¢ä¸æ˜¯å‰åºèŠ‚ç‚¹çš„ç¥–å…ˆï¼Œä¹Ÿä¸æ˜¯å­å­™
     bool isCross() const {
         //return !isTree() && !isBack() && !isDown();
-        return GRAPH::isDigraph() && popOrd_[v_] != -1; // Ö»ÓĞÓĞÏòÍ¼²ÅÓĞ¿ç±ß
+        return GRAPH::isDigraph() && popOrd_[v_] != -1; // åªæœ‰æœ‰å‘å›¾æ‰æœ‰è·¨è¾¹
     }
 
-    // µ±Ç°½ÚµãÊÇ·ñÕıÔÚÈëÕ»£¬¶ÔÓ¦ÓÚµİ¹éµÄÈë¿Ú
+    // å½“å‰èŠ‚ç‚¹æ˜¯å¦æ­£åœ¨å…¥æ ˆï¼Œå¯¹åº”äºé€’å½’çš„å…¥å£
     bool isPushing() const { return isTree(); }
 
-    // µ±Ç°½ÚµãÊÇ·ñÕıÔÚ³öÕ»£¬¶ÔÓ¦ÓÚµİ¹éµÄ³ö¿Ú
+    // å½“å‰èŠ‚ç‚¹æ˜¯å¦æ­£åœ¨å‡ºæ ˆï¼Œå¯¹åº”äºé€’å½’çš„å‡ºå£
     bool isPopping() const { return stopAtPopping && !isPushing() && todo_.back().first.isEnd(); }
 
     unsigned pushIndex(unsigned v) const { return pushOrd_[v]; }
@@ -186,7 +198,7 @@ public:
 
 private:
 
-    // ·µ»Øµ±Ç°¶¥µãµÄ×æ¸¸¶¥µã£¬¼´fromÖ®from
+    // è¿”å›å½“å‰é¡¶ç‚¹çš„ç¥–çˆ¶é¡¶ç‚¹ï¼Œå³fromä¹‹from
     unsigned grandpa() const {
         return todo_.size() > 2 ? todo_[todo_.size() - 2].second : -1;
     }
@@ -194,12 +206,12 @@ private:
 private:
     const GRAPH& graph_;
 
-    // ´ı´¦ÀíµÄÁÚ½Ó¶¥µãµü´úÆ÷¡£Ê¹ÓÃpair½á¹¹£¬Ö÷ÒªÊÇÎªÁË·½±ã¸ßĞ§ÊµÏÖfrom·½·¨
+    // å¾…å¤„ç†çš„é‚»æ¥é¡¶ç‚¹è¿­ä»£å™¨ã€‚ä½¿ç”¨pairç»“æ„ï¼Œä¸»è¦æ˜¯ä¸ºäº†æ–¹ä¾¿é«˜æ•ˆå®ç°fromæ–¹æ³•
     std::vector<std::pair<adj_vertex_iter, unsigned>> todo_;
 
-    unsigned v_; // ÕıÔÚ±éÀúµÄ¶¥µã
+    unsigned v_; // æ­£åœ¨éå†çš„é¡¶ç‚¹
 
-    std::vector<unsigned> pushOrd_, popOrd_; // ÓÃÓÚ¼ÇÂ¼¸÷¶¥µãµÄÑ¹Õ»/³öÕ»Ë³Ğò
-    unsigned pushIdx_, popIdx_; // µ±Ç°Ñ¹Õ»/³öÕ»ĞòºÅ
+    std::vector<unsigned> pushOrd_, popOrd_; // ç”¨äºè®°å½•å„é¡¶ç‚¹çš„å‹æ ˆ/å‡ºæ ˆé¡ºåº
+    unsigned pushIdx_, popIdx_; // å½“å‰å‹æ ˆ/å‡ºæ ˆåºå·
 };
 

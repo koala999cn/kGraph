@@ -3,190 +3,181 @@
 #include <algorithm>
 
 
-// Ï¡Êè¾ØÕóµÄÊµÏÖ£¬»ùÓÚCSR£¨Compressed Sparse Row£©Ëã·¨
-template<typename T>
+// åŸºäºvectorçš„ç¨€ç–çŸ©é˜µå®ç°
+template<typename T, typename ROW_CONTAINER = std::vector<std::pair<unsigned, T>>>
 class KtSparseMatrix
 {
 public:
-    typedef T value_type;
-    typedef std::pair<unsigned, value_type> element_type;
-    typedef typename std::vector<element_type>::iterator element_iterator;
-    typedef typename std::vector<element_type>::const_iterator const_element_iterator;
+    using value_type = T;
+    using reference = value_type&;
+    using const_reference = const value_type&;
+    using element_type = std::pair<unsigned, T>;
+    using row_type = ROW_CONTAINER;
+    using element_iterator =  typename row_type::iterator;
+    using const_element_iterator = typename row_type::const_iterator;
 
-    KtSparseMatrix() : cols_(0), default_(0) {}
+    KtSparseMatrix() : cols_{0}, default_{} {}
     KtSparseMatrix(const KtSparseMatrix&) = default;
     KtSparseMatrix(KtSparseMatrix&&) = default;
     KtSparseMatrix& operator=(const KtSparseMatrix&) = default;
     KtSparseMatrix& operator=(KtSparseMatrix&&) = default;
 
-    KtSparseMatrix(unsigned rows, unsigned cols, const T& defaultVal) : 
-        cols_(cols), default_(defaultVal), row_offsets_(rows + 1, -1) {   
-            row_offsets_.back() = 0; // ×îºóÒ»¸öÔªËØ±íÊ¾ÓĞĞ§Êı¾İ×ÜÊı£¬³õÊ¼Îª0
-    }
+    KtSparseMatrix(unsigned rows, unsigned cols, const_reference defaultVal) :
+        cols_(0), default_(defaultVal), elements_(rows) { }
 
-    void reset(unsigned rows, unsigned cols, const value_type& val) {
-        cols_ = cols, default_ = val;
-        row_offsets_.assign(rows + 1, -1);
-        row_offsets_.back() = 0;
-        elements_.clear();
+    void resize(unsigned rows, unsigned cols, const_reference val) {
+        cols_ = cols;  default_ = val;
+        elements_.clear(); elements_.resize(rows);
     }
     
-    const value_type& operator()(unsigned row, unsigned col) const {
-        const_element_iterator x = const_cast<KtSparseMatrix<value_type>*>(this)->getAt(row, col, false);
-        return x == elements_.end() ? default_ : x->second;
+    void reserve(unsigned rows, unsigned cols) { elements_.reserve(rows); }
+
+
+    const_reference operator()(unsigned row, unsigned col) const {
+        auto iter = const_cast<KtSparseMatrix<value_type>*>(this)->getAt(row, col, false);
+        return iter == rowEnd(row) ? default_ : iter->second;
     }
 
-    value_type& operator()(unsigned row, unsigned col) {
-        auto x = getAt(row, col, true);
-        return x->second;
+
+    // ç­‰åŒäºassign(row, col, val)
+    reference operator()(unsigned row, unsigned col) {
+        auto iter = getAt(row, col, true);
+        assert(iter != rowEnd(row));
+        return iter->second;
     }
 
-    unsigned rows() const { return row_offsets_.size() - 1; }
+    unsigned rows() const { return elements_.size(); }
     unsigned cols() const { return cols_; }
 
+    
+    // è¿”å›ç¬¬rowè¡Œå¯¹è±¡
+    row_type& row(unsigned row) { return elements_[row]; }
+    const row_type& row(unsigned row) const { return elements_[row]; }
 
-    // »ñÈ¡µÚrowĞĞÓĞĞ§Êı¾İµÄÊıÁ¿
-    unsigned getSizeOfRow(unsigned row) const {
-        unsigned begin, end;
-        rowRange(row, &begin, &end, false);
 
-        return begin == -1 ? 0 : end - begin;
+    // è·å–ç¬¬rowè¡Œæœ‰æ•ˆæ•°æ®çš„æ•°é‡
+    unsigned nonDefaultsOfRow(unsigned row) const {
+        return elements_[row].size();
     }
 
-    // ½«µÚrowĞĞ¡¢µÚcolÁĞÊı¾İÖÃÎªdefault£¬ÊµÖÊµÈĞ§ÓÚÉ¾³ı²Ù×÷
-    void setDefault(unsigned row, unsigned col) {
-        unsigned begin_idx, end_idx;
-        rowRange(row, &begin_idx, &end_idx, false);
-        if(begin_idx != -1) {
-            auto begin_iter = std::next(elements_.begin(), begin_idx);
-            auto end_iter = std::next(elements_.begin(), end_idx);
-            auto erase_iter = std::lower_bound(begin_iter, end_iter, element_type{col, value_type(0)}, 
-                        [](const element_type& a, const element_type& b){ return a.first < b.first; });
-            if(erase_iter != end_iter && erase_iter->first == col) { // bingo
-                // É¾³ıÊı¾İ
-               elements_.erase(erase_iter);
 
-                // ĞŞÕıĞĞÆ«ÒÆ
-                if(end_idx - begin_idx == 1) row_offsets_[row] = -1; 
-                while(++row < row_offsets_.size())
-                    if(row_offsets_[row] != -1) row_offsets_[row]--; 
-            }
-        }
+    // ç›´æ¥åœ¨ï¼ˆrow, colï¼‰æ’å…¥å…ƒç´ valï¼Œä¸æ£€æµ‹å…ƒç´ æ˜¯å¦å·²å­˜åœ¨ï¼Œä»¥æ”¯æŒåŒä¸€ä½ç½®å¤šä¸ªå€¼
+    void insert(unsigned row, unsigned col, const_reference val) {
+        elements_[row].emplace_back(col, val);
     }
 
 
     auto rowBegin(unsigned row) const {
-        auto begin_idx = row_offsets_[row];
-        return begin_idx == -1 ? elements_.end() : std::next(elements_.begin(), begin_idx);
+        return elements_[row].begin();
     }
 
     auto rowEnd(unsigned row) const {
-        unsigned begin_idx, end_idx;
-        rowRange(row, &begin_idx, &end_idx, false);
-        return end_idx == -1 ? elements_.end() : std::next(elements_.begin(), end_idx);
+        return elements_[row].end();
     }
 
 
+    // å°†ç¬¬rowè¡Œã€ç¬¬colåˆ—æ•°æ®ç½®ä¸ºdefault
+    // åœ¨å…è®¸å¤šå€¼æƒ…å†µä¸‹ï¼Œä»…è®¾ç½®ç¬¬ä¸€ä¸ªå€¼ä¸ºdefault
+    void setDefault(unsigned row, unsigned col) {
+        auto iter = getAt(row, col, false);
+        if (iter != elements_[row].end())
+            elements_[row].erase(iter);
+    }
+
+    // å°†ç¬¬rowè¡Œã€ç¬¬colåˆ—çš„æ‰€æœ‰æ•°æ®å‡ç½®ä¸ºdefault
+    void defaultAll(unsigned row, unsigned col) {
+        auto iter = getAt(row, col, false);
+        elements_[row].erase(iter);
+
+        while (iter != elements_[row].end()) {
+            if (iter->first == col)
+                elements_[row].erase(iter);
+            else
+                ++iter;
+        }
+    }
+
+    // å°†ç¬¬rowè¡Œæ‰€æœ‰æ•°æ®ç½®ä¸ºdefault
+    void assignRow(unsigned r, const_reference val) {
+        if(val == default_)
+            elements_[r].clear();
+        else {
+            auto& x = row(r);
+            x.resize(cols());
+            for (auto i = 0u; i < cols(); i++)
+                x[i] = { i, val };
+        }
+    }
+
+    // å°†ç¬¬colåˆ—æ‰€æœ‰æ•°æ®ç½®ä¸ºdefault
+    void assignCol(unsigned col, const_reference val) {
+        if (val == default_) {
+            for (unsigned r = 0; r < rows(); r++)
+                defaultAll(r, col);
+        }
+        else {
+            for (unsigned r = 0; r < rows(); r++)
+                (*this)(r, col) = val;
+        }
+    }
+
+
+    // åˆ é™¤ç¬¬rowè¡Œ
     void eraseRow(unsigned row) { 
-        unsigned begin_idx, end_idx;
-        rowRange(row, &begin_idx, &end_idx, false);
-        row_offsets_.erase(std::next(row_offsets_.begin(), row));
-        if (begin_idx != -1) {
-            elements_.erase(std::next(elements_.begin(), begin_idx), std::next(elements_.begin(), end_idx));
-
-            // ¸üĞÂrow_offsets_
-            auto iter = std::next(row_offsets_.begin(), row);
-            unsigned offset = end_idx - begin_idx;
-            for (; iter != row_offsets_.end(); ++iter) {
-                unsigned i = *iter;
-                if(i != -1) *iter = i - offset;
-            }            
-        }
+        elements_.erase(elements_.begin() + row);
     }
 
+    // åˆ é™¤ç¬¬colåˆ—
     void eraseCol(unsigned col) {
-        for (unsigned row = 0; row < rows(); row++)
-            setDefault(row, col);
+        for (auto& row : elements_) 
+            for (auto iter = row.begin(); iter != row.end();) {
+                if (iter->first == col) {
+                    elements_[row].erase(iter);
+                    continue;
+                }
+                else if (iter->first >= col)
+                    iter->first--; // å°‘äº†ä¸€åˆ—ï¼Œè¦ä¿®æ­£åˆ—ç´¢å¼•
 
-        // ¸üĞÂelements_ÖĞµÄÁĞË÷Òı
-        auto iter = elements_.begin();
-        for (; iter != elements_.end(); ++iter) {
-            assert(iter->first != col);
-            if (iter->first > col)
-                iter->first--;
-        }
+                ++iter;
+            }
 
         --cols_;
     }
 
 
-    void appendRow(const value_type& val) {
-        assert(val == default_);
-        row_offsets_.push_back(row_offsets_.back());
-        row_offsets_[row_offsets_.size() - 2] = -1;
+    void appendRow(const_reference val) {
+        elements_.push_back(row_type());
+        if (val != default_)
+            assignRow(rows() - 1, val);
     }
 
-    void appendCol(const value_type& val) {
-        assert(val == default_);
+    void appendCol(const_reference val) {
         ++cols_;
+        if (val != default_)
+            assignCol(cols() - 1, val);
     }
 
 
 private:
 
-    // ·µ»ØµÚrowĞĞ¡¢µÚcolÁĞÊı¾İ¶ÁĞ´µØÖ·£¬Èô²»´æÔÚÇÒinsert·ÇÕæ£¬Ôò·µ»Ønull
+    // è¿”å›ç¬¬rowè¡Œã€ç¬¬colåˆ—æ•°æ®è¯»å†™åœ°å€ï¼Œè‹¥ä¸å­˜åœ¨ä¸”insertéçœŸï¼Œåˆ™è¿”å›null
     element_iterator getAt(unsigned row, unsigned col, bool insert) {
-        unsigned begin_idx, end_idx;
-        rowRange(row, &begin_idx, &end_idx, insert);
+        auto& r = elements_[row];
 
-        element_iterator insert_iter;
-
-        // ²éÕÒÊı¾İÊÇ·ñ´æÔÚ
-        if(begin_idx != -1) {
-            auto begin_iter = elements_.begin() + begin_idx;
-            auto end_iter = elements_.begin() + end_idx;
-            insert_iter = std::lower_bound(begin_iter, end_iter, element_type{col, value_type(0)}, 
-                        [](const element_type& a, const element_type& b){ return a.first < b.first; });
-            if(insert_iter != end_iter && insert_iter->first == col) // bingo
-                return insert_iter;
-        }
-        
-        if(!insert) return elements_.end();
-
-        if(begin_idx == -1) {
-            assert(end_idx != -1);
-            insert_iter = elements_.begin() + end_idx;
-            row_offsets_[row] = end_idx; 
+        auto iter = r.begin();
+        for (; iter != r.end(); ++iter) {
+            if (iter->first == col) // bingo
+                return iter;
+            
+            // ç»§ç»­æ‰¾
         }
 
-        auto iter = elements_.insert(insert_iter, { col, default_ });
-
-        // ĞŞÕıĞĞÆ«ÒÆ
-        while(++row < row_offsets_.size())
-            if(row_offsets_[row] != -1) row_offsets_[row]++; 
-
-        return iter;
+        return insert ? r.emplace(r.end(), col, default_) : r.end();
     }
-
-
-    // ¼ÆËãµÚrowĞĞÎ»ÓÚelements_µÄÊı¾İ·¶Î§£¬½á¹û·µ»Øµ½beginºÍend.
-    // Èç¹ûforceEndÎªÕæ£¬Ôò*begin == -1Ê±£¬ÈÔÈ»¼ÆËã*endÖµ
-    void rowRange(unsigned row, unsigned* begin, unsigned* end, bool forceEnd) const {
-        *begin = row_offsets_[row];
-        if(*begin != -1 || forceEnd) {
-            *end = row_offsets_[++row];
-            while(*end == -1) *end = row_offsets_[++row];
-        }
-        else {
-            *end = -1;
-        }
-    }
-
 
 private:
     value_type default_;
     unsigned cols_;
-    std::vector<element_type> elements_; // ·ÇÄ¬ÈÏÊı¾İµÄ{ÁĞË÷Òı£¬Êı¾İÖµ}ĞòÁĞ
-    std::vector<unsigned> row_offsets_; // ´óĞ¡µÈÓÚrows+1£¬×îºóÒ»¸öÔªËØ´æ´¢ÓĞĞ§Êı¾İÊıÁ¿
+    std::vector<row_type> elements_;
 };
 

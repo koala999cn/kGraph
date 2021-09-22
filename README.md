@@ -4,6 +4,8 @@
 
 基于C++模板实现的图基本算法
 
+核心代码参考Algorithms in C++ Part 5 Graph Algorithms, Robert Sedgewick, 3rd Edition.
+
 
 #### 软件架构
 

@@ -3,8 +3,8 @@
 
 
 /* 
-  »ùÓÚWarshallËã·¨µÄ´«µİ±Õ°üÊµÏÖ.
-  WarshallËã·¨½«»ùÓÚ²¼¶û¾ØÕóµÄ´«µİ±Õ°üÊµÏÖÊ±¼ä¸´ÔÓ¶È´ÓV^3*log2V½µµÍÎªV^3
+  åŸºäºWarshallç®—æ³•çš„ä¼ é€’é—­åŒ…å®ç°.
+  Warshallç®—æ³•å°†åŸºäºå¸ƒå°”çŸ©é˜µçš„ä¼ é€’é—­åŒ…å®ç°æ—¶é—´å¤æ‚åº¦ä»V^3*log2Vé™ä½ä¸ºV^3
  */
 template<typename SRC_GRAPH, typename CLS_GRAPH = SRC_GRAPH>
 class KtTransitiveClosureWar
@@ -13,14 +13,15 @@ public:
     KtTransitiveClosureWar(const SRC_GRAPH& g) : g_(g) {
         unsigned V = g.order();
         for(size_t v = 0; v < V; v++)
-            g_.addEdge(v, v); // Ìí¼Ó×Ô»·
+            if(!g_.hasEdge(v, v)) 
+                g_.addEdge(v, v); // æ·»åŠ è‡ªç¯
 
-        // WarshallËã·¨
+        // Warshallç®—æ³•
         for(unsigned i = 0; i < V; i++)
             for(unsigned s = 0; s < V; s++)
                 if(g_.hasEdge(s, i))
                     for(unsigned t = 0; t < V; t++)
-                        if(g_.hasEdge(i, t))
+                        if(g_.hasEdge(i, t) && !g_.hasEdge(s, t))
                             g_.addEdge(s, t);
     }
 
@@ -34,8 +35,8 @@ private:
 
 
 /* 
-  »ùÓÚDFSµÄ´«µİ±Õ°üÊµÏÖ.
-  ËüÒÔGµÄ¸÷¸ö¶¥µã×÷Îª¿ªÊ¼Íê³ÉÒ»¸öµ¥¶ÀµÄDFS£¬¼ÆËãÆä¿É´ïµÄ¶¥µã¼¯£¬ÒÔ´Ë¼ÆËã´«µİ±Õ°ü¡£
+  åŸºäºDFSçš„ä¼ é€’é—­åŒ…å®ç°.
+  å®ƒä»¥Gçš„å„ä¸ªé¡¶ç‚¹ä½œä¸ºå¼€å§‹å®Œæˆä¸€ä¸ªå•ç‹¬çš„DFSï¼Œè®¡ç®—å…¶å¯è¾¾çš„é¡¶ç‚¹é›†ï¼Œä»¥æ­¤è®¡ç®—ä¼ é€’é—­åŒ…ã€‚
  */
 #include "KtDfsIter.h"
 template<typename SRC_GRAPH, typename CLS_GRAPH = SRC_GRAPH>
@@ -45,19 +46,16 @@ public:
     KtTransitiveClosureDfs(const SRC_GRAPH& g) : g_(g.order()) {
         unsigned V = g.order();
         for(unsigned i = 0; i < V; i++)
-            g_.addEdge(i, i);
+            if(!g_.hasEdge(i, i))
+                g_.addEdge(i, i);
                     
         for(size_t v = 0; v < V; v++) {
             KtDfsIter<SRC_GRAPH> iter(g, v);
             assert(iter.from() == -1);
             ++iter; // skip v-self
-            while(!iter.isEnd()) {
-                if(iter.isTree()) {
-                    unsigned w = *iter;
-                    g_.addEdge(v, w);
-                }
-                ++iter;
-            }
+            for (; !iter.isEnd(); ++iter)
+                if(iter.isTree() && !g_.hasEdge(v, *iter)) 
+                    g_.addEdge(v, *iter);
         }
     }
 
@@ -70,11 +68,11 @@ private:
 };
 
 
-// DAGµÄ´«µİ±Õ°ü£¬»ùÓÚDFSËã·¨ÊµÏÖ¡£
-// Ïà±ÈKtClosureDfs£¬Ö÷ÒªÀûÓÃDAGµÄÌØĞÔ½øĞĞÓÅ»¯.
-//   1.Ã»ÓĞ»Ø±ß
-//   2.ÏÂ±ß¿ÉÒÔºöÂÔ£¬¼´²»ÓÃµİ¹éÕ¹¿ª£¬Ò²²»ÓÃ»ØËİ´«µİ±Õ°ü
-//   3.¿ç±ß²»ÓÃµİ¹éÕ¹¿ª£¬Ö±½Ó»ØËİ¼´¿É
+// DAGçš„ä¼ é€’é—­åŒ…ï¼ŒåŸºäºDFSç®—æ³•å®ç°ã€‚
+// ç›¸æ¯”KtClosureDfsï¼Œä¸»è¦åˆ©ç”¨DAGçš„ç‰¹æ€§è¿›è¡Œä¼˜åŒ–.
+//   1.æ²¡æœ‰å›è¾¹
+//   2.ä¸‹è¾¹å¯ä»¥å¿½ç•¥ï¼Œå³ä¸ç”¨é€’å½’å±•å¼€ï¼Œä¹Ÿä¸ç”¨å›æº¯ä¼ é€’é—­åŒ…
+//   3.è·¨è¾¹ä¸ç”¨é€’å½’å±•å¼€ï¼Œç›´æ¥å›æº¯å³å¯
 template<typename SRC_DAG, typename CLS_DAG = SRC_DAG>
 class KtTransitiveClosureDag
 {
@@ -86,24 +84,21 @@ public:
             g_.addEdge(i, i);
 
         KtDfsIter<SRC_DAG, true, true, true> iter(g, 0); 
-        while(!iter.isEnd()) {
+        for (; !iter.isEnd(); ++iter) {
             unsigned p = iter.from();
-            if(p == -1) {
-                ++iter; // skip edge(-1, v)
-                continue;
-            }
+            if(p == -1) 
+                continue; // skip edge(-1, v)
 
             unsigned v = *iter;
-            if(!iter.isPopping()) 
+            if(!iter.isPopping() && !g_.hasEdge(p, v))
                 g_.addEdge(p, v);
 
-            assert(!iter.isBack()); // DAGÃ»ÓĞ»Ø±ß
+            assert(!iter.isBack()); // DAGæ²¡æœ‰å›è¾¹
 
             if(iter.isCross() || iter.isPopping()) 
                  for(size_t w = 0; w < V; w++) 
-                    if(g_.hasEdge(v, w)) g_.addEdge(p, w);
-
-            ++iter;
+                    if(g_.hasEdge(v, w) && !g_.hasEdge(p, w)) 
+                        g_.addEdge(p, w);
         }     
     }
 
@@ -117,7 +112,7 @@ private:
 
 
 /* 
-  »ùÓÚÇ¿·ÖÁ¿µÄ´«µİ±Õ°üÊµÏÖ.
+  åŸºäºå¼ºåˆ†é‡çš„ä¼ é€’é—­åŒ…å®ç°.
  */
 #include "KtStronglyConnected.h"
 template<typename GRAPH>
@@ -125,18 +120,20 @@ class KtTransitiveClosureScc
 {
 public:
     KtTransitiveClosureScc(const GRAPH& g) : scc_(g) {
-        // ÒÔÃ¿¸öÇ¿Á¬Í¨·ÖÁ¿ÎªÒ»¸ö¶¥µã¹¹½¨DAG
-        GRAPH K(scc_.count()); // TODO£ºuse bit graph
+        // ä»¥æ¯ä¸ªå¼ºè¿é€šåˆ†é‡ä¸ºä¸€ä¸ªé¡¶ç‚¹æ„å»ºDAG
+        GRAPH K(scc_.count()); // TODOï¼šuse bit graph
         for(unsigned v = 0; v < g.order(); v++) {
             typename GRAPH::adj_vertex_iter iter(g, v);
             while(!iter.isEnd()) {
-                if(scc_[v] != scc_[*iter]) // Ïû³ı×Ô»·
-                    K.addEdge(scc_[v], scc_[*iter]);
+                auto x = scc_[v];
+                auto y = scc_[*iter];
+                if(x != y && !K.hasEdge(x, y)) // æ¶ˆé™¤è‡ªç¯
+                    K.addEdge(x, y);
                 ++iter;
             }
         }
 
-        // Ê¹ÓÃ»ùÓÚDAGµÄ´«µİ±Õ°üÓÅ»¯Ëã·¨
+        // ä½¿ç”¨åŸºäºDAGçš„ä¼ é€’é—­åŒ…ä¼˜åŒ–ç®—æ³•
         dagCls_ = new KtTransitiveClosureDag<GRAPH>(K);
     }
 

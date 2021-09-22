@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <vector>
 #include "KtDfsIterX.h"
 #include "KtTopologySort.h"
@@ -53,7 +53,7 @@ public:
         KtTopologySortInv<GRAPH> ts(g); // 拓扑排序算法只对DAG有效，所以此处使用基于DFS的逆拓扑排序计算后序编号
 
         // 第二遍DFS
-        auto gR = g.template reverse<GRAPH>(); // TODO：使用逆DFS搜索，可以省却计算逆图的时间和空间
+        auto gR = g.template inverse<GRAPH>(); // TODO：使用逆DFS搜索，可以省却计算逆图的时间和空间
         unsigned V = g.order();
         numScc_ = 0;
         idScc_.assign(V, -1);        

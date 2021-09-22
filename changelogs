@@ -1,0 +1,7 @@
+v0.3 build20210922
+1. recode spare matrix.
+2. new implement KtGraphVoa, the graph with Vertex Object Attached.
+3. new implement KtSubGraph, the graph support embedded sub-graphs.
+4. new implement resort alogrithm.
+5. new support parallel edges.
+6. fix some bugs.

@@ -17,10 +17,10 @@ void dump(const GRAPH& g, const char* path, bool dumpValue)
         bool empty_line(true);
         for (; !iter.isEnd(); ++iter) {
             if (!g.isDigraph() && *iter < v)
-                continue; // ¶ÔÓÚÎŞÏòÍ¼£¬Ö»ÏÔÊ¾v <= wµÄ±ß
+                continue; // å¯¹äºæ— å‘å›¾ï¼Œåªæ˜¾ç¤ºv <= wçš„è¾¹
 
             of << '(' << s << *iter;
-            if (dumpValue) of << ", " << iter.value();
+            //if (dumpValue) of << ", " << iter.value();
             of << ") ";
             empty_line = false;
         }
@@ -31,7 +31,7 @@ void dump(const GRAPH& g, const char* path, bool dumpValue)
 }
 
 
-// ²âÊÔÊ§°ÜÊ±µ÷ÓÃ¸Ãº¯Êı´òÓ¡ĞÅÏ¢¡¢ÍË³ö³ÌĞò
+// æµ‹è¯•å¤±è´¥æ—¶è°ƒç”¨è¯¥å‡½æ•°æ‰“å°ä¿¡æ¯ã€é€€å‡ºç¨‹åº
 template<typename GRAPH>
 void test_failed(const GRAPH& g, bool detail = false)
 {
@@ -46,11 +46,11 @@ void test_failed(const GRAPH& g, bool detail = false)
 
 
 
-// ·µ»Ø[x0, x1]Çø¼äµÄËæ»úÊı
+// è¿”å›[x0, x1]åŒºé—´çš„éšæœºæ•°
 double rand(double x0, double x1);
 
 
-// ÒÔpµÄ¸ÅÂÊ·µ»Øtrue.
+// ä»¥pçš„æ¦‚ç‡è¿”å›true.
 // 0 <= p <= 1
 bool rand_p(double p);
 
@@ -60,7 +60,7 @@ GRAPH randGraph(unsigned V, unsigned E)
 {
     GRAPH g(V);
     double p = static_cast<double>(E) / (V * V);
-    if (!g.isDigraph()) p *= 2; // ¶ÔÓÚÎŞÏòÍ¼£¬±ßµÄÉú³É¸ÅÂÊ·­±¶
+    if (!g.isDigraph()) p *= 2; // å¯¹äºæ— å‘å›¾ï¼Œè¾¹çš„ç”Ÿæˆæ¦‚ç‡ç¿»å€
     for (unsigned i = 0; i < V; i++) {
         unsigned jMax = g.isDigraph() ? V : i + 1;
         for (unsigned j = 0; j < jMax; j++)
@@ -78,24 +78,25 @@ GRAPH randGraph(unsigned V, unsigned E)
 
 
 #include "../core/KtConnected.h"
-// ÔÚÍ¼gµÄ»ù´¡ÉÏÔö¼Ó±ß£¬ÒÔ±£Ö¤gÎªÁ¬Í¨Í¼
+// åœ¨å›¾gçš„åŸºç¡€ä¸Šå¢åŠ è¾¹ï¼Œä»¥ä¿è¯gä¸ºè¿é€šå›¾
 template<typename GRAPH>
 void makeConnect(GRAPH& g)
 {
     KtConnected<GRAPH> cc(g);
     if (cc.count() > 1) {
-        std::vector<unsigned> v(cc.count());
-        unsigned cnt(1);
-        for (unsigned i = 0; i < g.order(); i++) {
-            if (cnt == cc[i]) {
-                v.push_back(i); // Ñ¹ÈëÃ¿¸öÁ¬Í¨·ÖÁ¿µÄµÚ1¸ö¶¥µã
-                if (cnt++ == cc.count())
-                    break;
+        std::vector<unsigned> v(cc.count(), -1);
+        unsigned cnt(0);
+        for (unsigned i = 0; i < g.order() && cnt < cc.count(); i++) {
+            if (v[cc[i]] == -1) {
+                v[cc[i]] = i; // å‹å…¥æ¯ä¸ªè¿é€šåˆ†é‡çš„ç¬¬1ä¸ªé¡¶ç‚¹
+                ++cnt;
             }
         }
 
-        for (unsigned i = 1; i < v.size(); i++)
+        for (unsigned i = 1; i < v.size(); i++) {
+            assert(!g.hasEdge(v[i - 1], v[i]));
             g.addEdge(v[i - 1], v[i]);
+        }
 
         assert(g.isConnected());
     }
@@ -103,7 +104,7 @@ void makeConnect(GRAPH& g)
 
 
 
-// ÅĞ¶ÏÁ½¸öÍ¼g1, g2ÊÇ·ñÏàµÈ
+// åˆ¤æ–­ä¸¤ä¸ªå›¾g1, g2æ˜¯å¦ç›¸ç­‰
 template<typename G1, typename G2>
 bool isSame(const G1& g1, const G2& g2)
 {
