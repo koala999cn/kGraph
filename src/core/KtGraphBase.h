@@ -1,95 +1,134 @@
 #pragma once
 #include <vector>
-#include <cassert>
+#include <assert.h>
 
 
-// »ùÓÚÁÚ½Ó¾ØÕóµÄÍ¼²¼¾Ö
-// MAT_TYPEÎªÁÚ½Ó¾ØÕóÀàĞÍ£¬ÖÁÉÙÒªÓĞÒÔÏÂ3Ïî³ÉÔ±£º
-//     1.ÀàĞÍÉùÃ÷£ºvalue_type
-//     2.¹¹Ôìº¯Êı£ºMAT_TYPE(unsigned numRow, unsigned numCol, value_type initValue)
-//     3.·ûºÅÖØÔØ£ºvalue_type& operaotr(unsigned idxRow, unsigned idxCol)
-// directionÎªÕæ´ú±íÓĞÏòÍ¼£¬·ñÔò´ú±íÎŞÏòÍ¼¡£
-template<typename MAT_TYPE, bool direction = false> 
+/// åŸºäºé‚»æ¥çŸ©é˜µçš„å›¾å¸ƒå±€
+//  -- Containerä¸ºé‚»æ¥çŸ©é˜µç±»å‹.
+//  -- directionä¸ºçœŸä»£è¡¨æœ‰å‘å›¾ï¼Œå¦åˆ™ä»£è¡¨æ— å‘å›¾ã€‚
+//  -- parallelä¸ºçœŸä»£è¡¨å…è®¸å¹³è¡Œè¾¹ï¼Œå³ä¸¤ç‚¹ä¹‹é—´å¯æœ‰å¤šæ¡è¾¹ã€‚
+template<typename Container, bool direction = false, bool parallel = false>
 class KtGraphBase
 {
 public:
-    typedef typename MAT_TYPE::value_type value_type;
+    using value_type = typename Container::value_type;
+    using reference = typename Container::reference;
+    using const_reference = typename Container::const_reference;
+    using vertex_index_t = unsigned;
+    constexpr static vertex_index_t null_vertex = -1;
 
-    KtGraphBase() : E_(0), null_(0) {} 
+
+    KtGraphBase() : E_(0), null_{} { } // nullé»˜è®¤ä¸ºé›¶åˆå§‹åŒ–å€¼
+
     KtGraphBase(const KtGraphBase&) = default;
     KtGraphBase(KtGraphBase&&) = default;
     KtGraphBase& operator=(const KtGraphBase&) = default;
     KtGraphBase& operator=(KtGraphBase&&) = default;
 
-    explicit KtGraphBase(unsigned numVertex, value_type nullValue = value_type{0}) : 
+    explicit KtGraphBase(unsigned numVertex, const_reference nullValue = value_type{}) :
         adjMat_(numVertex, numVertex, nullValue),
         E_(0),
-        null_(nullValue) {}
+        null_(nullValue) { }
 
     constexpr static bool isDigraph() { return direction; }
 
-    // ÖØÖÃÍ¼ÎªnumVertex¶¥µã£¬²¢Çå¿ÕËùÓĞ±ß
-    void reset(unsigned numVertex, value_type nullValue = value_type(0)) {
+    // é‡ç½®å›¾ä¸ºnumVertexé¡¶ç‚¹ï¼Œå¹¶æ¸…ç©ºæ‰€æœ‰è¾¹
+    void reset(unsigned numVertex, const_reference nullValue = value_type()) {
         E_ = 0;
         null_ = nullValue;
         adjMat_.reset(numVertex, numVertex, null_);
     }
 
-    // ·µ»ØÍ¼µÄ½×£¬¼´¶¥µãÊıÄ¿
+    void reserve(unsigned numVerts, unsigned numEdges) {
+        adjMat_.reserve(numVerts, numVerts);
+    }
+
+
+    // è¿”å›å›¾çš„é˜¶ï¼Œå³é¡¶ç‚¹æ•°ç›®
     unsigned order() const { return adjMat_.rows(); }
 
-    // ·µ»ØÍ¼µÄ±ßÊı
+    // è¿”å›å›¾çš„è¾¹æ•°
     unsigned size() const { return E_; }
 
-    // ¿ÕÍ¼
+    // ç©ºå›¾
     bool isEmpty() const  { return order() == 0; }
 
-    // Æ½·²Í¼
+    // å¹³å‡¡å›¾
     bool isTrivial() const { return order() == 1; }
 
-    // ÁãÍ¼
+    // é›¶å›¾
     bool isNull() const { return size() == 0; }
 
-    const value_type& getEdge(unsigned v1, unsigned v2) const {
+    const_reference getEdge(vertex_index_t v1, vertex_index_t v2) const {
         return adjMat_(v1, v2);
     }
 
-    value_type getEdge(unsigned v1, unsigned v2) {
+    reference getEdge(vertex_index_t v1, vertex_index_t v2) {
         return adjMat_(v1, v2);
     }
 
-    bool hasEdge(unsigned v1, unsigned v2) const {
+    bool hasEdge(vertex_index_t v1, vertex_index_t v2) const {
         return getEdge(v1, v2) != null_;
     }
 
 
-    void addEdge(unsigned v1, unsigned v2, const value_type& val = value_type(1)) {
+    void addEdge(vertex_index_t v1, vertex_index_t v2, const_reference val) {
         assert(val != null_);
-        if(!hasEdge(v1, v2)) 
-            ++E_;
-        adjMat_(v1, v2) = val;
-        if(!direction) adjMat_(v2, v1) = val;
-     }
-     
-
-    void setEdge(unsigned v1, unsigned v2, const value_type& val) {
-        assert(val != null_ && hasEdge(v1, v2));
-        adjMat_(v1, v2) = val;
-        if(!direction) adjMat_(v2, v1) = val;
+        assert(parallel || !hasEdge(v1, v2));
+        ++E_;
+        adjMat_.insert(v1, v2, val);
+        if (!isDigraph()) adjMat_.insert(v2, v1, val);
     }
 
 
-    void eraseEdge(unsigned v1, unsigned v2) {
+    // è‹¥å…è®¸ï¼ˆå¯æ•´å‹æ„é€ ï¼‰ï¼Œåˆ™æä¾›ä¸€ä¸ªaddEdgeçš„ç®€åŒ–ç‰ˆ
+    template<typename T = value_type>
+    typename std::enable_if_t<std::is_constructible<T, int>::value>
+    addEdge(vertex_index_t v1, vertex_index_t v2) {
+        addEdge(v1, v2, T{ 1 });
+    }
+   
+
+    void setEdge(vertex_index_t v1, vertex_index_t v2, const_reference val) {
+        assert(val != null_); assert(hasEdge(v1, v2));
+        adjMat_(v1, v2) = val;
+        if(!isDigraph()) adjMat_(v2, v1) = val;
+    }
+
+
+    // åˆ é™¤è¾¹(v1, v2)
+    void eraseEdge(vertex_index_t v1, vertex_index_t v2) {
         if(hasEdge(v1, v2)) {
             adjMat_(v1, v2) = null_;
-            if(!direction) adjMat_(v2, v1) = null_;
+            if(!isDigraph()) adjMat_(v2, v1) = null_;
             --E_;
         }
     }
 
 
-    // ³ö¶È
-    virtual unsigned outdegree(unsigned v) const {
+    // åˆ é™¤é¡¶ç‚¹vçš„æ‰€æœ‰å…¥è¾¹
+    void eraseInEdges(vertex_index_t v) {
+        adjMat_.assignCol(v, null_);
+        if (!isDigraph()) adjMat_.assignRow(v, null_);
+    }
+
+
+    // åˆ é™¤é¡¶ç‚¹vçš„æ‰€æœ‰å‡ºè¾¹
+    void eraseOutEdges(vertex_index_t v) {
+        adjMat_.assignRow(v, null_);
+        if (!isDigraph()) adjMat_.assignCol(v, null_);
+    }
+
+
+    // åˆ é™¤ä¸é¡¶ç‚¹vç›¸æ¥çš„æ‰€æœ‰è¾¹
+    void eraseEdges(vertex_index_t v) {
+        adjMat_.eraseRow(v);
+        adjMat_.eraseCol(v);
+    }
+
+
+    // å‡ºåº¦
+    virtual unsigned outdegree(vertex_index_t v) const {
         unsigned d(0);
         for (unsigned i = 0; i < order(); i++)
             if (hasEdge(v, i)) ++d;
@@ -97,8 +136,8 @@ public:
     }
 
 
-    // Èë¶È
-    unsigned indegree(unsigned v) const {
+    // å…¥åº¦
+    virtual unsigned indegree(vertex_index_t v) const {
         if (!direction) {
             return outdegree(v);
         }
@@ -110,33 +149,34 @@ public:
         }
     }
 
-    // ¶È. ×¢£º¶ÔÓÚÓĞÏòÍ¼µÄ×Ô»·£¬¶ÈÎª2£¬1¸öÈë¶È+1¸ö³ö¶È
-    unsigned degree(unsigned v) const {
+    // åº¦. æ³¨ï¼šå¯¹äºæœ‰å‘å›¾çš„è‡ªç¯ï¼Œåº¦ä¸º2ï¼Œ1ä¸ªå…¥åº¦+1ä¸ªå‡ºåº¦
+    unsigned degree(vertex_index_t v) const {
         auto d = outdegree(v);
-        if (direction) d += indegree(v);
+        if (isDigraph()) d += indegree(v);
         return d;
     }
 
 
-    // É¾³ı¶¥µãv¼°ÆäÁÚ±ß
-    void eraseVertex(unsigned v) {
-        auto d = degree(v); // ÓëvÏàÁÚµÄ±ßÊı
-        if (direction && hasEdge(v, v)) --d; // ĞŞÕıÓĞÏò×Ô»·µÄ±ßÊı
+    // åˆ é™¤é¡¶ç‚¹våŠå…¶é‚»è¾¹
+    void eraseVertex(vertex_index_t v) {
+        auto d = degree(v); // ä¸vç›¸é‚»çš„è¾¹æ•°
+        if (isDigraph() && hasEdge(v, v)) --d; // ä¿®æ­£æœ‰å‘è‡ªç¯çš„è¾¹æ•°
         adjMat_.eraseRow(v);
         adjMat_.eraseCol(v);
         E_ -= d;
     }
 
 
-    // Ôö¼Ó1¸ö¹ÂÁ¢µã£¬·µ»ØĞÂÔö¶¥µãµÄ±àºÅ
-    void addVertex() {
+    // å¢åŠ 1ä¸ªå­¤ç«‹ç‚¹
+    vertex_index_t addVertex() {
         adjMat_.appendRow(null_);
         adjMat_.appendCol(null_);
+        return adjMat_.rows() - 1;
     }
 
 
 protected:
-    MAT_TYPE adjMat_; // ÁÚ½Ó¾ØÕó
-    value_type null_; // ¾ØÕóÔªËØµÈÓÚnull_Ê±£¬´ú±íÎŞÁ¬½Ó
-    unsigned E_; // ±ßÊıÁ¿
+    Container adjMat_; // é‚»æ¥çŸ©é˜µ
+    value_type null_; // çŸ©é˜µå…ƒç´ ç­‰äºnull_æ—¶ï¼Œä»£è¡¨æ— è¿æ¥
+    unsigned E_; // è¾¹æ•°é‡
 };
