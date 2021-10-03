@@ -1,7 +1,7 @@
 #pragma once
 
 
-// 判断两个图g1, g2是否相等
+// 鍒ゆ柇涓や釜鍥緂1銆乬2鏄惁鐩稿悓
 template<typename G1, typename G2>
 bool is_same(const G1& g1, const G2& g2)
 {
