@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../GraphX.h"
 #include "../core/KtTransitiveClosure.h"
+#include "../util/randgen.h"
 #include "test_util.h"
 
 
@@ -78,7 +79,7 @@ void transitive_closure_test()
     transitive_closure_test_(dag);
 
 
-    DigraphDi dg = randGraph<DigraphDi>(100, 1000); 
+    DigraphDi dg = randgen<DigraphDi>(100, 1000); 
     printf("   random digraph V = %d, E = %d\n", dg.order(), dg.size());
     fflush(stdout);
     transitive_closure_test_(dg);
