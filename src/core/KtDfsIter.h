@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <assert.h>
-#include "KtGraphBase.h"
 
 
 // 统一有向图与无向图的深度优先遍历模板框架，通过模板参数可支持多种遍历范式。
@@ -15,124 +14,90 @@ template<typename GRAPH, bool fullGraph = false, bool modeEdge = false, bool sto
 class KtDfsIter
 {
 public:
-    using value_type = typename GRAPH::value_type;
-    using adj_vertex_iter = typename GRAPH::adj_vertex_iter;
+    using graph_type = GRAPH;
+    using vertex_index_t = typename graph_type::vertex_index_t;
+    using edge_type = typename GRAPH::edge_type;
+    using adj_vertex_iter = decltype(std::declval<graph_type>().adjIter(0));
+    using const_edge_ref = decltype(std::declval<adj_vertex_iter>().edge());
+    enum { null_vertex = GRAPH::null_vertex };
 
 
     // graph -- 待遍历的图
     // startVertex -- 遍历的起始顶点，-1表示只构建迭代器，需要另外调用begin方法开始遍历
-    KtDfsIter(const GRAPH& graph, unsigned startVertex)
+    KtDfsIter(GRAPH& graph, vertex_index_t startVertex)
         : graph_(graph),
-        v_(-1),
-        pushOrd_(graph.order(), -1),
-        popOrd_(graph.order(), -1),
+        v_(null_vertex),
+        pushOrd_(graph.order(), null_vertex),
+        popOrd_(graph.order(), null_vertex),
         pushIdx_(0), popIdx_(0) {
-        if (startVertex != -1) begin(startVertex);
+        if (startVertex != null_vertex) begin(startVertex);
     }
 
     void operator++() {
         assert(!isEnd());
 
         if (isPopping()) { // 处理出栈顶点
-            assert(popOrd_[v_] == -1);
+            assert(popOrd_[v_] == null_vertex);
             popOrd_[v_] = popIdx_++;
             todo_.pop_back();
         }
         else {
             if (todo_.size() > 1)
-                ++todo_.back().first;
+                ++todo_.back();
             if (isPushing()) {
                 pushOrd_[v_] = pushIdx_++;
-                todo_.emplace_back(adj_vertex_iter{ graph_, v_ }, v_);
+                todo_.push_back(graph_.adjIter(v_));
             }
         }
-
-
-        // 检测当前顶点是否需要跳过
-        while (todo_.size() > 1) {
-            auto& iter = todo_.back().first;
-
-            // 移除已结束的迭代器
-            if (iter.isEnd()) {
-                if (!stopAtPopping) {
-                    popOrd_[todo_.back().second] = popIdx_++;
-                    todo_.pop_back();
-                    continue;
-                }
-
-                break; // stop at popping
-            }
-
-
-            assert(!isPopping() && !iter.isEnd());
-
-            // 防止无向图的顶点回溯
-            if (!GRAPH::isDigraph() && *iter == grandpa()) {
-                ++iter;
-                continue;
-            }
-
-            // 跳过已遍历的顶点或边
-            bool needSkip = false;
-                
-            if (modeEdge) {
-                if (!GRAPH::isDigraph() && popOrd_[*iter] != -1) // 对于无向图，若某顶点已出栈，则与之邻接的边必然已遍历
-                    needSkip = true;
-            }
-            else if (pushOrd_[*iter] != -1)  // 跳过已遍历的顶点，确保每个顶点只遍历一次
-                    needSkip = true;
-
-            if (needSkip) {
-                ++iter;
-                continue;
-            }
         
-            break;
-        }
-
-        // 更新v_和接续遍历
-        if (todo_.size() <= 1) {
-            v_ = -1; // 设置终止标记
-
-            if (fullGraph) {
-                unsigned unvisted = firstUnvisited();
-                if(unvisted != -1) begin(unvisted); // 接续遍历
-            }
-        }
-        else {
-            v_ = todo_.back().first.isEnd() ? todo_.back().second : *todo_.back().first;
-        }
+        advancePost_();
     }
 
     // 返回当前正在游历的顶点
-    unsigned operator*() const { return v_; }
+    vertex_index_t operator*() const { return v_; }
 
 
     // 与当前顶点（to顶点）构成边的from顶点
-    unsigned from() const {
+    vertex_index_t from() const {
         assert(!isEnd());
         return isPopping() ? grandpa() :
-                            todo_.size() > 1 ? todo_.back().second : -1;
+                            todo_.size() > 1 ? todo_.back().source() : null_vertex;
     }
 
 
     // 返回边(from, to)的值
-    auto value() const {
-        assert(!isEnd() && from() != -1);
-        return todo_.back().first.value();
+    const_edge_ref edge() const {
+        assert(!isEnd() && from() != null_vertex);
+        return todo_.back().edge();
     }
 
 
-    bool isEnd() const { return v_ == -1; }
+    bool isEnd() const { return v_ == null_vertex; }
 
 
     // 从顶点v开始接续进行广度优先遍历
-    void begin(unsigned v) {
-        assert(isEnd() && pushOrd_[v] == -1);
+    void begin(vertex_index_t v) {
+        assert(isEnd() && pushOrd_[v] == null_vertex);
         todo_.clear();
-        todo_.emplace_back(adj_vertex_iter(graph_), v_ = v);
+        todo_.push_back(adj_vertex_iter(graph_));
+        v_ = v;
         if (modeEdge && !stopAtPopping) 
             ++(*this); // skip v0
+    }
+
+
+    void erase() {
+        assert(!isEnd() && from() != null_vertex);
+
+        if (isPopping()) { // 处理出栈顶点
+            assert(popOrd_[v_] == null_vertex);
+            popOrd_[v_] = popIdx_++;
+            todo_.pop_back();
+        }
+
+        todo_.back().erase();
+
+        advancePost_();
     }
 
 
@@ -177,7 +142,7 @@ public:
     bool isPushing() const { return isTree(); }
 
     // 当前节点是否正在出栈，对应于递归的出口
-    bool isPopping() const { return stopAtPopping && !isPushing() && todo_.back().first.isEnd(); }
+    bool isPopping() const { return stopAtPopping && !isPushing() && todo_.back().isEnd(); }
 
     unsigned pushIndex(unsigned v) const { return pushOrd_[v]; }
     unsigned popIndex(unsigned v) const { return popOrd_[v]; }
@@ -192,24 +157,83 @@ public:
     }
 
 
-    unsigned graphOrder() const {
-        return graph_.order();
-    }
+    graph_type& graph() { return graph_; }
+
 
 private:
 
     // 返回当前顶点的祖父顶点，即from之from
-    unsigned grandpa() const {
-        return todo_.size() > 2 ? todo_[todo_.size() - 2].second : -1;
+    vertex_index_t grandpa() const {
+        return todo_.size() > 2 ? todo_[todo_.size() - 2].source() : null_vertex;
+    }
+
+
+    // 步进或删除的后处理
+    void advancePost_() {
+
+        // 检测当前顶点是否需要跳过
+        while (todo_.size() > 1) {
+            auto& iter = todo_.back();
+
+            // 移除已结束的迭代器
+            if (iter.isEnd()) {
+                if (!stopAtPopping) {
+                    popOrd_[todo_.back().source()] = popIdx_++;
+                    todo_.pop_back();
+                    continue;
+                }
+
+                break; // stop at popping
+            }
+
+
+            assert(!isPopping() && !iter.isEnd());
+
+            // 防止无向图的顶点回溯
+            if (!GRAPH::isDigraph() && *iter == grandpa()) {
+                ++iter;
+                continue;
+            }
+
+            // 跳过已遍历的顶点或边
+            bool needSkip = false;
+
+            if (modeEdge) {
+                if (!GRAPH::isDigraph() && popOrd_[*iter] != -1) // 对于无向图，若某顶点已出栈，则与之邻接的边必然已遍历
+                    needSkip = true;
+            }
+            else if (pushOrd_[*iter] != -1)  // 跳过已遍历的顶点，确保每个顶点只遍历一次
+                needSkip = true;
+
+            if (needSkip) {
+                ++iter;
+                continue;
+            }
+
+            break;
+        }
+
+        // 更新v_和接续遍历
+        if (todo_.size() <= 1) {
+            v_ = null_vertex; // 设置终止标记
+
+            if (fullGraph) {
+                unsigned unvisted = firstUnvisited();
+                if (unvisted != null_vertex) begin(unvisted); // 接续遍历
+            }
+        }
+        else {
+            v_ = todo_.back().isEnd() ? todo_.back().source() : *todo_.back();
+        }
     }
 
 private:
-    const GRAPH& graph_;
+    graph_type& graph_;
 
-    // 待处理的邻接顶点迭代器。使用pair结构，主要是为了方便高效实现from方法
-    std::vector<std::pair<adj_vertex_iter, unsigned>> todo_;
+    // 待处理的邻接顶点迭代器
+    std::vector<adj_vertex_iter> todo_;
 
-    unsigned v_; // 正在遍历的顶点
+    vertex_index_t v_; // 正在遍历的顶点
 
     std::vector<unsigned> pushOrd_, popOrd_; // 用于记录各顶点的压栈/出栈顺序
     unsigned pushIdx_, popIdx_; // 当前压栈/出栈序号
