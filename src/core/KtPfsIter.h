@@ -14,8 +14,8 @@ class KtPfsIter
 {
 public:
     using adj_vertex_iter = typename GRAPH::adj_vertex_iter;
-    using value_type = typename GRAPH::value_type;
-    using prior_type = decltype(std::declval<PRIORITOR>()(0, 0, value_type(0))); // 得到PRIORITOR算子的返回类型
+    using edge_type = typename GRAPH::edge_type;
+    using prior_type = decltype(std::declval<PRIORITOR>()(0, 0, edge_type(0))); // 得到PRIORITOR算子的返回类型
     using element_type = std::pair<std::pair<unsigned, unsigned>, prior_type>;
 
     struct Comp {
@@ -27,7 +27,7 @@ public:
     using pfs_queue = std::priority_queue<element_type, std::vector<element_type>, Comp>;
 
 public:
-    KtPfsIter(const GRAPH& g, unsigned v0)
+    KtPfsIter(GRAPH& g, unsigned v0)
         : graph_(g),
           v0_(v0),
           isPushed_(g.order(), false),
@@ -42,17 +42,17 @@ public:
         unsigned w = x.second;
         st_[w] = x.first;
 
-        adj_vertex_iter iter(graph_, w);
+        auto iter= graph_.adjIter(w);
         for (; !iter.isEnd(); ++iter) {
             unsigned t = *iter;
             if (!isPushed(t)) {
-                pq_.emplace(std::pair<unsigned, unsigned>{w, t}, PRIORITOR{}(w, t, iter.value())); // put it
+                pq_.emplace(std::pair<unsigned, unsigned>{w, t}, PRIORITOR{}(w, t, iter.edge())); // put it
                 isPushed_[t] = true;
              }
             else if(!isPopped(t) // isPopped(v0)始终为false
                 && (graph_.isDigraph() || t != x.first && t != v0_) // 忽略无向图的回边
                 ) 
-                pq_.emplace(std::pair<unsigned, unsigned>{w, t}, PRIORITOR{}(w, t, iter.value())); // update it
+                pq_.emplace(std::pair<unsigned, unsigned>{w, t}, PRIORITOR{}(w, t, iter.edge())); // update it
         }
 
 
@@ -109,7 +109,7 @@ public:
 
 
 private:
-    const GRAPH& graph_;
+    GRAPH& graph_;
     unsigned v0_;
     std::vector<bool> isPushed_;
 
