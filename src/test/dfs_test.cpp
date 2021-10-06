@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../GraphX.h"
 #include "../core/KtDfsIter.h"
+#include "../util/randgen.h"
 #include "test_util.h"
 
 
@@ -9,7 +10,7 @@ void dfs_test_(const GRAPH& g)
 {
     printf("      normal mode");
     fflush(stdout);
-    KtDfsIter<GRAPH, true> dfs1(g, 0);
+    KtDfsIter<const GRAPH, true> dfs1(g, 0);
     std::vector<unsigned> v;
     for (; !dfs1.isEnd(); ++dfs1) 
         v.push_back(*dfs1);
@@ -20,7 +21,7 @@ void dfs_test_(const GRAPH& g)
 
     printf("      edge mode");
     fflush(stdout);
-    KtDfsIter<GRAPH, true, true> dfs2(g, 0);
+    KtDfsIter<const GRAPH, true, true> dfs2(g, 0);
     std::vector<std::pair<unsigned, unsigned>> e;
     for (; !dfs2.isEnd(); ++dfs2)
         e.push_back({ dfs2.from(), *dfs2 });
@@ -35,7 +36,7 @@ void dfs_test_(const GRAPH& g)
 
     printf("      normal popping mode");
     fflush(stdout);
-    KtDfsIter<GRAPH, true, false, true> dfs3(g, 0);
+    KtDfsIter<const GRAPH, true, false, true> dfs3(g, 0);
     v.clear();
     for (; !dfs3.isEnd(); ++dfs3) 
         v.push_back(*dfs3);
@@ -71,12 +72,12 @@ void dfs_test()
     fflush(stdout);
     dfs_test_(sdg);
 
-    GraphDd rg = randGraph<GraphDd>(300, 30000);
+    GraphDd rg = randgen<GraphDd>(300, 30000);
     printf("   random graph V = %d, E = %d\n", rg.order(), rg.size());
     fflush(stdout);
     dfs_test_(rg);
 
-    DigraphDd rdg = randGraph<DigraphDd>(300, 30000); 
+    DigraphDd rdg = randgen<DigraphDd>(300, 30000); 
     printf("   random digraph V = %d, E = %d\n", rdg.order(), rdg.size());
     fflush(stdout);
     dfs_test_(rdg);
