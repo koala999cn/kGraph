@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "../GraphX.h"
+#include "../util/randgen.h"
+#include "../util/is_same.h"
 #include "test_util.h"
 
 
@@ -12,11 +14,11 @@ void sparse_graph_test()
     printf("sparse graph test...\n");
     fflush(stdout);
 
-    GraphDd dense = randGraph<GraphDd>(V, 200);
+    GraphDd dense = randgen<GraphDd>(V, 200);
     printf("   random add edges");
     fflush(stdout);
     GraphDd sparse = dense.copy<GraphDd>();
-    if (!isSame(sparse, dense))
+    if (!is_same(sparse, dense))
         test_failed(sparse);
     printf("  > passed\n"); fflush(stdout);
 
@@ -29,7 +31,7 @@ void sparse_graph_test()
                 sparse.eraseEdge(i, j);
                 dense.eraseEdge(i, j);
             }
-    if (!isSame(sparse, dense))
+    if (!is_same(sparse, dense))
         test_failed(sparse);
     printf("  > passed\n"); fflush(stdout);
 
@@ -43,7 +45,7 @@ void sparse_graph_test()
                 sparse.setEdge(i, j, d);
                 dense.setEdge(i, j, d);
             }
-    if (!isSame(sparse, dense))
+    if (!is_same(sparse, dense))
         test_failed(sparse);
     printf("  > passed\n"); fflush(stdout);
 
@@ -56,7 +58,7 @@ void sparse_graph_test()
                 sparse.addEdge(i, j);
                 dense.addEdge(i, j);
             }
-    if (!isSame(sparse, dense))
+    if (!is_same(sparse, dense))
         test_failed(sparse);
     printf("  > passed\n"); fflush(stdout);
 
@@ -73,7 +75,7 @@ void sparse_graph_test()
         if (sparse.size() != numEdge - degree)
             test_failed(sparse);
 
-        if (!isSame(sparse, dense))
+        if (!is_same(sparse, dense))
             test_failed(sparse);
     }
     printf("  > passed\n"); fflush(stdout);
@@ -81,7 +83,7 @@ void sparse_graph_test()
     printf("   add new vertex");
     fflush(stdout);
     sparse.addVertex(); dense.addVertex();
-    if (!isSame(sparse, dense))
+    if (!is_same(sparse, dense))
         test_failed(sparse);
     printf("  > passed\n"); fflush(stdout);
 }
