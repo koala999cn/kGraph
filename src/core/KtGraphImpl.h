@@ -13,41 +13,70 @@ class KtGraphImpl : public GRAPH_BASE
 {
 public:
 
-    using typename GRAPH_BASE::value_type;
-    using typename GRAPH_BASE::adj_vertex_iter;
-    using typename GRAPH_BASE::vertex_index_t;
+    using super_ = GRAPH_BASE;
+    using typename super_::edge_type;
+    using typename super_::vertex_index_t;
+    using typename super_::adj_vertex_iter;
+    using typename super_::const_adj_vertex_iter;
 
     template<bool fullGraph = false, bool modeEdge = false, bool stopAtPopping = false>
     using dfs_iter = KtDfsIter<KtGraphImpl, fullGraph, modeEdge, stopAtPopping>;
 
+    template<bool fullGraph = false, bool modeEdge = false, bool stopAtPopping = false>
+    using const_dfs_iter = KtDfsIter<const KtGraphImpl, fullGraph, modeEdge, stopAtPopping>;
+
     template<bool fullGraph = false, bool modeEdge = false>
     using bfs_iter = KtBfsIter<KtGraphImpl, fullGraph, modeEdge>;
 
-    using edge_iter = bfs_iter<true, true>; // TODO: 移到基类
+    template<bool fullGraph = false, bool modeEdge = false>
+    using const_bfs_iter = KtBfsIter<const KtGraphImpl, fullGraph, modeEdge>;
+
+    using edge_iter = bfs_iter<true, true>; 
+    using const_edge_iter = const_bfs_iter<true, true>;
+
 
     // 导入基类的构造函数
-    using GRAPH_BASE::GRAPH_BASE;
+    using super_::super_;
 
     // 导入基类的有关成员函数
-    using GRAPH_BASE::order;
-    using GRAPH_BASE::size;
-    using GRAPH_BASE::addEdge;
-    using GRAPH_BASE::hasEdge;
-    using GRAPH_BASE::getEdge;
-    using GRAPH_BASE::eraseEdge;
-    using GRAPH_BASE::isDigraph;
-    using GRAPH_BASE::indegree;
-    using GRAPH_BASE::outdegree;
+    using super_::order;
+    using super_::size;
+    using super_::addEdge;
+    using super_::hasEdge;
+    using super_::getEdge;
+    using super_::eraseEdge;
+    using super_::isDigraph;
+    using super_::indegree;
+    using super_::outdegree;
+
+
+
+    // 返回4个版本的邻接顶点迭代器
+    auto adjIter(vertex_index_t v) const {
+        return const_adj_vertex_iter(*this, v);
+    }
+
+    auto adjIter(vertex_index_t v) {
+        return adj_vertex_iter(*this, v);
+    }
+
+    auto adjIterR(vertex_index_t v) const {
+        return const_adj_vertex_iter_r(*this, v);
+    }
+
+    auto adjIterR(vertex_index_t v) {
+        return adj_vertex_iter_r(*this, v);
+    }
 
 
     // @GRAPH: 输出的图类型
     // @WEIGHTOR: 边权值转换函数子
-    template<typename GRAPH, typename WEIGHTOR = KtWeightSelf<value_type>>
+    template<typename GRAPH, typename WEIGHTOR = KtWeightSelf<edge_type>>
     GRAPH copy() const {
         GRAPH g(order()); g.reserve(order(), size());
-        bfs_iter<true, true> bfs(*this, 0);
-        for (; !bfs.isEnd(); ++bfs)
-            g.addEdge(bfs.from(), *bfs, WEIGHTOR{}(bfs.value()));
+        const_edge_iter iter(*this, 0);
+        for (; !iter.isEnd(); ++iter)
+            g.addEdge(iter.from(), *iter, WEIGHTOR{}(iter.edge()));
 
         assert(g.size() == size());
         return g;
@@ -75,7 +104,7 @@ public:
 
     // 一个有向图是DAG，当且仅当在使用DFS检查每条边时未遇到任何回边
     bool hasLoop() const {
-        dfs_iter<true, true, true> iter(*this, 0);
+        const_dfs_iter<true, true, true> iter(*this, 0);
         while(!iter.isEnd()) {
             if(iter.isBack())
                 return true;
@@ -92,8 +121,9 @@ public:
         dfs_iter<true, true> iter(*this, 0);
         while(!iter.isEnd()) {
             if(iter.isBack())
-                eraseEdge(iter.from(), *iter);
-            ++iter;
+                iter.erase();
+            else
+                ++iter;
         }
     }
 
@@ -103,9 +133,9 @@ public:
     auto edges() const {
         using edge_type = std::pair<std::pair<unsigned, unsigned>, typename WEIGHTOR::weight_type>;
         std::vector<edge_type> es; es.reserve(size());
-        bfs_iter<true, true> iter(*this, 0); 
+        const_bfs_iter<true, true> iter(*this, 0); 
         for(; !iter.isEnd(); ++iter) 
-            es.push_back({ { iter.from(), *iter }, WEIGHTOR{}(iter.value()) });
+            es.push_back({ { iter.from(), *iter }, WEIGHTOR{}(iter.edge()) });
 
         assert(es.size() == size());
         return es;
@@ -116,9 +146,9 @@ public:
     template<typename GRAPH>
     GRAPH inverse() const {
         GRAPH gR(order()); gR.reserve(order(), size());
-        bfs_iter<true, true> iter(*this, 0);
+        const_bfs_iter<true, true> iter(*this, 0);
         for (; !iter.isEnd(); ++iter)
-            gR.addEdge(*iter, iter.from(), iter.value());
+            gR.addEdge(*iter, iter.from(), iter.edge());
 
         return gR;
     }
@@ -128,15 +158,9 @@ public:
     bool isDag() const { return isDigraph() && !hasLoop(); }
 
 
-    // 返回v的邻接顶点迭代器
-    auto adjIter(unsigned v) const {
-        return adj_vertex_iter(*this, v);
-    }
-
-
     // 判断是否连通图
     bool isConnected() const {
-        bfs_iter<> iter(*this, 0);
+        const_bfs_iter<> iter(*this, 0);
         unsigned V(0);
         for (; !iter.isEnd(); ++iter)
             ++V;
@@ -147,7 +171,7 @@ public:
 
     // 顶点v是否可达w，即是否存在一条从v到w的路径
     bool isReachable(vertex_index_t v, vertex_index_t w) const {
-        bfs_iter<> iter(*this, v);
+        const_bfs_iter<> iter(*this, v);
         for (; !iter.isEnd(); ++iter)
             if (*iter == w)
                 return true;
@@ -183,7 +207,7 @@ public:
     // 在任何DFS树中，一条树边v-w是一个桥，条件是当且仅当不存在回边将w的一个子孙与w的一个祖先相连接
     auto bridges() const {
         std::vector<std::pair<unsigned, unsigned>> res;
-        KtDfsIterX<KtGraphImpl, true> iter(*this, 0);
+        KtDfsIterX<const KtGraphImpl, true> iter(*this, 0);
         while(!iter.isEnd()) { 
             if (iter.isBridge()) {
                 unsigned from = iter.from();
@@ -206,7 +230,7 @@ public:
         unsigned root(0);
         std::vector<unsigned> res;
         unsigned sons_of_root(0); // 根节点的子树数量
-        KtDfsIterX<KtGraphImpl, false> iter(*this, root);
+        KtDfsIterX<const KtGraphImpl, false> iter(*this, root);
         while (!iter.isEnd()) {
             unsigned p = iter.from();
             if (p == root && iter.isTree()) // 忽略popping状态 
