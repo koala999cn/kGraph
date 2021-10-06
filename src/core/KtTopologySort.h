@@ -4,12 +4,12 @@
 #include <queue>
 
 
-// »ùÓÚÔ´µã£¨Èë¶ÈÎª0µÄ¶¥µã£©¶ÓÁÐµÄÍØÆËÅÅÐòËã·¨
-// ÍØÆËÅÅÐòµÄ2ÖÖ¶¨Òå£º
-//   1.ÖØÐÂ±àºÅ£º¶ÔDAG¶¥µãÖØÐÂ±àºÅ´Ó¶øÊ¹Ã¿Ìõ±ßÓÉ½ÏÐ¡±àºÅ¶¥µãÖ¸Ïò½Ï´ó±àºÅ¶¥µã
-//   2.ÖØÐÂÕûÀí£º½«DAG¶¥µãÔÚÒ»ÌõË®Æ½ÏßÉÏÖØÐÂÕûÀí£¬´Ó¶øÊ¹ËùÓÐ±ß¾ùÓÉ×óÖ¸ÏòÓÒ
-// ÒÔÉÏÁ½ÖÖ¶¨ÒåÊÇµÈ¼ÛºÍ»¥ÄæµÄ£¬ÈôÒÑÖªÖØÐÂÕûÀíts£¬ÔòÖØÐÂ±àºÅ¼ÆËã·½·¨ÈçÏÂ£ºtsI[ts[v]] = v
-// Í¬Ñù£¬ÈôÒÑÖªÖØÐÂ±àºÅtsI£¬ÔòÖØÐÂÕûÀí¼ÆËã·½·¨ÈçÏÂ£ºts[tsI[v]] = v
+// åŸºäºŽæºç‚¹ï¼ˆå…¥åº¦ä¸º0çš„é¡¶ç‚¹ï¼‰é˜Ÿåˆ—çš„æ‹“æ‰‘æŽ’åºç®—æ³•
+// æ‹“æ‰‘æŽ’åºçš„2ç§å®šä¹‰ï¼š
+//   1.é‡æ–°ç¼–å·ï¼šå¯¹DAGé¡¶ç‚¹é‡æ–°ç¼–å·ä»Žè€Œä½¿æ¯æ¡è¾¹ç”±è¾ƒå°ç¼–å·é¡¶ç‚¹æŒ‡å‘è¾ƒå¤§ç¼–å·é¡¶ç‚¹
+//   2.é‡æ–°æ•´ç†ï¼šå°†DAGé¡¶ç‚¹åœ¨ä¸€æ¡æ°´å¹³çº¿ä¸Šé‡æ–°æ•´ç†ï¼Œä»Žè€Œä½¿æ‰€æœ‰è¾¹å‡ç”±å·¦æŒ‡å‘å³
+// ä»¥ä¸Šä¸¤ç§å®šä¹‰æ˜¯ç­‰ä»·å’Œäº’é€†çš„ï¼Œè‹¥å·²çŸ¥é‡æ–°æ•´ç†tsï¼Œåˆ™é‡æ–°ç¼–å·è®¡ç®—æ–¹æ³•å¦‚ä¸‹ï¼štsI[ts[v]] = v
+// åŒæ ·ï¼Œè‹¥å·²çŸ¥é‡æ–°ç¼–å·tsIï¼Œåˆ™é‡æ–°æ•´ç†è®¡ç®—æ–¹æ³•å¦‚ä¸‹ï¼šts[tsI[v]] = v
 template<typename DAG>
 class KtTopologySort
 {
@@ -21,19 +21,19 @@ public:
         unsigned V = dag.order();
         ts_.resize(V, -1); tsI_.resize(V, -1);
 
-        // ¼ÆËã¸÷¶¥µãµÄÈë¶È
+        // è®¡ç®—å„é¡¶ç‚¹çš„å…¥åº¦
         std::vector<unsigned> ins(V, 0);
         for (unsigned v = 0; v < V; v++)
             ins[v] = dag.indegree(v);
         
-        // ½«Ô´µãÍÆÈë¶ÓÁÐq
-        std::queue<unsigned> q; // Ô´µã¶ÓÁÐ
+        // å°†æºç‚¹æŽ¨å…¥é˜Ÿåˆ—q
+        std::queue<unsigned> q; // æºç‚¹é˜Ÿåˆ—
         for(unsigned v = 0; v < V; v++) 
             if(ins[v] == 0) q.push(v);
         assert(!q.empty());
 
 
-        // °´ÕÕFIFOË³Ðò£¬¶ÔÔ´µã½øÐÐÍØÆËÅÅÐò
+        // æŒ‰ç…§FIFOé¡ºåºï¼Œå¯¹æºç‚¹è¿›è¡Œæ‹“æ‰‘æŽ’åº
         for(unsigned i = 0; !q.empty(); i++) {
             unsigned v = q.front(); q.pop();
             ts_[i] = v; 
@@ -45,12 +45,12 @@ public:
         }
     }
 
-    // ·µ»ØÖØÐÂÕûÀí
+    // è¿”å›žé‡æ–°æ•´ç†
     unsigned operator[](unsigned v) const {
         return ts_[v];
     }
     
-    // ·µ»ØÖØÐÂ±àºÅ
+    // è¿”å›žé‡æ–°ç¼–å·
     unsigned relabel(unsigned v) const {
         return tsI_[v];
     }
@@ -61,9 +61,9 @@ private:
 
 
 
-// »ùÓÚDfsËã·¨µÄÄæÍØÆËÅÅÐò
-// DFSÖÐµÄºóÐò±àºÅ¿ÉÒÔµÃµ½Ò»¸öÄæÍØÆËÅÅÐò
-// ÊÊÓÃÓÚ·ÇDAG
+// åŸºäºŽDfsç®—æ³•çš„é€†æ‹“æ‰‘æŽ’åº
+// DFSä¸­çš„åŽåºç¼–å·å¯ä»¥å¾—åˆ°ä¸€ä¸ªé€†æ‹“æ‰‘æŽ’åº
+// é€‚ç”¨äºŽéžDAG
 template<typename GRAPH>
 class KtTopologySortInv
 {
@@ -94,6 +94,6 @@ public:
 
 
 private:
-    KtDfsIter<GRAPH, true> dfs_;
+    KtDfsIter<const GRAPH, true> dfs_;
     std::vector<unsigned> popI_;
 };
