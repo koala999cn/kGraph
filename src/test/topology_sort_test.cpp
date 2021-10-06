@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../GraphX.h"
 #include "../core/KtTopologySort.h"
+#include "../util/randgen.h"
 #include "test_util.h"
 
 
@@ -10,9 +11,9 @@ void topology_sort_test_(const DAG& g)
     printf("      normal method");
     fflush(stdout);
     KtTopologySort<DigraphDi> ts(g);
-    KtDfsIter<DigraphDi, true, true> iter(g, 0);
-    while (!iter.isEnd()) { // µü´úÃ¿ÌõÓĞÏò±ß
-        if (ts.relabel(iter.from()) >= ts.relabel(*iter)) // Ğ¡±àºÅÖ¸Ïò´ó±àºÅ
+    KtDfsIter<const DigraphDi, true, true> iter(g, 0);
+    while (!iter.isEnd()) { // è¿­ä»£æ¯æ¡æœ‰å‘è¾¹
+        if (ts.relabel(iter.from()) >= ts.relabel(*iter)) // å°ç¼–å·æŒ‡å‘å¤§ç¼–å·
             test_failed(g);
         ++iter;
     }
@@ -22,9 +23,9 @@ void topology_sort_test_(const DAG& g)
     printf("      inverse method");
     fflush(stdout);
     KtTopologySortInv<DigraphDi> tsInv(g);
-    KtDfsIter<DigraphDi, true, true> iterInv(g, 0);
-    while (!iterInv.isEnd()) { // µü´úÃ¿ÌõÓĞÏò±ß
-        if (tsInv.relabel(iterInv.from()) <= tsInv.relabel(*iterInv)) // ´ó±àºÅÖ¸ÏòĞ¡±àºÅ
+    KtDfsIter<const DigraphDi, true, true> iterInv(g, 0);
+    while (!iterInv.isEnd()) { // è¿­ä»£æ¯æ¡æœ‰å‘è¾¹
+        if (tsInv.relabel(iterInv.from()) <= tsInv.relabel(*iterInv)) // å¤§ç¼–å·æŒ‡å‘å°ç¼–å·
             test_failed(g);
         ++iterInv;
     }
@@ -54,7 +55,7 @@ void topology_sort_test()
     topology_sort_test_(g);
 
 
-    DigraphDi rg = randGraph<DigraphDi>(300, 30000);
+    DigraphDi rg = randgen<DigraphDi>(300, 30000);
     rg.eraseLoop();
     printf("   random dag V = %d, E = %d\n", rg.order(), rg.size());
     fflush(stdout);
