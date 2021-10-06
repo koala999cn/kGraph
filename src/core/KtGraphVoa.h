@@ -9,12 +9,11 @@ class KtGraphVoa : public BASE_GRAPH
 {
 public:
 
-    using typename BASE_GRAPH::value_type;
+    using typename BASE_GRAPH::edge_type;
     using typename BASE_GRAPH::const_reference;
     using typename BASE_GRAPH::edge_iter;
     using typename BASE_GRAPH::vertex_index_t;
 
-    using edge_type = typename BASE_GRAPH::value_type;
     using vertex_type = VERTEX_TYPE;
 
 
@@ -22,7 +21,7 @@ public:
 
     KtGraphVoa() : BASE_GRAPH(), vos_() { }
 
-    explicit KtGraphVoa(unsigned numVertex, const_reference nullValue = value_type{ 0 }) :
+    explicit KtGraphVoa(unsigned numVertex, const_reference nullValue = edge_type{ 0 }) :
         BASE_GRAPH(numVertex, nullValue),
         vos_(numVertex) { }
 
@@ -33,8 +32,8 @@ public:
 
     // 重写与顶点对象有关的成员函数
 
-    void reset(unsigned numVertex, const_reference nullValue = value_type(0)) {
-        BASE_GRAPH::reset(numVertex, nullValue);
+    void reset(unsigned numVertex, const_reference nullEdge = edge_type(0)) {
+        BASE_GRAPH::reset(numVertex, nullEdge);
         vos_.resize(numVertex);
     }
 
@@ -56,7 +55,7 @@ public:
         vos_.reserve(V);
     }
 
-    template<typename WEIGHTOR = KtWeightSelf<value_type>>
+    template<typename WEIGHTOR = KtWeightSelf<edge_type>>
     KtGraphVoa copy() const {
         auto g = BASE_GRAPH::template copy<KtGraphVoa, WEIGHTOR>();
         g.vos_ = vos_;
