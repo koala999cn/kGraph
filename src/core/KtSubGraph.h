@@ -57,12 +57,12 @@ private:
     void expandTo_(BASE_GRAPH& g, vertex_index_t subNode, vertex_index_t& offset) const;
 
 
-	// 将子图中的顶点v转换到父图所对应的顶点序号
-	//   @start: 子图的源点
-	//   @offset: 子图从父图的offset顶点开始展开
-	static vertex_index_t subToSup(vertex_index_t v, vertex_index_t start, vertex_index_t offset) {
-		return v < start ? v + offset : v + offset - 1; /// 兼容start == -1的情况
-	}
+    // 将子图中的顶点v转换到父图所对应的顶点序号
+    //   @start: 子图的源点
+    //   @offset: 子图从父图的offset顶点开始展开
+    static vertex_index_t subToSup(vertex_index_t v, vertex_index_t start, vertex_index_t offset) {
+        return v < start ? v + offset : v + offset - 1; /// 兼容start == -1的情况
+    }
 
 
 private:
@@ -88,10 +88,10 @@ void KtSubGraph<BASE_GRAPH>::expandTo(BASE_GRAPH& g) const
 {
     unsigned V(0), E(0);
     calcExpandedSize_(V, E);
-	g.reserve(V, E);
+    g.reserve(V, E);
     g.resize(V); 
 
-	vertex_index_t offset(0);
+    vertex_index_t offset(0);
     expandTo_(g, -1, offset);
 
     assert(offset == V && g.size() == E);
@@ -102,8 +102,8 @@ template<typename BASE_GRAPH>
 void KtSubGraph<BASE_GRAPH>::expandTo_(BASE_GRAPH& g, vertex_index_t subNode, vertex_index_t& offset) const
 {
     /// first step: expand this->g_ to g 
-	vertex_index_t start(-1); // THIS的源点
-	vertex_index_t end(-1); // THIS的汇点
+    vertex_index_t start(-1); // THIS的源点
+    vertex_index_t end(-1); // THIS的汇点
 
     // 1. copy vertex objects & adjust g'out-edges of sub-graph vertex [subNode]
     if (subNode != -1) { /// THIS子图对应于g的subNode顶点
@@ -111,7 +111,7 @@ void KtSubGraph<BASE_GRAPH>::expandTo_(BASE_GRAPH& g, vertex_index_t subNode, ve
         assert(s.size() == 1);
         start = s[0];
 
-		// TODO: 支持非顶点对象图
+        // TODO: 支持非顶点对象图
         g.getVertex(subNode) = BASE_GRAPH::getVertex(start); // subNode顶点复用为子图的源点
 
         auto e = BASE_GRAPH::sinks(); 
