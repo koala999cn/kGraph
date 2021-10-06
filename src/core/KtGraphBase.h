@@ -7,13 +7,14 @@
 //  -- Container为邻接矩阵类型.
 //  -- direction为真代表有向图，否则代表无向图。
 //  -- parallel为真代表允许平行边，即两点之间可有多条边。
-template<typename Container, bool direction = false, bool parallel = false>
+template<typename ADJ_MATRIX, bool direction = false, bool parallel = false>
 class KtGraphBase
 {
 public:
-    using value_type = typename Container::value_type;
-    using reference = typename Container::reference;
-    using const_reference = typename Container::const_reference;
+    using adj_matrix_type = ADJ_MATRIX;
+    using edge_type = typename adj_matrix_type::value_type;
+    using edge_ref = typename adj_matrix_type::reference;
+    using const_edge_ref = typename adj_matrix_type::const_reference;
     using vertex_index_t = unsigned;
     constexpr static vertex_index_t null_vertex = -1;
 
@@ -25,17 +26,17 @@ public:
     KtGraphBase& operator=(const KtGraphBase&) = default;
     KtGraphBase& operator=(KtGraphBase&&) = default;
 
-    explicit KtGraphBase(unsigned numVertex, const_reference nullValue = value_type{}) :
-        adjMat_(numVertex, numVertex, nullValue),
+    explicit KtGraphBase(unsigned numVertex, const_edge_ref nullEdge = edge_type{}) :
+        adjMat_(numVertex, numVertex, nullEdge),
         E_(0),
-        null_(nullValue) { }
+        null_(nullEdge) { }
 
     constexpr static bool isDigraph() { return direction; }
 
     // 重置图为numVertex顶点，并清空所有边
-    void reset(unsigned numVertex, const_reference nullValue = value_type()) {
+    void reset(unsigned numVertex, const_edge_ref nullEdge = edge_type{}) {
         E_ = 0;
-        null_ = nullValue;
+        null_ = nullEdge;
         adjMat_.reset(numVertex, numVertex, null_);
     }
 
@@ -59,11 +60,11 @@ public:
     // 零图
     bool isNull() const { return size() == 0; }
 
-    const_reference getEdge(vertex_index_t v1, vertex_index_t v2) const {
+    const_edge_ref getEdge(vertex_index_t v1, vertex_index_t v2) const {
         return adjMat_(v1, v2);
     }
 
-    reference getEdge(vertex_index_t v1, vertex_index_t v2) {
+    edge_ref getEdge(vertex_index_t v1, vertex_index_t v2) {
         return adjMat_(v1, v2);
     }
 
@@ -72,7 +73,7 @@ public:
     }
 
 
-    void addEdge(vertex_index_t v1, vertex_index_t v2, const_reference val) {
+    void addEdge(vertex_index_t v1, vertex_index_t v2, const_edge_ref val) {
         assert(val != null_);
         assert(parallel || !hasEdge(v1, v2));
         ++E_;
@@ -81,15 +82,15 @@ public:
     }
 
 
-    // 若允许（可整型构造），则提供一个addEdge的简化版
-    template<typename T = value_type>
+    // 若允许（edge_type可整型构造），则提供一个addEdge的简化版
+    template<typename T = edge_type>
     typename std::enable_if_t<std::is_constructible<T, int>::value>
     addEdge(vertex_index_t v1, vertex_index_t v2) {
         addEdge(v1, v2, T{ 1 });
     }
    
 
-    void setEdge(vertex_index_t v1, vertex_index_t v2, const_reference val) {
+    void setEdge(vertex_index_t v1, vertex_index_t v2, const_edge_ref val) {
         assert(val != null_); assert(hasEdge(v1, v2));
         adjMat_(v1, v2) = val;
         if(!isDigraph()) adjMat_(v2, v1) = val;
@@ -175,8 +176,14 @@ public:
     }
 
 
+    const edge_type& nullEdge() const { return null_; }
+
+    adj_matrix_type& adjMatrix() { return adjMat_; }
+    const adj_matrix_type& adjMatrix() const { return adjMat_; }
+
+
 protected:
-    Container adjMat_; // 邻接矩阵
-    value_type null_; // 矩阵元素等于null_时，代表无连接
+    adj_matrix_type adjMat_; // 邻接矩阵
+    edge_type null_; // 矩阵元素等于null_时，代表无连接
     unsigned E_; // 边数量
 };
