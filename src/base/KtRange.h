@@ -25,7 +25,7 @@ public:
 		first_(rhs.first_), last_(rhs.last_) {}
 
 
-	// ×÷ÎªÈİÆ÷Ê¹ÓÃ
+	// ä½œä¸ºå®¹å™¨ä½¿ç”¨
 
 	iter_type& begin() { return first_; }
 	iter_type& end() { return last_; }
@@ -41,7 +41,7 @@ public:
 	}
 
 	
-	// ×÷Îªµü´úÆ÷Ê¹ÓÃ
+	// ä½œä¸ºè¿­ä»£å™¨ä½¿ç”¨
 
 	iter_type& operator++() { return ++first_; }
 
@@ -58,14 +58,12 @@ public:
 	// advance first_ until Pred(first_)
 	template<typename Pred>
 	void skipUntil(Pred pred) {	
-		do { 
-			if (pred(first_)) break; 
+		while (!empty() && !pred(first_))
 			++first_;
-		} while (!empty()); 
 	}
 
 
-	// ¶ÔÒ»Ğ©³£ÓÃstdËã·¨µÄ·â×°
+	// å¯¹ä¸€äº›å¸¸ç”¨stdç®—æ³•çš„å°è£…
 
 	void sort() { std::sort(first_, last_); }
 	template<class Compare> void sort(Compare comp) { std::sort(first_, last_, comp); }
