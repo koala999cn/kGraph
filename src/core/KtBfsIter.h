@@ -14,12 +14,12 @@ template <typename GRAPH, bool fullGraph = false, bool modeEdge = false>
 class KtBfsIter 
 {
 public:
-	using graph_type = GRAPH;
+    using graph_type = GRAPH;
     using edge_type = typename GRAPH::edge_type;
-	using vertex_index_t = typename GRAPH::vertex_index_t;
-	using adj_vertex_iter = decltype(std::declval<graph_type>().adjIter(0));
-	using const_edge_ref = decltype(std::declval<adj_vertex_iter>().edge());
-	constexpr static auto null_vertex = GRAPH::null_vertex;
+    using vertex_index_t = typename GRAPH::vertex_index_t;
+    using adj_vertex_iter = decltype(std::declval<graph_type>().adjIter(0));
+    using const_edge_ref = decltype(std::declval<adj_vertex_iter>().edge());
+    constexpr static auto null_vertex = GRAPH::null_vertex;
 
 
     // graph -- 待遍历的图
@@ -38,14 +38,14 @@ public:
         if (!isPushed_[v0_]) {
             assert(todo_.empty());
             isPushed_[v0_] = true;
-			todo_.push(graph_.adjIter(v0_));
+            todo_.push(graph_.adjIter(v0_));
         } else {
             assert(!todo_.empty());
             auto& iter = todo_.front();
-			vertex_index_t v = *iter;
+            vertex_index_t v = *iter;
             if (!isPushed_[v]) {
                 isPushed_[v] = true;
-				todo_.push(graph_.adjIter(v));
+                todo_.push(graph_.adjIter(v));
             }
             ++iter;
         }
@@ -89,19 +89,19 @@ public:
     }
 
     // 返回当前正在游历的顶点
-	vertex_index_t operator*() const {
+    vertex_index_t operator*() const {
         return todo_.empty() ? v0_ : *(todo_.front());
     }
 
 
     // 与当前顶点（to顶点）构成边的from顶点
-	vertex_index_t from() const {
+    vertex_index_t from() const {
         assert(!isEnd());
         return todo_.empty() ? null_vertex : todo_.front().source();
     }
 
 
-	const_edge_ref edge() const { return todo_.front().edge(); }
+    const_edge_ref edge() const { return todo_.front().edge(); }
 
     bool isEnd() const { return v0_ == null_vertex; }
 
@@ -119,11 +119,11 @@ public:
     bool isPopped(vertex_index_t v) const { return isPopped_[v]; }
 
 private:
-	graph_type& graph_;
+    graph_type& graph_;
 
     // 待处理的邻接顶点迭代器
     std::queue<adj_vertex_iter> todo_;
 
-	vertex_index_t v0_; // 起始顶点
+    vertex_index_t v0_; // 起始顶点
     std::vector<bool> isPushed_, isPopped_;  // 用于标记顶点是否已压栈/出栈
 };
