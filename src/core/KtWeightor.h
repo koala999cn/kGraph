@@ -68,16 +68,16 @@ using KtWeightorMax = KtWeightor<WeightorBase, Accumlate, false>;
 
 
 template<typename GRAPH>
-using default_min_wtor = KtWeightorMin<KtWeightSelf<typename GRAPH::value_type>, KtAdder<typename KtWeightSelf<typename GRAPH::value_type>::weight_type>>;
+using default_min_wtor = KtWeightorMin<KtWeightSelf<typename GRAPH::edge_type>, KtAdder<typename KtWeightSelf<typename GRAPH::edge_type>::weight_type>>;
 
 template<typename GRAPH>
-using default_max_wtor = KtWeightorMax<KtWeightSelf<typename GRAPH::value_type>, KtAdder<typename KtWeightSelf<typename GRAPH::value_type>::weight_type>>;
+using default_max_wtor = KtWeightorMax<KtWeightSelf<typename GRAPH::edge_type>, KtAdder<typename KtWeightSelf<typename GRAPH::edge_type>::weight_type>>;
 
 template<typename GRAPH>
-using unit_min_wtor = KtWeightorMin<KtWeightUnit<typename GRAPH::value_type>, KtAdder<typename KtWeightUnit<typename GRAPH::value_type>::weight_type>>;
+using unit_min_wtor = KtWeightorMin<KtWeightUnit<typename GRAPH::edge_type>, KtAdder<typename KtWeightUnit<typename GRAPH::edge_type>::weight_type>>;
 
 template<typename GRAPH>
-using unit_max_wtor = KtWeightorMax<KtWeightUnit<typename GRAPH::value_type>, KtAdder<typename KtWeightUnit<typename GRAPH::value_type>::weight_type>>;
+using unit_max_wtor = KtWeightorMax<KtWeightUnit<typename GRAPH::edge_type>, KtAdder<typename KtWeightUnit<typename GRAPH::edge_type>::weight_type>>;
 
 
 template<typename GRAPH>
