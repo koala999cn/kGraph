@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../GraphX.h"
 #include "../core/KtConnected.h"
+#include "../util/randgen.h"
 #include "test_util.h"
 
 
@@ -45,7 +46,7 @@ void bridge_test()
     printf("  > passed\n"); fflush(stdout);
 
 
-    GraphDd rg = randGraph<GraphDd>(100, 150);
+    GraphDd rg = randgen<GraphDd>(100, 150);
     makeConnect(rg);
     printf("   random graph V = %d, E = %d", rg.order(), rg.size());
     fflush(stdout);
