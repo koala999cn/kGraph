@@ -2,23 +2,24 @@
 #include "../GraphX.h"
 #include "../core/KtShortestPath.h"
 #include "../core/KtBfsIter.h"
+#include "../util/randgen.h"
 #include "test_util.h"
 
 
-// ÅĞ¶ÏÍ¼gÊÇ·ñº¬ÓĞ¸ºÈ¨Öµ
+// åˆ¤æ–­å›¾gæ˜¯å¦å«æœ‰è´Ÿæƒå€¼
 template<typename GRAPH, typename WEIGHTOR>
 bool hasNegWt(const GRAPH& g)
 {
-    KtBfsIter<GRAPH, true, true> iter(g, 0);
+    KtBfsIter<const GRAPH, true, true> iter(g, 0);
     for (; !iter.isEnd(); ++iter)
-        if (WEIGHTOR{}(iter.value()) < 0)
+        if (WEIGHTOR{}(iter.edge()) < 0)
             return true;
 
     return false;
 }
 
 
-// ¸º»·¼ì²â
+// è´Ÿç¯æ£€æµ‹
 template<typename GRAPH>
 bool hasNegLoop(const GRAPH& g)
 {
@@ -83,7 +84,7 @@ void shortest_path_test_(const GRAPH& g)
     printf("  > passed\n"); fflush(stdout);
 
 
-    // dfsËã·¨Ì«Âı£¬ÆúÁÆ
+    // dfsç®—æ³•å¤ªæ…¢ï¼Œå¼ƒç–—
     //printf("      floyd vs. dfs");
     //fflush(stdout);
     //for (unsigned i = 0; i < g.order(); i++)
@@ -141,25 +142,25 @@ void shortest_path_test()
     shortest_path_test_(g);
 
 
-    DigraphDd rg = randGraph<DigraphDd>(100, 1000); 
+    DigraphDd rg = randgen<DigraphDd>(100, 1000); 
     printf("   random digraph V = %d, E = %d\n", rg.order(), rg.size());
     fflush(stdout);
     shortest_path_test_(rg);
 
 
-    // ¹¹ÔìÎŞ»·Í¼
+    // æ„é€ æ— ç¯å›¾
     rg.eraseLoop();
     assert(!rg.hasLoop());
     printf("   random dag V = %d, E = %d\n", rg.order(), rg.size());
     fflush(stdout);
     shortest_path_test_(rg);
 
-/*  ¶ÔDAG½øĞĞ²âÊÔÃ²ËÆÎŞÒâÒå£¬»¹ÊÇÓ¦¸ÃÔÚÓĞ»·Í¼»ù´¡ÉÏ¹¹½¨¸ºÈ¨ÖµÍ¼
-    TODO: ¸ßĞ§¹¹½¨ÎŞ¸º»·µÄ´ø¸ºÈ¨ÖµÍ¼µÄ·½·¨
+/*  å¯¹DAGè¿›è¡Œæµ‹è¯•è²Œä¼¼æ— æ„ä¹‰ï¼Œè¿˜æ˜¯åº”è¯¥åœ¨æœ‰ç¯å›¾åŸºç¡€ä¸Šæ„å»ºè´Ÿæƒå€¼å›¾
+    TODO: é«˜æ•ˆæ„å»ºæ— è´Ÿç¯çš„å¸¦è´Ÿæƒå€¼å›¾çš„æ–¹æ³•
     KtBfsIter<DigraphDd, true, true> iter(rg, 0);
     unsigned neg_wt(0);
     for (; !iter.isEnd(); ++iter)
-        if (rand_p(0.1)) { // ½«10%µÄ±ßÖÃÎª¸ºÈ¨Öµ
+        if (rand_p(0.1)) { // å°†10%çš„è¾¹ç½®ä¸ºè´Ÿæƒå€¼
             rg.setEdge(iter.from(), *iter, -iter.value());
             ++neg_wt;
         }
