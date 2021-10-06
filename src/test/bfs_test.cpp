@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../GraphX.h"
 #include "../core/KtBfsIter.h"
+#include "../util/randgen.h"
 #include "test_util.h"
 
 
@@ -9,7 +10,7 @@ void bfs_test_(const GRAPH& g)
 {
     printf("      normal mode");
     fflush(stdout);
-    KtBfsIter<GRAPH, true> bfs1(g, 0);
+    KtBfsIter<const GRAPH, true> bfs1(g, 0);
     std::vector<unsigned> v;
     for (; !bfs1.isEnd(); ++bfs1)
         v.push_back(*bfs1);
@@ -20,7 +21,7 @@ void bfs_test_(const GRAPH& g)
 
     printf("      edge mode");
     fflush(stdout);
-    KtBfsIter<GRAPH, true, true> bfs2(g, 0);
+    KtBfsIter<const GRAPH, true, true> bfs2(g, 0);
     std::vector<std::pair<unsigned, unsigned>> e;
     for (; !bfs2.isEnd(); ++bfs2)
         e.push_back({ bfs2.from(), *bfs2 });
@@ -50,12 +51,12 @@ void bfs_test()
     fflush(stdout);
     bfs_test_(g);
 
-    GraphDd ug = randGraph<GraphDd>(300, 30000);
+    GraphDd ug = randgen<GraphDd>(300, 30000);
     printf("   random graph V = %d, E = %d\n", ug.order(), ug.size());
     fflush(stdout);
     bfs_test_(ug);
 
-    DigraphDd dg = randGraph<DigraphDd>(300, 30000);
+    DigraphDd dg = randgen<DigraphDd>(300, 30000);
     printf("   random digraph V = %d, E = %d\n", dg.order(), dg.size());
     fflush(stdout);
     bfs_test_(dg);
