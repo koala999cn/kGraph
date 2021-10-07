@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../GraphX.h"
 #include "../core/KtStronglyConnected.h"
+#include "../util/randgen.h"
 #include "test_util.h"
 
 
@@ -44,7 +45,7 @@ void strongly_connected_test()
     fflush(stdout);
     strongly_connected_test_(g);
 
-    DigraphDi dg = randGraph<DigraphDi>(300, 1200); 
+    DigraphDi dg = randgen<DigraphDi>(300, 1200); 
     printf("   random digraph V = %d, E = %d\n", dg.order(), dg.size());
     fflush(stdout);
     strongly_connected_test_(dg);

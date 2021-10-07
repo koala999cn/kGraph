@@ -2,6 +2,7 @@
 #include "../GraphX.h"
 #include "../core/KtMinSpanTree.h"
 #include "../core/KtWeightor.h"
+#include "../util/randgen.h"
 #include "test_util.h"
 
 
@@ -42,7 +43,7 @@ void min_span_tree_test()
     min_span_tree_test_<GraphDd, default_min_wtor<GraphDd>>(g);
 
 
-    GraphDd dg = randGraph<GraphDd>(300, 10000); 
+    GraphDd dg = randgen<GraphDd>(300, 10000); 
     printf("   random graph V = %d, E = %d\n", dg.order(), dg.size());
     fflush(stdout);
     min_span_tree_test_<GraphDd, default_min_wtor<GraphDd>>(dg);

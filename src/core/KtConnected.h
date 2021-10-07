@@ -13,7 +13,7 @@ public:
         : count_(0),
           cc_(g.order(), -1) {
 
-        KtBfsIter<GRAPH, true> bfs(g, 0);
+        KtBfsIter<const GRAPH, true> bfs(g, 0);
         unsigned id(-1);
         for (; !bfs.isEnd(); ++bfs) {
             if (bfs.from() == -1)

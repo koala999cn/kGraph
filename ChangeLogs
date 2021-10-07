@@ -1,3 +1,11 @@
+v0.4 build20211006
+1. reimplement adj_vertex_iter
+2. new implement adj_vertex_iter_r
+3. new implement const_adj_vertex_iter & const_adj_vertex_iter_r
+4. new implement KtRange & row_range / col_range support for adj_matrix
+5. new implement utils
+
+
 v0.3 build20210922
 1. recode spare matrix.
 2. new implement KtGraphVoa, the graph with Vertex Object Attached.

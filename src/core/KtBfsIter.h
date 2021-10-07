@@ -14,17 +14,22 @@ template <typename GRAPH, bool fullGraph = false, bool modeEdge = false>
 class KtBfsIter 
 {
 public:
-    using value_type = typename GRAPH::value_type;
-    using adj_vertex_iter = typename GRAPH::adj_vertex_iter;
+    using graph_type = GRAPH;
+    using edge_type = typename GRAPH::edge_type;
+    using vertex_index_t = typename GRAPH::vertex_index_t;
+    using adj_vertex_iter = decltype(std::declval<graph_type>().adjIter(0));
+    using const_edge_ref = decltype(std::declval<adj_vertex_iter>().edge());
+    constexpr static auto null_vertex = GRAPH::null_vertex;
+
 
     // graph -- 待遍历的图
     // startVertex -- 遍历的起始顶点，-1表示只构建迭代器，需要另外调用begin方法开始遍历
-    KtBfsIter(const GRAPH& graph, unsigned startVertex)
+    KtBfsIter(graph_type& graph, vertex_index_t startVertex)
         : graph_(graph),
-          v0_(-1),
+          v0_(null_vertex),
           isPushed_(graph.order(), false),
           isPopped_(graph.order(), false) {
-        if (startVertex != -1) begin(startVertex);
+        if (startVertex != null_vertex) begin(startVertex);
     }
 
     void operator++() {
@@ -33,31 +38,31 @@ public:
         if (!isPushed_[v0_]) {
             assert(todo_.empty());
             isPushed_[v0_] = true;
-            todo_.emplace(adj_vertex_iter{graph_, v0_}, v0_);
+            todo_.push(graph_.adjIter(v0_));
         } else {
             assert(!todo_.empty());
-            auto& iter = todo_.front().first;
-            unsigned v = *iter;
+            auto& iter = todo_.front();
+            vertex_index_t v = *iter;
             if (!isPushed_[v]) {
                 isPushed_[v] = true;
-                todo_.emplace(adj_vertex_iter{graph_, v}, v);
+                todo_.push(graph_.adjIter(v));
             }
             ++iter;
         }
 
         while (!todo_.empty()) {
-            auto& iter = todo_.front().first;
+            auto& iter = todo_.front();
 
             // 移出已到末尾的迭代器
             if (iter.isEnd()) {
-                isPopped_[todo_.front().second] = true;
+                isPopped_[todo_.front().source()] = true;
                 todo_.pop();
                 continue;
             }
 
             // 跳过已遍历的顶点或边
             if (modeEdge) {
-                if (!GRAPH::isDigraph() && isPopped_[*iter]) { // 对于无向图，若某顶点已出栈，则与之邻接的边必然已遍历
+                if (!graph_type::isDigraph() && isPopped_[*iter]) { // 对于无向图，若某顶点已出栈，则与之邻接的边必然已遍历
                     ++iter;
                     continue;
                 }
@@ -74,7 +79,7 @@ public:
 
         if (todo_.empty()) {
             isPopped_[v0_] = true;
-            v0_ = -1;  // 设置终止标记
+            v0_ = null_vertex;  // 设置终止标记
         }
 
         if (fullGraph && isEnd()) {
@@ -84,28 +89,25 @@ public:
     }
 
     // 返回当前正在游历的顶点
-    unsigned operator*() const {
-        return todo_.empty() ? v0_ : *(todo_.front().first);
+    vertex_index_t operator*() const {
+        return todo_.empty() ? v0_ : *(todo_.front());
     }
 
 
     // 与当前顶点（to顶点）构成边的from顶点
-    unsigned from() const {
+    vertex_index_t from() const {
         assert(!isEnd());
-        return todo_.empty() ? -1 : todo_.front().second;
+        return todo_.empty() ? null_vertex : todo_.front().source();
     }
 
 
-    auto value() const {
-        return todo_.front().first.value();
-    }
+    const_edge_ref edge() const { return todo_.front().edge(); }
 
-
-    bool isEnd() const { return v0_ == -1; }
+    bool isEnd() const { return v0_ == null_vertex; }
 
 
     // 从顶点v开始接续进行广度优先遍历
-    void begin(unsigned v) {
+    void begin(vertex_index_t v) {
         assert(isEnd() && !isPushed_[v]);
         v0_ = v;
 
@@ -113,15 +115,15 @@ public:
     }
 
 
-    bool isPushed(unsigned v) const { return isPushed_[v]; }
-    bool isPopped(unsigned v) const { return isPopped_[v]; }
+    bool isPushed(vertex_index_t v) const { return isPushed_[v]; }
+    bool isPopped(vertex_index_t v) const { return isPopped_[v]; }
 
 private:
-    const GRAPH& graph_;
+    graph_type& graph_;
 
-    // 待处理的邻接顶点迭代器。使用pair结构，主要是为了方便高效实现from方法
-    std::queue<std::pair<adj_vertex_iter, unsigned>> todo_;
+    // 待处理的邻接顶点迭代器
+    std::queue<adj_vertex_iter> todo_;
 
-    unsigned v0_; // 起始顶点
+    vertex_index_t v0_; // 起始顶点
     std::vector<bool> isPushed_, isPopped_;  // 用于标记顶点是否已压栈/出栈
 };

@@ -58,7 +58,7 @@ public:
         numScc_ = 0;
         idScc_.assign(V, -1);        
         unsigned i(V-1);
-        KtDfsIter<GRAPH> iter(gR, -1);
+        KtDfsIter<const GRAPH> iter(gR, -1);
     
         while(true) {
             iter.begin(ts[i]);
@@ -96,7 +96,7 @@ public:
         numScc_ = 0;
         idScc_.resize(V, -1);       
         std::vector<unsigned> S; 
-        KtDfsIterX<GRAPH, true> iter(g, 0);
+        KtDfsIterX<const GRAPH, true> iter(g, 0);
         while(!iter.isEnd()) {
             unsigned v = *iter;
             if(iter.isPushing()) 
@@ -130,7 +130,7 @@ public:
         numScc_ = 0;
         idScc_.resize(V, -1);       
         std::vector<unsigned> S, path;
-        KtDfsIter<GRAPH, true, true, true> iter(g, 0);
+        KtDfsIter<const GRAPH, true, true, true> iter(g, 0);
         while(!iter.isEnd()) {
             unsigned v = *iter;
             if(iter.isTree()) {

@@ -201,19 +201,17 @@ public:
 template<typename GRAPH, typename WEIGHTOR = default_wtor<GRAPH>>
 class KtMstPfs : public KtMst<GRAPH, WEIGHTOR>
 {
-    using value_type = typename GRAPH::value_type;
+    using edge_type = typename GRAPH::edge_type;
     using weight_type = typename WEIGHTOR::weight_type;
     using super_ = KtMst<GRAPH, WEIGHTOR>;
     using super_::mst_;
     using super_::dist_;
-    using edges_type = decltype(std::declval<GRAPH>().template edges<WEIGHTOR>());
-    using edge_type = typename edges_type::value_type;
 
 public:
     KtMstPfs(const GRAPH& g) : super_{ g } {
         assert(super_::mst_.size() == 0);
         struct Prior {
-            auto operator()(unsigned, unsigned, const value_type& val) {
+            auto operator()(unsigned, unsigned, const edge_type& val) {
                 return WEIGHTOR{}(val);
             }
         };
@@ -225,7 +223,7 @@ public:
         };
 
 
-        KtPfsIter<GRAPH, Prior, Comp> iter(g, 0);
+        KtPfsIter<const GRAPH, Prior, Comp> iter(g, 0);
         ++iter; // skip v0
         for (; !iter.isEnd() ; ++iter) {
             if (!iter.isPopped(*iter)) {

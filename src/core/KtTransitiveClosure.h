@@ -50,7 +50,7 @@ public:
                 g_.addEdge(i, i);
                     
         for(size_t v = 0; v < V; v++) {
-            KtDfsIter<SRC_GRAPH> iter(g, v);
+            KtDfsIter<const SRC_GRAPH> iter(g, v);
             assert(iter.from() == -1);
             ++iter; // skip v-self
             for (; !iter.isEnd(); ++iter)
@@ -83,7 +83,7 @@ public:
         for(unsigned i = 0; i < V; i++)
             g_.addEdge(i, i);
 
-        KtDfsIter<SRC_DAG, true, true, true> iter(g, 0); 
+        KtDfsIter<const SRC_DAG, true, true, true> iter(g, 0); 
         for (; !iter.isEnd(); ++iter) {
             unsigned p = iter.from();
             if(p == -1) 
@@ -123,7 +123,7 @@ public:
         // 以每个强连通分量为一个顶点构建DAG
         GRAPH K(scc_.count()); // TODO：use bit graph
         for(unsigned v = 0; v < g.order(); v++) {
-            typename GRAPH::adj_vertex_iter iter(g, v);
+            auto iter = g.adjIter(v);
             while(!iter.isEnd()) {
                 auto x = scc_[v];
                 auto y = scc_[*iter];
