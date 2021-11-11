@@ -56,6 +56,11 @@ private:
 			return curRow_ == rhs.curRow_ && range_ == rhs.range_;
 		}
 
+		bool operator!=(const col_element_iter_& rhs) const {
+			assert(&mat_ == &rhs.mat_ && colIdx_ == rhs.colIdx_);
+			return curRow_ != rhs.curRow_ || range_ != rhs.range_;
+		}
+
 
 		void erase() {
 			assert(curRow_ < rows());

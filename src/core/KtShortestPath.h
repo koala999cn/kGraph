@@ -161,7 +161,7 @@ public:
 
             // 边松弛
             for (unsigned w = 0; w < g.order(); w++)
-                if ((!vis[w] || w == v0_/*允许计算v0到自身环路的最短路径*/) && g.hasEdge(v, w))
+                if ((!vis[w] || w == v0_/*permit loop path*/) && g.hasEdge(v, w))
                     KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w)));
 
 
@@ -171,7 +171,7 @@ public:
                 if (!vis[w] && (v == -1 || WEIGHTOR{}.comp(dist_[w], dist_[v])))
                     v = w;
 
-            if (v == -1 || spt_[v] == -1/*与v0不连通*/) break; // all done
+            if (v == -1 || spt_[v] == -1/*disconnecte to v0*/) break; // all done
         }
     }
 };
@@ -206,7 +206,7 @@ public:
 
             // 边松弛
             for (unsigned w = 0; w < g.order(); w++)
-                if ((!vis[w] || w == v0_/*允许计算v0到自身环路的最短路径*/) && g.hasEdge(v, w))
+                if ((!vis[w] || w == v0_/*permit loop path*/) && g.hasEdge(v, w))
                     if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w))))
                         pq.emplace(w, dist_[w]);
         }
@@ -261,7 +261,7 @@ public:
             auto iter = g.adjIter(v);
             for (; !iter.isEnd(); ++iter)
                 if (KtSpt<GRAPH, WEIGHTOR>::relax_(v, *iter, WEIGHTOR{}(iter.edge()))
-                    && *iter != v/*忽略自环顶点，避免重复展开*/)
+                    && *iter != v/*ignore self-loop*/)
                     q.push(*iter);
         }
     }

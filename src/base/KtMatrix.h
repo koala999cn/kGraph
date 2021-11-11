@@ -51,6 +51,11 @@ private:
 			return iter_ == rhs.iter_;
 		}
 
+		bool operator!=(const col_element_iter_& rhs) const {
+			assert(end_ == rhs.end_ && offset_ == rhs.offset_);
+			return iter_ != rhs.iter_;
+		}
+
 
 	private:
 		ELE_ITER iter_, end_;
@@ -146,7 +151,7 @@ public:
 
 	// 将第col列所有数据置为val
 	void assignCol(unsigned colIdx, const_reference val) {
-		col(colIdx).fill(val);
+		row(colIdx).fill(val);
 	}
 
 
@@ -178,7 +183,7 @@ public:
     void appendCol(const_reference val) {
         data_.resize(data_.size() + rows_);
         value_type* p = data_.data();
-        for (unsigned r = rows_; r > 1/*第一行数据不用移动*/; r--) {
+        for (unsigned r = rows_; r > 1/*need not move the first row*/; r--) {
             value_type* src = p + r * cols_;
             value_type* dst = src + cols_;
             *--dst = val;

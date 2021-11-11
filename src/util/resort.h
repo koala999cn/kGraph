@@ -10,7 +10,7 @@
 template<class GRAPH, class ORDER>
 void resort(GRAPH& g, const ORDER& order)
 {
-    using edge_type = typename GRAPH::value_type;
+    using edge_type = typename GRAPH::edge_type;
     using vertex_index_t = typename GRAPH::vertex_index_t;
 
     auto E = g.size(); // 用于verify
@@ -24,13 +24,11 @@ void resort(GRAPH& g, const ORDER& order)
         std::vector<std::pair<vertex_index_t, edge_type>> v_outEdges;
         typename GRAPH::adj_vertex_iter iter(g, v);
         for (; !iter.isEnd(); ++iter)
-            v_outEdges.emplace_back(*iter, iter.value());
+            v_outEdges.emplace_back(*iter, iter.edge());
 
 
-        while (!flags[v]) {
-
+        do {
             flags[v] = true;
-
             auto nv = order[v]; // 顶点v将重排为nv
 
             // 将顶点v的出边调整为nv的出边之前，先保存nv的出边，以免信息丢失
@@ -38,7 +36,7 @@ void resort(GRAPH& g, const ORDER& order)
             if (!flags[nv]) { // 若nv已处理，则出边信息已重排过，不必再收集保留
                 typename GRAPH::adj_vertex_iter iter(g, nv);
                 for (; !iter.isEnd(); ++iter)
-                    nv_outEdges.emplace_back(*iter, iter.value());
+                    nv_outEdges.emplace_back(*iter, iter.edge());
             }
 
             // 出边调整：outEdges(v) -> outEdges(nv)
@@ -50,7 +48,7 @@ void resort(GRAPH& g, const ORDER& order)
             // 顺着v -> order[v] -> order[order[v]] -> ... 一直往前走
             v = nv;
             std::swap(v_outEdges, nv_outEdges);
-        }
+        } while (!flags[v]);
     }
 
     assert(g.size() == E);

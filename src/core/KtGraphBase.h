@@ -109,6 +109,7 @@ public:
 
     // 删除顶点v的所有入边
     void eraseInEdges(vertex_index_t v) {
+        E_ -= indegree(v);
         adjMat_.assignCol(v, null_);
         if (!isDigraph()) adjMat_.assignRow(v, null_);
     }
@@ -116,6 +117,7 @@ public:
 
     // 删除顶点v的所有出边
     void eraseOutEdges(vertex_index_t v) {
+        E_ -= outdegree(v);
         adjMat_.assignRow(v, null_);
         if (!isDigraph()) adjMat_.assignCol(v, null_);
     }

@@ -1,3 +1,9 @@
+v0.41 build20211008
+1. new implement resort_test.
+2. fix file coding problem caused by chinese remark.
+3. fix some bugs.
+
+
 v0.4 build20211006
 1. reimplement adj_vertex_iter
 2. new implement adj_vertex_iter_r

@@ -15,6 +15,7 @@ extern void strongly_connected_test();
 extern void min_span_tree_test();
 extern void shortest_path_test();
 extern void maxflow_test();
+extern void resort_test();
 
 
 int main(int argc, char const *argv[])
@@ -32,7 +33,7 @@ int main(int argc, char const *argv[])
     min_span_tree_test(); printf("\n");
     shortest_path_test(); printf("\n");
     maxflow_test(); printf("\n");
-
+    resort_test(); printf("\n");
     
     printf(" :) All passed! press any key to exit.\n");
     getchar();

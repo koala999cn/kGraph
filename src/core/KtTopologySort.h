@@ -55,6 +55,12 @@ public:
         return tsI_[v];
     }
 
+
+    const auto& relabels() const {
+        return tsI_;
+    }
+
+
 private:
     std::vector<unsigned> ts_, tsI_; 
 };
