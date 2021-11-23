@@ -75,14 +75,15 @@ GraphX.h，定义了一些基础的图类型
     g.addEdge(5, 1, 0.29), g.addEdge(5, 4, 0.20);
 ```
 
-对图g进行深度迭代的示例代码：
+对图g进行深度优先迭代的示例代码：
 
 ```
     #include "../core/KtDfsIter.h"
+
     KtDfsIter<DigraphDd> dfs(g, 0);
     std::vector<unsigned> v;
     for (; !dfs.isEnd(); ++dfs) 
-        v.push_back(*dfs);
+        v.push_back(*dfs); // *dfs表示当前遍历的顶点序号
 ```
 
 
