@@ -23,7 +23,7 @@ void transitive_closure_test_(const GRAPH& g)
     KtTransitiveClosureWar<GRAPH> war(g);
     KtTransitiveClosureDfs<GRAPH> dfs(g);
     KtTransitiveClosureScc<GRAPH> scc(g);
-    KtTransitiveClosureDag<GRAPH> *dag;
+    KtTransitiveClosureDag<GRAPH> *dag(nullptr);
     if(doDag) dag = new KtTransitiveClosureDag<GRAPH>(g);
 
     printf("      war vs. dfs");
