@@ -28,7 +28,7 @@ GraphX.h，定义了一些基础的图类型
 4.  连通、强连通检测
 5.  二分图检测
 6.  桥、割点检测
-7.  拓扑排序
+7.  拓扑排序：基于源点队列, 基于Dfs的逆排序
 8.  传递闭包：Warshall, Dfs, Dag-Dfs, Strongly-Connected
 9.  最小生成树：Prim, Kruskal, Boruvka, Pfs
 10. 最优路径：单源（Dijkstra,, Pfs, TS, Bellman-Ford），全源（Dijkstra, Pfs, Dfs, Floyd）
