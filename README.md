@@ -1,4 +1,4 @@
-# kGraph
+![输入图片说明](pic/graph-calss.png)# kGraph
 
 ### 介绍
 
@@ -52,6 +52,8 @@ GraphX.h，定义了一些基础的图类型
 具体参见下图，嵌套图未画出。
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/1102/100032_d62dde5c_8396825.jpeg "arch.jpg")
+
+
 
 
 ### 编译
