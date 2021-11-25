@@ -1,5 +1,3 @@
-![输入图片说明](pic/graph-calss.png)# kGraph
-
 ### 介绍
 
 基于C++模板实现的图基本算法
@@ -53,8 +51,9 @@ GraphX.h，定义了一些基础的图类型
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/1102/100032_d62dde5c_8396825.jpeg "arch.jpg")
 
+GraphX.h文件定义了一些常用的图类型，参考下图：
 
-
+![输入图片说明](pic/graph-calss.png)# kGraph
 
 ### 编译
 
