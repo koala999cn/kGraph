@@ -29,10 +29,10 @@ GraphX.h，定义了一些基础的图类型
 5.  二分图检测
 6.  桥、割点检测
 7.  拓扑排序
-8.  传递闭包
-9.  最小生成树
-10.  最优路径
-11. 最大流
+8.  传递闭包：Warshall, Dfs, Dag-Dfs, Strongly-Connected
+9.  最小生成树：Prim, Kruskal, Boruvka, Pfs
+10. 最优路径：单源（Dijkstra,, Pfs, TS, Bellman-Ford），全源（Dijkstra, Pfs, Dfs, Floyd）
+11. 最大流：Path-Augment, Pfs, Edmonds-Karp/Bfs, Preflow
 
 
 ### 软件架构
