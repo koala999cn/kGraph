@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <algorithm>
+#include <assert.h>
 #include "KtRange.h"
 
 
@@ -37,8 +38,22 @@ private:
 		using deref_type = std::pair<const unsigned, value_type_&>;
 		using const_deref_type = const std::pair<const unsigned, const value_type_&>;
 
-		col_element_iter_(spare_matrix_type& mat, row_range_type& range, unsigned rowIdx, unsigned colIdx) :
-			mat_(mat), range_(range), curRow_(rowIdx), colIdx_(colIdx) {}
+		col_element_iter_(spare_matrix_type& mat, const row_range_type& range, unsigned rowIdx, unsigned colIdx) :
+			mat_(mat), range_(range), curRow_(rowIdx), colIdx_(colIdx) { }
+
+		// 定位到mat种的首个colIdx列元素
+		col_element_iter_(spare_matrix_type& mat, unsigned colIdx) :
+			mat_(mat), range_(mat.row(0)), curRow_(0), colIdx_(colIdx) {
+			while (!range_.empty()) {
+				if ((*range_).first == colIdx)
+					break;
+				++range_;
+			}
+
+			if (range_.empty() || (*range_).first != colIdx)
+				next_();
+		}
+
 
 		col_element_iter_& operator++() {
 			assert(!range_.empty());
@@ -47,8 +62,15 @@ private:
 		}
 
 
-		deref_type operator*() { return{ curRow_, range_->second }; }
-		const_deref_type operator*() const { return{ curRow_, range_->second }; }
+		deref_type operator*() { 
+			assert(!range_.empty() && (*range_).first == colIdx_);
+			return{ curRow_, (*range_).second }; 
+		}
+
+		const_deref_type operator*() const { 
+			assert(!range_.empty() && (*range_).first == colIdx_);
+			return{ curRow_, (*range_).second }; 
+		}
 
 
 		bool operator==(const col_element_iter_& rhs) const {
@@ -62,9 +84,20 @@ private:
 		}
 
 
+		col_element_iter_& operator=(const col_element_iter_& rhs) {
+			assert(&mat_ == &rhs.mat_ && colIdx_ == rhs.colIdx_);
+			curRow_ = rhs.curRow_, range_ = rhs.range_;
+			return *this;
+		}
+
+
 		void erase() {
-			assert(curRow_ < rows());
+			assert(curRow_ < mat_.rows());
 			range_.begin() = mat_.elements_[curRow_].erase(range_.begin());
+			range_.end() = mat_.elements_[curRow_].end();
+			if (bMultiVal && !range_.empty() && (*range_).first == colIdx_)
+				return;
+
 			next_();
 		}
 
@@ -83,13 +116,16 @@ private:
 			}
 
 			// goto next row
-			while (++curRow_ < rows()) {
-				range_ = row(curRow_);
+			while (++curRow_ < mat_.rows()) {
+				range_ = mat_.row(curRow_);
 				range_.skipUntil(pred);
 				if (!range_.empty())
-					break; // bingo
+					return *this; // bingo
 			}
 			
+			assert(curRow_ == mat_.rows());
+			range_ = row_range_type(mat_.rowEnd(curRow_ - 1), 0);
+
 			return *this;
 		}
 
@@ -127,14 +163,14 @@ public:
 
 
     const_reference operator()(unsigned row, unsigned col) const {
-        auto iter = const_cast<KtSparseMatrix<value_type, bMultiVal>*>(this)->getAt(row, col, false);
+        auto iter = const_cast<KtSparseMatrix*>(this)->getAt_(row, col, false);
         return iter == elements_[row].end() ? default_ : iter->second;
     }
 
 
   
     reference operator()(unsigned row, unsigned col) {
-        auto iter = getAt(row, col, true);
+        auto iter = getAt_(row, col, true);
         assert(iter != elements_[row].end());
         return iter->second;
     }
@@ -145,13 +181,12 @@ public:
 			return (*this)(row, col);
 		}
 
-		auto iter = getAt(row, col, false);
-		while (iter != elements_[row].end()) {
+		auto iter = getAt_(row, col, false);
+		for (; iter != elements_[row].end(); ++iter) {
 			if (iter->first == col && iter->second == val) 
 				return iter->second;
 		}
 
-		assert(false);
 		return default_; // make compiler easy.
 	}
 
@@ -160,42 +195,62 @@ public:
     unsigned cols() const { return cols_; }
 
     
+	// 统计多值的数量
+	unsigned mvalues() const {
+		if (!bMultiVal) return 0;
+
+		unsigned mvals(0);
+
+		for (unsigned r = 0; r < rows(); r++)
+			for (unsigned c = 0; c < cols(); c++) {
+				auto iter = const_cast<KtSparseMatrix*>(this)->getAt_(r, c, false);
+				if (iter == elements_[r].end())
+					continue;
+
+				while (++iter != elements_[r].end()) 
+					if (iter->first == c) { // 发现一个(r, c)索引的重值
+						++mvals;
+						break;
+					}
+			}
+
+		return mvals;
+	}
+
+
+	row_element_iter rowBegin(unsigned rowIdx) { return elements_[rowIdx].begin(); }
+	const_row_element_iter rowBegin(unsigned rowIdx) const { return elements_[rowIdx].cbegin(); }
+	row_element_iter rowEnd(unsigned rowIdx) { return elements_[rowIdx].end(); }
+	const_row_element_iter rowEnd(unsigned rowIdx) const { return elements_[rowIdx].cend(); }
+
     // 返回第rowIdx行range对象
     auto row(unsigned rowIdx) { 
-		return row_range(elements_[rowIdx].begin(), elements_[rowIdx].end());
+		return row_range(rowBegin(rowIdx), rowEnd(rowIdx));
 	}
 
     auto row(unsigned rowIdx) const {
-		return const_row_range(elements_[rowIdx].cbegin(), elements_[rowIdx].cend());;
+		return const_row_range(rowBegin(rowIdx), rowEnd(rowIdx));
+	}
+
+
+	col_element_iter colBegin(unsigned colIdx) { return col_element_iter(*this, colIdx); }
+	const_col_element_iter colBegin(unsigned colIdx) const { return const_col_element_iter(*this, colIdx); }
+	col_element_iter colEnd(unsigned colIdx) {
+		return col_element_iter(*this, row_range(elements_.back().end(), 0), rows(), colIdx);
+	}
+	const_col_element_iter colEnd(unsigned colIdx) const {
+		return const_col_element_iter(*this, row_range(elements_.back().end(), 0), rows(), colIdx);
 	}
 
 
 	// 返回第colIdx行range对象
 	auto col(unsigned colIdx) {
-		unsigned rowIdx(0);
-		row_range r = row(rowIdx);
-		while (r.empty() && rowIdx < rows())
-			r = row(++rowIdx);
-
-		auto first = col_element_iter(*this, r, rowIdx, colIdx);
-		auto last = col_element_iter(*this, elements_.back().end(), rows(), colIdx);
-
-		return col_range(first, last);
+		return col_range(colBegin(colIdx), colEnd(colIdx));
 	}
 
 	auto col(unsigned colIdx) const {
-		unsigned rowIdx(0);
-		const_row_range r = row(rowIdx);
-		while (r.empty() && rowIdx < rows())
-			r = row(++rowIdx);
-
-		auto first = const_col_element_iter(*this, r, rowIdx, colIdx);
-		auto last = const_col_element_iter(*this, elements_.back().end(), rows(), colIdx);
-
-		return const_col_range(first, last);
+		return const_col_range(colBegin(colIdx), colEnd(colIdx));
 	}
-
-
 
     // 获取第row行有效数据的数量
     unsigned nonDefaultsOfRow(unsigned row) const {
@@ -207,7 +262,7 @@ public:
 	// 若不允许多值，且（row, col）已有数据，则改写该位置数据为val
     void insert(unsigned row, unsigned col, const_reference val) {
 		if (!bMultiVal) { // 判定(row, col)位置是否已存在数据
-			auto pos = getAt(row, col, false);
+			auto pos = getAt_(row, col, false);
 			if (pos != elements_[row].end()) { // 已有数据
 				pos->second = val;
 				return;
@@ -219,18 +274,23 @@ public:
 
 
     // 将第row行、第col列所有数据置为default
-    void setDefault(unsigned row, unsigned col) {
-        auto iter = getAt(row, col, false);
+    bool setDefault(unsigned row, unsigned col) {
+        auto iter = getAt_(row, col, false);
 		if (iter == elements_[row].end())
-			return;
+			return false;
 
+		bool bingo(false);
 		iter = elements_[row].erase(iter);
 		while (iter != elements_[row].end()) {
-			if (iter->first == col)
+			if (iter->first == col) {
 				iter = elements_[row].erase(iter);
+				bingo = true;
+			}
 			else
 				++iter;
 		}
+
+		return bingo;
     }
 
     // 将第row行、第col列，且值等于val的数据置为default
@@ -242,7 +302,7 @@ public:
 			return setDefault(row, col);
 		}
 
-        auto iter = getAt(row, col, false);
+        auto iter = getAt_(row, col, false);
 		while (iter != elements_[row].end()) {
 			if (iter->first == col && iter->second == val) {
 				elements_[row].erase(iter);
@@ -323,7 +383,7 @@ public:
 private:
 
     // 返回第row行、第col列数据读写地址，若不存在且insert非真，则返回end迭代器
-    row_element_iter getAt(unsigned row, unsigned col, bool insert) {
+    row_element_iter getAt_(unsigned row, unsigned col, bool insert) {
         auto& r = elements_[row];
 
         auto iter = r.begin();
