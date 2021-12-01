@@ -68,45 +68,49 @@ private:
     class adj_vertex_iter_base_
     {
     public:
-        using deref_type = decltype(std::declval<RANGE>()->second);
-        using const_deref_type = const deref_type;
+        using deref_type = decltype((*std::declval<RANGE>()).second);
+        using const_deref_type = decltype((*std::declval<std::add_const_t<RANGE>>()).second);
 
         adj_vertex_iter_base_(GRAPH& g) : graph_(g), u_(GRAPH::null_vertex) {}
 
         adj_vertex_iter_base_(GRAPH& g, const RANGE& r, const vertex_index_t idx) 
             : graph_(g), range_(r), u_(idx) {}
 
-        const vertex_index_t source() const { return u_; }
-        const vertex_index_t operator*() const { return range_->first; }
+        const vertex_index_t other() const { return u_; }
+        const vertex_index_t operator*() const { return (*range_).first; }
 
         void operator++() { ++range_; }
 
         bool isEnd() const { return range_.empty(); }
 
 
-        // get the value of edge (u_, v_)
-        const_deref_type edge() const { return range_->second; }
+        // get the value of current edge
+        const_deref_type edge() const { return (*range_).second; }
+
+		virtual vertex_index_t from() const = 0;
+		virtual vertex_index_t to() const = 0;
 
 
-        // change the value of edge (u_, v_)
-        void reedge(const_edge_ref val) {
-            assert(val != null_);
+		// change the value of current edge      
+		void reedge(const_edge_ref val) {
+			assert(val != graph_.nullEdge());
 
-            if (!graph_.isDigraph() && range_->first != u_) {
-                if (parallel)
-                    graph_.adjMatrix(range_->first, u_, range_->second) = val;
-                else
-                    graph_.adjMatrix(range_->first, u_) = val;
-            }
+			typename RANGE::deref_type e = *range_;
 
-            range_->second = val;
-        }
+			if (!graph_.isDigraph() && **this != other()) {
+				if (parallel)
+					graph_.adjMatrix()(to(), from(), e.second) = val;
+				else
+					graph_.adjMatrix()(to(), from()) = val;
+			}
 
+			e.second = val;
+		}
 
-        // erase the edge (u_, v_)
-        void erase() {
-            assert(false); // 由子类实现
-        }
+		// erase the current edge
+		void erase() {
+			assert(false); // 由子类实现
+		}
 
     protected:
         GRAPH& graph_;
@@ -140,7 +144,7 @@ private:
         using super_ = adj_vertex_iter_base_<graph_type, range_type>;
         using super_::graph_;
         using super_::range_;
-        using super_::u_;
+        using super_::other;
 
 
         adj_vertex_iter_base(graph_type& g) : super_(g) {}
@@ -148,16 +152,35 @@ private:
         adj_vertex_iter_base(graph_type& g, vertex_index_t v) :
             super_(g, g.adjMatrix().row(v), v) {}
 
-        void erase() {
-            if (!graph_.isDigraph() && range_->first != u_) {
-                if (parallel)
-                    graph_.adjMatrix.setDefault(range_->first, u_, range_->second);
-                else
-                    graph_.adjMatrix.setDefault(range_->first, u_);
-            }
 
-            range_.begin() = graph_.adjMatrix.erase(u_, range_.begin());
-        }
+		virtual vertex_index_t from() const final {
+			return other();
+		}
+
+		virtual vertex_index_t to() const final {
+			return **this;
+		}
+
+		void erase() {
+			auto& e = *range_;
+
+			if (!graph_.isDigraph() && **this != other()) {
+				if (parallel)
+					graph_.adjMatrix().setDefault(to(), from(), e.second);
+				else
+					graph_.adjMatrix().setDefault(to(), from());
+			}
+
+			assert(range_.end() == graph_.adjMatrix().row(from()).end()); // TODO
+
+			range_.begin() = graph_.adjMatrix().erase(from(), range_.begin());
+			range_.end() = graph_.adjMatrix().row(from()).end();
+
+			static_assert(std::is_convertible<graph_type, typename KtGraphSparse::super_>::value, "illegal type of GRAPH for KtGraphSparse::adj_vertex_iter_base_.");
+			KtGraphSparse* g = dynamic_cast<KtGraphSparse*>(&graph_);
+			--g->E_;
+		}
+
     };
 
     template<bool bConst>
@@ -170,7 +193,7 @@ private:
         using super_ = adj_vertex_iter_base_<graph_type, range_type>;
         using super_::graph_;
         using super_::range_;
-        using super_::u_;
+        using super_::other;
 
 
         adj_vertex_iter_r_base(graph_type& g) : super_(g) {}
@@ -178,15 +201,42 @@ private:
         adj_vertex_iter_r_base(graph_type& g, vertex_index_t v) :
             super_(g, g.adjMatrix().col(v), v) {}
 
-        void erase() {
-            if (!graph_.isDigraph() && range_->first != u_) {
-                if (parallel)
-                    graph_.adjMatrix.setDefault(range_->first, u_, range_->second);
-                else
-                    graph_.adjMatrix.setDefault(range_->first, u_);
-            }
 
-            range_.erase();
+		virtual vertex_index_t from() const final {
+			return **this;
+		}
+
+		virtual vertex_index_t to() const final {
+			return other();
+		}
+
+
+        void erase() {
+			
+			auto& mat = graph_.adjMatrix();
+			assert(range_.end() == mat.colEnd(to()));
+
+			bool updateEnd = (from() == mat.rows() - 1); // 若删除最后一行元素，则需要同步更新range_.end()
+			typename range_type::deref_type e = *range_;
+
+			if (!graph_.isDigraph() && **this != other()) {
+				if (parallel)
+					mat.setDefault(to(), from(), e.second);
+				else
+					mat.setDefault(to(), from());
+
+				if (to() == mat.rows() - 1)
+					updateEnd = true;
+			}
+
+			
+			range_.begin().erase();
+			if(updateEnd)
+				range_.end() = mat.colEnd(to());
+
+			static_assert(std::is_convertible<graph_type, typename KtGraphSparse::super_>::value, "illegal type of GRAPH for KtGraphSparse::adj_vertex_iter_r_base.");
+			KtGraphSparse* g = dynamic_cast<KtGraphSparse*>(&graph_);
+			--g->E_;
         }
     };
 
