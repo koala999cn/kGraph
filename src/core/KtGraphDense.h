@@ -28,7 +28,7 @@ public:
 
 private:
 
-	template<typename GRAPH, typename RANGE> friend class adj_vertex_iter_base_;
+    template<typename GRAPH, typename RANGE> friend class adj_vertex_iter_base_;
 
     // 邻接顶点迭代器的基类
     template<typename GRAPH, typename RANGE>
