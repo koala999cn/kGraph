@@ -57,8 +57,6 @@ public:
 
 	bool empty() const { return first_ == last_; }
 
-	//auto operator->() { return &first_; }
-	//auto operator->() const { return &first_; }
 
 	// advance first_ until Pred(first_)
 	template<typename Pred>
