@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <assert.h>
 #include "KtRange.h"
 
 
@@ -27,13 +28,13 @@ private:
 	{
 	public:
 		using deref_type = decltype(*std::declval<ELE_ITER>());
-		using const_deref_type = const deref_type;
+		using const_deref_type = decltype(*std::declval<std::add_const_t<ELE_ITER>>());
 
 		col_element_iter_(const ELE_ITER& iter, const ELE_ITER& end, unsigned offset) :
-			iter_(iter), offset_(offset) {}
+			iter_(iter), end_(end), offset_(offset) {}
 
 		col_element_iter_& operator++() {
-			if (std::distance(iter_, end_) < offset_)
+			if (std::distance(iter_, end_) >= offset_)
 				std::advance(iter_, offset_);
 			else
 				iter_ = end_;
@@ -93,10 +94,12 @@ public:
 
 	// 访问矩阵的第row行、第col列元素
     const_reference operator()(unsigned row, unsigned col) const {
+		assert(row < rows_ && col < cols_);
         return row_major ? data_[row * cols_ + col] : data_[col * rows_ + row];
     }
 
     reference operator()(unsigned row, unsigned col) {
+		assert(row < rows_ && col < cols_);
         return row_major ? data_[row * cols_ + col] : data_[col * rows_ + row];
     }
 
@@ -120,20 +123,20 @@ public:
 	// 返回第idx行的迭代范围
 	auto row(unsigned idx) {
 		row_element_iter start = std::next(data_.begin(), idx * cols_);
-		return KtRange<row_element_iter>(start, std::next(start, rows_));
+		return KtRange<row_element_iter>(start, std::next(start, cols_));
 	}
 
 
 	auto row(unsigned idx) const {
 		const_row_element_iter start = std::next(data_.cbegin(), idx * cols_);
-		return KtRange<const_row_element_iter>(start, std::next(start, rows_));
+		return KtRange<const_row_element_iter>(start, std::next(start, cols_));
 	}
 
 
 	// 返回第idx列的迭代范围
 	auto col(unsigned idx) {
 		auto b = std::next(data_.begin(), idx);
-		return col_range(col_element_iter(b, data_.end(), cols_), 
+		return col_range(col_element_iter(b, data_.end(), cols_),
 						col_element_iter(data_.end(), data_.end(), cols_));
 	}
 
