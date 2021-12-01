@@ -8,7 +8,7 @@ class KtRange
 public:
 	using iter_type = ITER_TYPE;
 	using deref_type = decltype(*std::declval<iter_type>());
-	using const_deref_type = const deref_type;
+	using const_deref_type = decltype(*std::declval<std::add_const_t<iter_type>>());
 	using value_type = std::remove_reference_t<deref_type>;
 	constexpr static bool is_const = std::is_const<deref_type>::value;
 
@@ -23,6 +23,11 @@ public:
 
 	KtRange(const KtRange& rhs) : 
 		first_(rhs.first_), last_(rhs.last_) {}
+
+
+	bool operator==(const KtRange& rhs) const {
+		return first_ == rhs.first_ && last_ == rhs.last_;
+	}
 
 
 	// 作为容器使用
@@ -52,8 +57,8 @@ public:
 
 	bool empty() const { return first_ == last_; }
 
-	auto operator->() { return first_.operator->(); }
-	auto operator->() const { return first_.operator->(); }
+	//auto operator->() { return &first_; }
+	//auto operator->() const { return &first_; }
 
 	// advance first_ until Pred(first_)
 	template<typename Pred>
