@@ -28,13 +28,15 @@ public:
 
 private:
 
+	template<typename GRAPH, typename RANGE> friend class adj_vertex_iter_base_;
+
     // 邻接顶点迭代器的基类
     template<typename GRAPH, typename RANGE>
     class adj_vertex_iter_base_
     {
     public:
         using deref_type = decltype(*std::declval<RANGE>());
-        using const_deref_type = const deref_type;
+        using const_deref_type = decltype(*std::declval<std::add_const_t<RANGE>>());
 
         adj_vertex_iter_base_(GRAPH& g) : graph_(g), u_(GRAPH::null_vertex) {
             v_ = GRAPH::null_vertex, null_ = g.nullEdge();
@@ -50,7 +52,7 @@ private:
         adj_vertex_iter_base_(const adj_vertex_iter_base_& iter) = default;
 
         
-        const vertex_index_t source() const { return u_; }
+        const vertex_index_t other() const { return u_; }
         const vertex_index_t operator*() const { return v_; }
 
 
@@ -65,28 +67,36 @@ private:
         bool isEnd() const { return range_.empty(); }
 
 
-        // get the value of edge (u_, v_)
+        // get the value of current edge
         const_deref_type edge() const { return *range_; }
 
-        // reset the value of edge (u_, v_)
-        void reedge(const_edge_ref val) {
-            assert(val != null_);
-            *range_ = val; 
+		virtual vertex_index_t from() const = 0;
+		virtual vertex_index_t to() const = 0;
 
-            if (!graph_.isDigraph() && v_ != u_)
-                graph_.adjMatrix(v_, u_) = val;
-        }
+		// reset the value of current edge, that is (u_, v_) = val
+		void reedge(const_edge_ref val) {
+			assert(val != null_);
+			*range_ = val;
 
-        // erase the edge (u_, v_)
-        void erase() {
-            *range_ = null_;
-            ++(*this); // skip the erased element
+			if (!graph_.isDigraph() && **this != other())
+				graph_.adjMatrix()(to(), from()) = val;
+		}
 
-            if (!graph_.isDigraph() && v_ != u_)
-                graph_.adjMatrix()(v_, u_) = null_;
-        }
+		// erase the current edge, that is (u_, v_) = null
+		void erase() {
+			*range_ = null_;
+			
+			if (!graph_.isDigraph() && **this != other())
+				graph_.adjMatrix()(to(), from()) = null_;
 
-    private:
+			++(*this); // skip the erased element
+
+			static_assert(std::is_convertible<GRAPH, typename KtGraphDense::super_>::value, "illegal type of GRAPH for KtGraphDense::adj_vertex_iter_base_.");
+			KtGraphDense* g = dynamic_cast<KtGraphDense*>(&graph_);
+			--g->E_;
+		}
+
+    protected:
         GRAPH& graph_;
         RANGE range_;
         const vertex_index_t u_; // range_对应的行号/列号
@@ -119,11 +129,20 @@ private:
         using range_type = range_type_<bConst, true>;
 
         using super_ = adj_vertex_iter_base_<graph_type, range_type>;
+        using super_::other;
 
         adj_vertex_iter_base(graph_type& g) : super_(g) {}
 
         adj_vertex_iter_base(graph_type& g, const vertex_index_t v) :
             super_(g, g.adjMatrix().row(v), v) {}
+
+		virtual vertex_index_t from() const final {
+			return other();
+		}
+
+		virtual vertex_index_t to() const final {
+			return **this;
+		}
     };
 
     template<bool bConst>
@@ -134,11 +153,20 @@ private:
         using range_type = range_type_<bConst, false>;
 
         using super_ = adj_vertex_iter_base_<graph_type, range_type>;
+        using super_::other;
 
         adj_vertex_iter_r_base(graph_type& g) : super_(g) {}
 
         adj_vertex_iter_r_base(graph_type& g, const vertex_index_t v) :
             super_(g, g.adjMatrix().col(v), v) {}
+
+		virtual vertex_index_t from() const final {
+			return **this;
+		}
+
+		virtual vertex_index_t to() const final {
+			return other();
+		}
     };
 
 public:
