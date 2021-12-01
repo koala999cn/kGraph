@@ -55,7 +55,7 @@ public:
 
             // 移出已到末尾的迭代器
             if (iter.isEnd()) {
-                isPopped_[todo_.front().source()] = true;
+                isPopped_[todo_.front().other()] = true;
                 todo_.pop();
                 continue;
             }
@@ -97,7 +97,7 @@ public:
     // 与当前顶点（to顶点）构成边的from顶点
     vertex_index_t from() const {
         assert(!isEnd());
-        return todo_.empty() ? null_vertex : todo_.front().source();
+        return todo_.empty() ? null_vertex : todo_.front().other();
     }
 
 
