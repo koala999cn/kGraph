@@ -1,4 +1,9 @@
-v0.41 build20211008
+v0.4.2 build20211201
+1. fix some fatal bugs.
+2. new implement matrix_test & adj_iter_test.
+
+
+v0.4.1 build20211008
 1. new implement resort_test.
 2. fix file coding problem caused by chinese remark.
 3. fix some bugs.
