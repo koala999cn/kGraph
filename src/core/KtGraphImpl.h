@@ -18,6 +18,8 @@ public:
     using typename super_::vertex_index_t;
     using typename super_::adj_vertex_iter;
     using typename super_::const_adj_vertex_iter;
+    using typename super_::adj_vertex_iter_r;
+    using typename super_::const_adj_vertex_iter_r;
 
     template<bool fullGraph = false, bool modeEdge = false, bool stopAtPopping = false>
     using dfs_iter = KtDfsIter<KtGraphImpl, fullGraph, modeEdge, stopAtPopping>;
