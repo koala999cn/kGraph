@@ -2,7 +2,9 @@
 #include <assert.h>
 
 
+extern void matrix_test();
 extern void sparse_graph_test();
+extern void adj_iter_test();
 extern void bfs_test();
 extern void dfs_test();
 extern void connected_component_test();
@@ -20,7 +22,9 @@ extern void resort_test();
 
 int main(int argc, char const *argv[])
 {
+    matrix_test(); printf("\n");
     sparse_graph_test(); printf("\n");
+    adj_iter_test(); printf("\n");
     bfs_test(); printf("\n");
     dfs_test(); printf("\n");
     connected_component_test(); printf("\n");
