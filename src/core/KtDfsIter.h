@@ -61,7 +61,7 @@ public:
     vertex_index_t from() const {
         assert(!isEnd());
         return isPopping() ? grandpa() :
-                            todo_.size() > 1 ? todo_.back().source() : null_vertex;
+                            todo_.size() > 1 ? todo_.back().other() : null_vertex;
     }
 
 
@@ -164,7 +164,7 @@ private:
 
     // 返回当前顶点的祖父顶点，即from之from
     vertex_index_t grandpa() const {
-        return todo_.size() > 2 ? todo_[todo_.size() - 2].source() : null_vertex;
+        return todo_.size() > 2 ? todo_[todo_.size() - 2].other() : null_vertex;
     }
 
 
@@ -178,7 +178,7 @@ private:
             // 移除已结束的迭代器
             if (iter.isEnd()) {
                 if (!stopAtPopping) {
-                    popOrd_[todo_.back().source()] = popIdx_++;
+                    popOrd_[todo_.back().other()] = popIdx_++;
                     todo_.pop_back();
                     continue;
                 }
@@ -223,7 +223,7 @@ private:
             }
         }
         else {
-            v_ = todo_.back().isEnd() ? todo_.back().source() : *todo_.back();
+            v_ = todo_.back().isEnd() ? todo_.back().other() : *todo_.back();
         }
     }
 
