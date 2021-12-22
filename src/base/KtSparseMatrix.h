@@ -152,15 +152,15 @@ public:
     KtSparseMatrix& operator=(KtSparseMatrix&&) = default;
 
     KtSparseMatrix(unsigned rows, unsigned cols, const_reference defaultVal) :
-        cols_(0), default_(defaultVal), elements_(rows) { }
+        cols_(cols), default_(defaultVal), elements_(rows) { }
 
     void resize(unsigned rows, unsigned cols, const_reference val) {
         cols_ = cols;  default_ = val;
         elements_.clear(); elements_.resize(rows);
     }
     
-    void reserve(unsigned rows, unsigned cols) { elements_.reserve(rows); }
-
+    void reserveRows(unsigned rows) { elements_.reserve(rows); }
+	void reserveCols(unsigned row, unsigned cols) { elements_[row].reserve(cols); }
 
     const_reference operator()(unsigned row, unsigned col) const {
         auto iter = const_cast<KtSparseMatrix*>(this)->getAt_(row, col, false);
@@ -190,6 +190,21 @@ public:
 		return default_; // make compiler easy.
 	}
 
+	const_reference operator()(unsigned row, unsigned col, const_reference val) const {
+		if (!bMultiVal) {
+			assert((*this)(row, col) == val);
+			return (*this)(row, col);
+		}
+
+		auto iter = const_cast<KtSparseMatrix*>(this)->getAt_(row, col, false);
+		for (; iter != elements_[row].end(); ++iter) {
+			if (iter->first == col && iter->second == val)
+				return iter->second;
+		}
+
+		return default_; // make compiler easy.
+	}
+
 
     unsigned rows() const { return elements_.size(); }
     unsigned cols() const { return cols_; }
@@ -200,19 +215,13 @@ public:
 		if (!bMultiVal) return 0;
 
 		unsigned mvals(0);
-
-		for (unsigned r = 0; r < rows(); r++)
-			for (unsigned c = 0; c < cols(); c++) {
-				auto iter = const_cast<KtSparseMatrix*>(this)->getAt_(r, c, false);
-				if (iter == elements_[r].end())
-					continue;
-
-				while (++iter != elements_[r].end()) 
-					if (iter->first == c) { // 发现一个(r, c)索引的重值
-						++mvals;
-						break;
-					}
-			}
+		for (unsigned r = 0; r < rows(); r++) {
+			const_row_range iter = row(r);
+			std::vector<unsigned> counts(cols(), 0);
+			for (; !iter.empty(); ++iter)
+				counts[(*iter).first]++;
+			mvals += std::count_if(counts.begin(), counts.end(), [](unsigned v) { return v > 1; });
+		}
 
 		return mvals;
 	}
@@ -224,11 +233,11 @@ public:
 	const_row_element_iter rowEnd(unsigned rowIdx) const { return elements_[rowIdx].cend(); }
 
     // 返回第rowIdx行range对象
-    auto row(unsigned rowIdx) { 
+	auto row(unsigned rowIdx) {
 		return row_range(rowBegin(rowIdx), rowEnd(rowIdx));
 	}
 
-    auto row(unsigned rowIdx) const {
+	auto row(unsigned rowIdx) const {
 		return const_row_range(rowBegin(rowIdx), rowEnd(rowIdx));
 	}
 
@@ -239,7 +248,7 @@ public:
 		return col_element_iter(*this, row_range(elements_.back().end(), 0), rows(), colIdx);
 	}
 	const_col_element_iter colEnd(unsigned colIdx) const {
-		return const_col_element_iter(*this, row_range(elements_.back().end(), 0), rows(), colIdx);
+		return const_col_element_iter(*this, const_row_range(elements_.back().end(), 0), rows(), colIdx);
 	}
 
 
@@ -349,7 +358,7 @@ public:
         for (auto& row : elements_) 
             for (auto iter = row.begin(); iter != row.end();) {
                 if (iter->first == col) {
-                    iter = elements_[row].erase(iter);
+                    iter = row.erase(iter);
                     continue;
                 }
                 else if (iter->first >= col)
