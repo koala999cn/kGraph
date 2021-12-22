@@ -37,13 +37,14 @@ public:
     void reset(unsigned numVertex, const_edge_ref nullEdge = edge_type{}) {
         E_ = 0;
         null_ = nullEdge;
-        adjMat_.reset(numVertex, numVertex, null_);
+        adjMat_.resize(numVertex, numVertex, null_);
     }
 
-    void reserve(unsigned numVerts, unsigned numEdges) {
-        adjMat_.reserve(numVerts, numVerts);
-    }
+	// 预留numVerts个顶点和numEdges条边的存储. 实现相关，缺省无动作
+    void reserve(unsigned numVerts, unsigned numEdges) { }
 
+	// 对顶点v预留numEdges条边的存储. 实现相关，缺省无动作
+	void reserveEdges(vertex_index_t v, unsigned numEdges) { }
 
     // 返回图的阶，即顶点数目
     unsigned order() const { return adjMat_.rows(); }
@@ -86,6 +87,7 @@ public:
     template<typename T = edge_type>
     typename std::enable_if_t<std::is_constructible<T, int>::value>
     addEdge(vertex_index_t v1, vertex_index_t v2) {
+		assert(null_ != T{ 1 });
         addEdge(v1, v2, T{ 1 });
     }
    
@@ -180,6 +182,8 @@ public:
 
     const edge_type& nullEdge() const { return null_; }
 
+
+	// TODO: 尽量删除以下2个函数
     adj_matrix_type& adjMatrix() { return adjMat_; }
     const adj_matrix_type& adjMatrix() const { return adjMat_; }
 
