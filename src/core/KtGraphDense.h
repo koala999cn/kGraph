@@ -20,8 +20,13 @@ public:
     using super_::order;
 
 
-    // 重载个虚函数
-    virtual unsigned outdegree(unsigned v) const override {
+	void reserve(unsigned numVerts, unsigned numEdges) {
+		adjMat_.reserve(numVerts, numEdges);
+	}
+
+
+    // 重载虚函数
+    unsigned outdegree(unsigned v) const override {
         return order() - adjMat_.row(v).count(null_);
     }
 
