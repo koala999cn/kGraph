@@ -60,7 +60,7 @@ private:
 
 	private:
 		ELE_ITER iter_, end_;
-		unsigned offset_; // 一次前进的偏移量
+		typename std::iterator_traits<ELE_ITER>::difference_type offset_; // 一次前进的偏移量
 	};
 
 
