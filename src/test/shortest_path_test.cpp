@@ -25,7 +25,7 @@ bool hasNegLoop(const GRAPH& g)
 {
     KtAllSptFloyd<GRAPH> floyd(g);
     for (unsigned i = 0; i < g.order(); i++)
-        if (floyd.dist(i, i) < 0)
+        if (floyd.distance(i, i) < 0)
             return true;
 
     return false;
@@ -36,8 +36,8 @@ template<typename GRAPH, typename SPTALL, typename SPT>
 void equal_test(const GRAPH& g, unsigned v, const SPTALL& all, const SPT& single)
 {
     for (unsigned w = 0; w < g.order(); w++) 
-        if (!almostEqual(all.dist(v, w), single.dist(w))) {
-            printf(" [DUMP: dist = %g vs %g", all.dist(v, w), single.dist(w));
+        if (!almostEqual(all.distance(v, w), single.distance(w))) {
+            printf(" [DUMP: distance = %g vs %g", all.distance(v, w), single.distance(w));
             printf("  path = %s vs %s]", format_pathR(all.pathR(v, w)).c_str(), format_pathR(single.pathR(w)).c_str());
             test_failed(g);
         }
@@ -105,7 +105,7 @@ void shortest_path_test_(const GRAPH& g)
         KtAllSptDfs<GRAPH, WEIGHTOR> allDfs(g);
         for (unsigned v = 0; v < g.order(); v++)
             for (unsigned w = 0; w < g.order(); w++)
-                if (!almostEqual(floyd.dist(v, w), allDfs.dist(v, w)))
+                if (!almostEqual(floyd.distance(v, w), allDfs.distance(v, w)))
                     test_failed(g);
         printf("  > passed\n"); fflush(stdout);
     }
