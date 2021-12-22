@@ -212,8 +212,8 @@ public:
             assert(path.back() == s && path.front() == t);
 
             // 增广路径，更新余留网的权值
-            assert(pfs.dist(t) == minFlow_(path));
-            augment_(path, pfs.dist(t));
+            assert(pfs.distance(t) == minFlow_(path));
+            augment_(path, pfs.distance(t));
         }
     }
 };
