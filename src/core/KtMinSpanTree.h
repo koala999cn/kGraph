@@ -32,7 +32,7 @@ public:
 
 
     // mst的累加权值
-    double dist() const {
+    double distance() const {
         return dist_;
     }
 
