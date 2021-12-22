@@ -10,7 +10,7 @@ void equal_test(const GRAPH& g, const TC1& tc1, const TC2& tc2)
 {
     for (unsigned i = 0; i < g.order(); i++)
         for (unsigned j = 0; j < g.order(); j++)
-            if (tc1.isReachable(i, j) != tc2.isReachable(i, j))
+            if (tc1.reachable(i, j) != tc2.reachable(i, j))
                 test_failed(g);
 }
 
@@ -20,11 +20,11 @@ void transitive_closure_test_(const GRAPH& g)
 {
     bool doDag = !g.hasLoop();
 
-    KtTransitiveClosureWar<GRAPH> war(g);
-    KtTransitiveClosureDfs<GRAPH> dfs(g);
-    KtTransitiveClosureScc<GRAPH> scc(g);
-    KtTransitiveClosureDag<GRAPH> *dag(nullptr);
-    if(doDag) dag = new KtTransitiveClosureDag<GRAPH>(g);
+	KtTcWarshall<GRAPH> war(g);
+    KtTcDfs<GRAPH> dfs(g);
+    KtTcScc<GRAPH> scc(g);
+    KtTcDag<GRAPH> *dag(nullptr);
+    if(doDag) dag = new KtTcDag<GRAPH>(g);
 
     printf("      war vs. dfs");
     fflush(stdout);
@@ -79,7 +79,7 @@ void transitive_closure_test()
     transitive_closure_test_(dag);
 
 
-    DigraphDi dg = randgen<DigraphDi>(100, 1000); 
+    DigraphDi dg = randgen<DigraphDi>(200, 5000); 
     printf("   random digraph V = %d, E = %d\n", dg.order(), dg.size());
     fflush(stdout);
     transitive_closure_test_(dg);
