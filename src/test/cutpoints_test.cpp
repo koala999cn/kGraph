@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../GraphX.h"
-#include "../core/KtConnected.h"
 #include "../util/randgen.h"
+#include "../util/make_connect.h"
 #include "test_util.h"
 
 
@@ -49,7 +49,7 @@ void cutpoints_test()
 
 
     GraphDd rg = randgen<GraphDd>(100, 150);
-    makeConnect(rg);
+    make_connect(rg);
     printf("   random graph V = %d, E = %d", rg.order(), rg.size());
     fflush(stdout);
     cutpoints_test_(rg);
