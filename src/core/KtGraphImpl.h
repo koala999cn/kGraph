@@ -71,6 +71,15 @@ public:
     }
 
 
+	auto edgeIter(vertex_index_t v = 0) {
+		return edge_iter(*this, v);
+	}
+
+	auto edgeIter(vertex_index_t v = 0) const {
+		return const_edge_iter(*this, v);
+	}
+
+
     // @GRAPH: 输出的图类型
     // @WEIGHTOR: 边权值转换函数子
     template<typename GRAPH, typename WEIGHTOR = KtWeightSelf<edge_type>>
@@ -180,6 +189,29 @@ public:
 
         return false;
     }
+
+
+	// 设置v可达的顶点标记
+	std::vector<bool> getReachable(vertex_index_t v) const {
+		std::vector<bool> flags(order(), false);
+		const_bfs_iter<> iter(*this, v);
+		for (; !iter.isEnd(); ++iter)
+			flags[*iter] = true;
+
+		return flags;
+	}
+
+
+	// 移除v不可达的顶点
+	void eraseUnreachable(vertex_index_t v) {
+		auto flags = reachable(v);
+
+		// 逆序删除v不可达的顶点
+		for (unsigned i = flags.size() - 1; i != -1; i--)
+			if(!flags[i])
+				super_::eraseVertex(i);
+	}
+
 
 
     // 返回源点集合
