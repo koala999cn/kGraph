@@ -24,6 +24,15 @@ public:
     using super_::KtGraphBase;
 
 
+	void reserve(unsigned numVerts, unsigned numEdges) {
+		adjMat_.reserveRows(numVerts);
+	}
+
+	void reserveEdges(vertex_index_t v, unsigned numEdges) {
+		adjMat_.reserveCols(v, numEdges);
+	}
+
+
     // 重新实现
     void eraseEdge(unsigned v, unsigned w) {
         if(hasEdge(v, w)) {
@@ -35,12 +44,12 @@ public:
 
 
     // 重载
-    virtual unsigned outdegree(unsigned v) const final { // 已是最优实现，使用final标记
+    unsigned outdegree(unsigned v) const final { // 已是最优实现，使用final标记
         return adjMat_.nonDefaultsOfRow(v);
     }
 
 
-    // 新增对平行边的支持函数
+    /// 新增对平行边的支持函数
 
     bool hasEdge(vertex_index_t v1, vertex_index_t v2, const_edge_ref val) const {
         return adjMat_(v1, v2, val) != null_;
