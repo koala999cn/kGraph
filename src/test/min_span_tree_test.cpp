@@ -14,12 +14,12 @@ void min_span_tree_test_(const GRAPH& g)
     KtMstBoruvka<GRAPH, WEIGHTOR> boru(g);
     KtMstPfs<GRAPH, WEIGHTOR> pfs(g);
 
-    printf("      prim = %f, kurs = %f, boru = %f, pfs = %f", prim.dist(), kurs.dist(), boru.dist(), pfs.dist());
+    printf("      prim = %f, kurs = %f, boru = %f, pfs = %f", prim.distance(), kurs.distance(), boru.distance(), pfs.distance());
     fflush(stdout);
 
-    if (!almostEqual(prim.dist(), kurs.dist()) || 
-        !almostEqual(prim.dist(), boru.dist()) ||
-        !almostEqual(prim.dist(), pfs.dist() )
+    if (!almostEqual(prim.distance(), kurs.distance()) || 
+        !almostEqual(prim.distance(), boru.distance()) ||
+        !almostEqual(prim.distance(), pfs.distance() )
         )
         test_failed(g);
 
