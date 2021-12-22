@@ -20,7 +20,7 @@ class KtWeightUnit
 {
 public:
     using weight_type = int;
-    weight_type operator()(const VALUE_TYPE&) const {
+    constexpr weight_type operator()(const VALUE_TYPE&) const {
         return 1;
     }
 };
