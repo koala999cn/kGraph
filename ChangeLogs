@@ -1,5 +1,5 @@
 v0.4.3 build20211222
-1. 对KtTopologySort作了进一步抽象
+1. 对KtTransitiveClosure作了进一步抽象
 2. KtGraphImpl新增getReachable和eraseUnreachable实现
 3. 新增KtGraphBase::reserveEdges接口和相应实现
 4. 对部门代码进行优化
