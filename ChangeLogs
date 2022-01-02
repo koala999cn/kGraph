@@ -7,28 +7,29 @@ v0.4.3 build20211222
 
 
 v0.4.2 build20211201
-1. fix some fatal bugs.
-2. new implement matrix_test & adj_iter_test.
+1. 修复一些致命bug.
+2. 新增实现matrix_test & adj_iter_test.
 
 
 v0.4.1 build20211008
-1. new implement resort_test.
-2. fix file coding problem caused by chinese remark.
-3. fix some bugs.
+1. 新增实现resort_test.
+2. 修复文件编码而引起的中文注释乱码问题.
+3. 修复bug.
 
 
 v0.4 build20211006
-1. reimplement adj_vertex_iter
-2. new implement adj_vertex_iter_r
-3. new implement const_adj_vertex_iter & const_adj_vertex_iter_r
-4. new implement KtRange & row_range / col_range support for adj_matrix
-5. new implement utils
+1. 重新实现adj_vertex_iter
+2. 新增实现adj_vertex_iter_r，可以迭代入边
+3. 新增实现const_adj_vertex_iter & const_adj_vertex_iter_r
+4. 新增实现KtRange
+5. 新增实现adj_matrix的_range & col_range支持
+5. 新增utils目录及有关实用函数
 
 
 v0.3 build20210922
-1. recode spare matrix.
-2. new implement KtGraphVoa, the graph with Vertex Object Attached.
-3. new implement KtSubGraph, the graph support embedded sub-graphs.
-4. new implement resort alogrithm.
-5. new support parallel edges.
-6. fix some bugs.
+1. 重新实现KtSpareMatrix.
+2. 新增实现KtGraphVoa, 支持为每个顶点设定存储类型.
+3. 新增实现KtGraphSub, 支持嵌套子图.
+4. 新增实现resort算法.
+5. 新增支持平行边.
+6. 修复bug.
