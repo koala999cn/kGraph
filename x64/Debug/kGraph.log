@@ -1,0 +1,865 @@
+﻿  adj_iter_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<double,true>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<double,true>”的引用
+C:\Project\kGraph\src\test\adj_iter_test.cpp(220): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<double,true>>”的引用
+C:\Project\kGraph\src\base\KtSparseMatrix.h(266,1): warning C4267: “return”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\base\KtSparseMatrix.h(265): message : 在编译 类 模板 成员函数“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::nonDefaultsOfRow(unsigned int) const”时
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\core\KtGraphSparse.h(48): message : 查看对正在编译的函数 模板 实例化“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::nonDefaultsOfRow(unsigned int) const”的引用
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\core\KtGraphBase.h(15): message : 查看对正在编译的 类 模板 实例化“KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>”的引用
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\core\KtGraphSparse.h(8): message : 查看对正在编译的 类 模板 实例化“KtGraphBase<KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>,false,false>”的引用
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphSparse<double,false,false>”的引用
+C:\Project\kGraph\src\test\adj_iter_test.cpp(227): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphSparse<double,false,false>>”的引用
+C:\Project\kGraph\src\base\KtSparseMatrix.h(209,1): warning C4267: “return”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\base\KtSparseMatrix.h(209): message : 在编译 类 模板 成员函数“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::rows(void) const”时
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\core\KtGraphBase.h(50): message : 查看对正在编译的函数 模板 实例化“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::rows(void) const”的引用
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\test\adj_iter_test.cpp(109,9): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“unsigned __int64”
+C:\Project\kGraph\src\test\adj_iter_test.cpp(109,9): message : 请考虑在格式字符串中使用“%zd”
+C:\Project\kGraph\src\test\adj_iter_test.cpp(199): message : 查看对正在编译的函数 模板 实例化“void adj_iter_test__<GRAPH>(GRAPH &,bool)”的引用
+          with
+          [
+              GRAPH=GraphDd
+          ]
+C:\Project\kGraph\src\test\adj_iter_test.cpp(216): message : 查看对正在编译的函数 模板 实例化“void adj_iter_test_<GraphDd>(GRAPH &)”的引用
+          with
+          [
+              GRAPH=GraphDd
+          ]
+C:\Project\kGraph\src\test\adj_iter_test.cpp(133,9): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“unsigned __int64”
+C:\Project\kGraph\src\test\adj_iter_test.cpp(133,9): message : 请考虑在格式字符串中使用“%zd”
+C:\Project\kGraph\src\test\adj_iter_test.cpp(173,9): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“unsigned __int64”
+C:\Project\kGraph\src\test\adj_iter_test.cpp(173,9): message : 请考虑在格式字符串中使用“%zd”
+  bfs_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<double,true>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<double,true>”的引用
+C:\Project\kGraph\src\test\bfs_test.cpp(59): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<double,true>>”的引用
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,true>>,true,true>::operator ++(void)”时
+C:\Project\kGraph\src\test\bfs_test.cpp(26): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,true>>,true,true>::operator ++(void)”的引用
+C:\Project\kGraph\src\test\bfs_test.cpp(24): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<const KtGraphImpl<KtGraphDense<double,true>>,true,true>”的引用
+C:\Project\kGraph\src\test\bfs_test.cpp(62): message : 查看对正在编译的函数 模板 实例化“void bfs_test_<DigraphDd>(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=DigraphDd
+          ]
+  bipartite_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBipartite.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\bipartite_test.cpp(27,12): warning C4267: “参数”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\test\bipartite_test.cpp(31,12): warning C4267: “参数”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<int,false>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<int,false>”的引用
+C:\Project\kGraph\src\test\bipartite_test.cpp(12): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<int,false>>”的引用
+C:\Project\kGraph\src\core\KtDfsIter.h(156,20): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtDfsIter.h(154): message : 在编译 类 模板 成员函数“unsigned int KtDfsIter<const GRAPH,true,true,false>::firstUnvisited(void) const”时
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\core\KtDfsIter.h(221): message : 查看对正在编译的函数 模板 实例化“unsigned int KtDfsIter<const GRAPH,true,true,false>::firstUnvisited(void) const”的引用
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\core\KtBipartite.h(20): message : 查看对正在编译的 类 模板 实例化“KtDfsIter<const GRAPH,true,true,false>”的引用
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\core\KtBipartite.h(17): message : 在编译 类 模板 成员函数“KtBipartite<GraphDi>::KtBipartite(const GRAPH &)”时
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\test\bipartite_test.cpp(22): message : 查看对正在编译的函数 模板 实例化“KtBipartite<GraphDi>::KtBipartite(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\test\bipartite_test.cpp(22): message : 查看对正在编译的 类 模板 实例化“KtBipartite<GraphDi>”的引用
+  bridge_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtConnected.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<double,false>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<double,false>”的引用
+C:\Project\kGraph\src\test\bridge_test.cpp(50): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<double,false>>”的引用
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,false,false>::operator ++(void)”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(176): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,false,false>::operator ++(void)”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(174): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,false,false>”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(173): message : 在编译 类 模板 成员函数“bool KtGraphImpl<KtGraphDense<double,false>>::isConnected(void) const”时
+C:\Project\kGraph\src\util\make_connect.h(30): message : 查看对正在编译的函数 模板 实例化“bool KtGraphImpl<KtGraphDense<double,false>>::isConnected(void) const”的引用
+C:\Project\kGraph\src\test\bridge_test.cpp(15,12): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“unsigned __int64”
+C:\Project\kGraph\src\test\bridge_test.cpp(15,12): message : 请考虑在格式字符串中使用“%zd”
+C:\Project\kGraph\src\test\bridge_test.cpp(46): message : 查看对正在编译的函数 模板 实例化“void bridge_test_<GraphDi>(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\core\KtDfsIter.h(156,20): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtDfsIter.h(154): message : 在编译 类 模板 成员函数“unsigned int KtDfsIter<GRAPH,false,true,true>::firstUnvisited(void) const”时
+          with
+          [
+              GRAPH=const KtGraphImpl<KtGraphDense<double,false>>
+          ]
+C:\Project\kGraph\src\core\KtDfsIterX.h(55): message : 查看对正在编译的函数 模板 实例化“unsigned int KtDfsIter<GRAPH,false,true,true>::firstUnvisited(void) const”的引用
+          with
+          [
+              GRAPH=const KtGraphImpl<KtGraphDense<double,false>>
+          ]
+C:\Project\kGraph\src\core\KtDfsIterX.h(12): message : 查看对正在编译的 类 模板 实例化“KtDfsIter<GRAPH,false,true,true>”的引用
+          with
+          [
+              GRAPH=const KtGraphImpl<KtGraphDense<double,false>>
+          ]
+C:\Project\kGraph\src\core\KtGraphImpl.h(244): message : 查看对正在编译的 类 模板 实例化“KtDfsIterX<const KtGraphImpl<KtGraphDense<double,false>>,true>”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(242): message : 在编译 类 模板 成员函数“std::vector<std::pair<unsigned int,unsigned int>,std::allocator<std::pair<unsigned int,unsigned int>>> KtGraphImpl<KtGraphDense<double,false>>::bridges(void) const”时
+  connected_component_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtConnected.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<int,false>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<int,false>”的引用
+C:\Project\kGraph\src\test\connected_component_test.cpp(12): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<int,false>>”的引用
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<const GRAPH,true,false>::operator ++(void)”时
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\core\KtConnected.h(18): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<const GRAPH,true,false>::operator ++(void)”的引用
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\core\KtConnected.h(16): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<const GRAPH,true,false>”的引用
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\core\KtConnected.h(12): message : 在编译 类 模板 成员函数“KtConnected<GraphDi>::KtConnected(const GRAPH &)”时
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\test\connected_component_test.cpp(24): message : 查看对正在编译的函数 模板 实例化“KtConnected<GraphDi>::KtConnected(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\test\connected_component_test.cpp(24): message : 查看对正在编译的 类 模板 实例化“KtConnected<GraphDi>”的引用
+  cutpoints_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtConnected.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<double,false>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<double,false>”的引用
+C:\Project\kGraph\src\test\cutpoints_test.cpp(51): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<double,false>>”的引用
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,false,false>::operator ++(void)”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(176): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,false,false>::operator ++(void)”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(174): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,false,false>”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(173): message : 在编译 类 模板 成员函数“bool KtGraphImpl<KtGraphDense<double,false>>::isConnected(void) const”时
+C:\Project\kGraph\src\util\make_connect.h(30): message : 查看对正在编译的函数 模板 实例化“bool KtGraphImpl<KtGraphDense<double,false>>::isConnected(void) const”的引用
+C:\Project\kGraph\src\test\cutpoints_test.cpp(14,12): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“unsigned __int64”
+C:\Project\kGraph\src\test\cutpoints_test.cpp(14,12): message : 请考虑在格式字符串中使用“%zd”
+C:\Project\kGraph\src\test\cutpoints_test.cpp(47): message : 查看对正在编译的函数 模板 实例化“void cutpoints_test_<GraphDi>(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=GraphDi
+          ]
+C:\Project\kGraph\src\core\KtDfsIter.h(156,20): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtDfsIter.h(154): message : 在编译 类 模板 成员函数“unsigned int KtDfsIter<GRAPH,false,true,true>::firstUnvisited(void) const”时
+          with
+          [
+              GRAPH=const KtGraphImpl<KtGraphDense<double,false>>
+          ]
+C:\Project\kGraph\src\core\KtDfsIterX.h(55): message : 查看对正在编译的函数 模板 实例化“unsigned int KtDfsIter<GRAPH,false,true,true>::firstUnvisited(void) const”的引用
+          with
+          [
+              GRAPH=const KtGraphImpl<KtGraphDense<double,false>>
+          ]
+C:\Project\kGraph\src\core\KtDfsIterX.h(12): message : 查看对正在编译的 类 模板 实例化“KtDfsIter<GRAPH,false,true,true>”的引用
+          with
+          [
+              GRAPH=const KtGraphImpl<KtGraphDense<double,false>>
+          ]
+C:\Project\kGraph\src\core\KtGraphImpl.h(267): message : 查看对正在编译的 类 模板 实例化“KtDfsIterX<const KtGraphImpl<KtGraphDense<double,false>>,false>”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(262): message : 在编译 类 模板 成员函数“std::vector<unsigned int,std::allocator<unsigned int>> KtGraphImpl<KtGraphDense<double,false>>::cutpoints(void) const”时
+  dfs_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<double,true>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<double,true>”的引用
+C:\Project\kGraph\src\test\dfs_test.cpp(80): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<double,true>>”的引用
+C:\Project\kGraph\src\base\KtSparseMatrix.h(266,1): warning C4267: “return”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\base\KtSparseMatrix.h(265): message : 在编译 类 模板 成员函数“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::nonDefaultsOfRow(unsigned int) const”时
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphSparse.h(48): message : 查看对正在编译的函数 模板 实例化“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::nonDefaultsOfRow(unsigned int) const”的引用
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphBase.h(15): message : 查看对正在编译的 类 模板 实例化“KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>”的引用
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphSparse.h(8): message : 查看对正在编译的 类 模板 实例化“KtGraphBase<KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>,true,false>”的引用
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphSparse<int,true,false>”的引用
+C:\Project\kGraph\src\test\dfs_test.cpp(64): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphSparse<int,true,false>>”的引用
+C:\Project\kGraph\src\base\KtSparseMatrix.h(209,1): warning C4267: “return”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\base\KtSparseMatrix.h(209): message : 在编译 类 模板 成员函数“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::rows(void) const”时
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphBase.h(50): message : 查看对正在编译的函数 模板 实例化“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::rows(void) const”的引用
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtDfsIter.h(156,20): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtDfsIter.h(154): message : 在编译 类 模板 成员函数“unsigned int KtDfsIter<const GRAPH,true,false,true>::firstUnvisited(void) const”时
+          with
+          [
+              GRAPH=DigraphDd
+          ]
+C:\Project\kGraph\src\core\KtDfsIter.h(221): message : 查看对正在编译的函数 模板 实例化“unsigned int KtDfsIter<const GRAPH,true,false,true>::firstUnvisited(void) const”的引用
+          with
+          [
+              GRAPH=DigraphDd
+          ]
+C:\Project\kGraph\src\test\dfs_test.cpp(39): message : 查看对正在编译的 类 模板 实例化“KtDfsIter<const GRAPH,true,false,true>”的引用
+          with
+          [
+              GRAPH=DigraphDd
+          ]
+C:\Project\kGraph\src\test\dfs_test.cpp(83): message : 查看对正在编译的函数 模板 实例化“void dfs_test_<DigraphDd>(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=DigraphDd
+          ]
+  matrix_test.cpp
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(223,89): warning C4244: “+=”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\base\KtSparseMatrix.h(214): message : 在编译 类 模板 成员函数“unsigned int KtSparseMatrix<double,true,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::mvalues(void) const”时
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\test\matrix_test.cpp(129): message : 查看对正在编译的函数 模板 实例化“unsigned int KtSparseMatrix<double,true,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::mvalues(void) const”的引用
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\test\matrix_test.cpp(113): message : 查看对正在编译的 类 模板 实例化“KtSparseMatrix<double,true,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>”的引用
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\base\KtSparseMatrix.h(209,1): warning C4267: “return”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\base\KtSparseMatrix.h(209): message : 在编译 类 模板 成员函数“unsigned int KtSparseMatrix<double,true,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::rows(void) const”时
+          with
+          [
+              T=double
+          ]
+C:\Project\kGraph\src\test\matrix_test.cpp(117): message : 查看对正在编译的函数 模板 实例化“unsigned int KtSparseMatrix<double,true,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::rows(void) const”的引用
+          with
+          [
+              T=double
+          ]
+  max_flow_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtMaxFlow.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtShortestPath.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtTopologySort.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<int,true>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<int,true>”的引用
+C:\Project\kGraph\src\test\max_flow_test.cpp(59): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<int,true>>”的引用
+C:\Project\kGraph\src\base\KtSparseMatrix.h(266,1): warning C4267: “return”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\base\KtSparseMatrix.h(265): message : 在编译 类 模板 成员函数“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::nonDefaultsOfRow(unsigned int) const”时
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphSparse.h(48): message : 查看对正在编译的函数 模板 实例化“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::nonDefaultsOfRow(unsigned int) const”的引用
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphBase.h(15): message : 查看对正在编译的 类 模板 实例化“KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>”的引用
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphSparse.h(8): message : 查看对正在编译的 类 模板 实例化“KtGraphBase<KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>,true,false>”的引用
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphSparse<int,true,false>”的引用
+C:\Project\kGraph\src\core\KtMaxFlow.h(112): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphSparse<int,true,false>>”的引用
+C:\Project\kGraph\src\core\KtMaxFlow.h(134): message : 查看对正在编译的 类 模板 实例化“KtMaxFlow<GRAPH,WEIGHTOR>”的引用
+          with
+          [
+              GRAPH=DigraphDi,
+              WEIGHTOR=KtWeightor<KtWeightSelf<int>,KtAdder<int>,true>
+          ]
+C:\Project\kGraph\src\core\KtMaxFlow.h(185): message : 查看对正在编译的 类 模板 实例化“KtPathAugment<GRAPH,WEIGHTOR>”的引用
+          with
+          [
+              GRAPH=DigraphDi,
+              WEIGHTOR=KtWeightor<KtWeightSelf<int>,KtAdder<int>,true>
+          ]
+C:\Project\kGraph\src\test\max_flow_test.cpp(26): message : 查看对正在编译的 类 模板 实例化“KtMaxFlowPfs<DigraphDi,KtWeightor<KtWeightSelf<int>,KtAdder<VALUE_TYPE>,true>>”的引用
+          with
+          [
+              VALUE_TYPE=int
+          ]
+C:\Project\kGraph\src\test\max_flow_test.cpp(67): message : 查看对正在编译的函数 模板 实例化“void maxflow_test_<DigraphDi>(const G &)”的引用
+          with
+          [
+              G=DigraphDi
+          ]
+C:\Project\kGraph\src\base\KtSparseMatrix.h(209,1): warning C4267: “return”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\base\KtSparseMatrix.h(209): message : 在编译 类 模板 成员函数“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::rows(void) const”时
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtGraphBase.h(50): message : 查看对正在编译的函数 模板 实例化“unsigned int KtSparseMatrix<T,false,std::vector<std::pair<unsigned int,T>,std::allocator<std::pair<unsigned int,T>>>>::rows(void) const”的引用
+          with
+          [
+              T=int
+          ]
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<const KtGraphImpl<KtGraphDense<int,true>>,true,true>::operator ++(void)”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(89): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<const KtGraphImpl<KtGraphDense<int,true>>,true,true>::operator ++(void)”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(88): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<const KtGraphImpl<KtGraphDense<int,true>>,true,true>”的引用
+C:\Project\kGraph\src\core\KtMaxFlow.h(33): message : 查看对正在编译的函数 模板 实例化“GRAPH KtGraphImpl<KtGraphDense<int,true>>::copy<KtGraphImpl<KtGraphSparse<int,true,false>>,WEIGHTOR>(void) const”的引用
+          with
+          [
+              GRAPH=KtGraphImpl<KtGraphSparse<int,true,false>>,
+              WEIGHTOR=KtWeightor<KtWeightSelf<int>,KtAdder<int>,true>
+          ]
+C:\Project\kGraph\src\core\KtMaxFlow.h(33): message : 查看对正在编译的函数 模板 实例化“GRAPH KtGraphImpl<KtGraphDense<int,true>>::copy<KtGraphImpl<KtGraphSparse<int,true,false>>,WEIGHTOR>(void) const”的引用
+          with
+          [
+              GRAPH=KtGraphImpl<KtGraphSparse<int,true,false>>,
+              WEIGHTOR=KtWeightor<KtWeightSelf<int>,KtAdder<int>,true>
+          ]
+C:\Project\kGraph\src\core\KtMaxFlow.h(31): message : 在编译 类 模板 成员函数“KtMaxFlow<GRAPH,WEIGHTOR>::KtMaxFlow(const GRAPH &,unsigned int,unsigned int)”时
+          with
+          [
+              GRAPH=DigraphDi,
+              WEIGHTOR=KtWeightor<KtWeightSelf<int>,KtAdder<int>,true>
+          ]
+C:\Project\kGraph\src\core\KtMaxFlow.h(296): message : 查看对正在编译的函数 模板 实例化“KtMaxFlow<GRAPH,WEIGHTOR>::KtMaxFlow(const GRAPH &,unsigned int,unsigned int)”的引用
+          with
+          [
+              GRAPH=DigraphDi,
+              WEIGHTOR=KtWeightor<KtWeightSelf<int>,KtAdder<int>,true>
+          ]
+  min_span_tree_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtMinSpanTree.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtPfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<double,false>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<double,false>”的引用
+C:\Project\kGraph\src\test\min_span_tree_test.cpp(35): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<double,false>>”的引用
+C:\Project\kGraph\src\core\KtMinSpanTree.h(176,1): warning C4267: “初始化”: 从“size_t”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtMinSpanTree.h(166): message : 在编译 类 模板 成员函数“KtMstBoruvka<GRAPH,WEIGHTOR>::KtMstBoruvka(const GRAPH &)”时
+          with
+          [
+              GRAPH=GraphDd,
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+C:\Project\kGraph\src\test\min_span_tree_test.cpp(14): message : 查看对正在编译的函数 模板 实例化“KtMstBoruvka<GRAPH,WEIGHTOR>::KtMstBoruvka(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=GraphDd,
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+C:\Project\kGraph\src\test\min_span_tree_test.cpp(14): message : 查看对正在编译的 类 模板 实例化“KtMstBoruvka<GRAPH,WEIGHTOR>”的引用
+          with
+          [
+              GRAPH=GraphDd,
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+C:\Project\kGraph\src\test\min_span_tree_test.cpp(43): message : 查看对正在编译的函数 模板 实例化“void min_span_tree_test_<GraphDd,KtWeightor<KtWeightSelf<double>,KtAdder<VALUE_TYPE>,true>>(const GRAPH &)”的引用
+          with
+          [
+              VALUE_TYPE=double,
+              GRAPH=GraphDd
+          ]
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,true,true>::operator ++(void)”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(148): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,true,true>::operator ++(void)”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(147): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,true,true>”的引用
+C:\Project\kGraph\src\core\KtMinSpanTree.h(162): message : 查看对正在编译的函数 模板 实例化“std::vector<edge_type,std::allocator<edge_type>> KtGraphImpl<KtGraphDense<double,false>>::edges<WEIGHTOR>(void) const”的引用
+          with
+          [
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+C:\Project\kGraph\src\core\KtPfsIter.h(61,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtPfsIter.h(39): message : 在编译 类 模板 成员函数“void KtPfsIter<const GRAPH,KtMstPfs<GRAPH,WEIGHTOR>::{ctor}::Prior,KtMstPfs<GRAPH,WEIGHTOR>::{ctor}::Comp,false>::operator ++(void)”时
+          with
+          [
+              GRAPH=GraphDd,
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+C:\Project\kGraph\src\core\KtMinSpanTree.h(227): message : 查看对正在编译的函数 模板 实例化“void KtPfsIter<const GRAPH,KtMstPfs<GRAPH,WEIGHTOR>::{ctor}::Prior,KtMstPfs<GRAPH,WEIGHTOR>::{ctor}::Comp,false>::operator ++(void)”的引用
+          with
+          [
+              GRAPH=GraphDd,
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+C:\Project\kGraph\src\core\KtMinSpanTree.h(226): message : 查看对正在编译的 类 模板 实例化“KtPfsIter<const GRAPH,KtMstPfs<GRAPH,WEIGHTOR>::{ctor}::Prior,KtMstPfs<GRAPH,WEIGHTOR>::{ctor}::Comp,false>”的引用
+          with
+          [
+              GRAPH=GraphDd,
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+C:\Project\kGraph\src\core\KtMinSpanTree.h(211): message : 在编译 类 模板 成员函数“KtMstPfs<GRAPH,WEIGHTOR>::KtMstPfs(const GRAPH &)”时
+          with
+          [
+              GRAPH=GraphDd,
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+C:\Project\kGraph\src\test\min_span_tree_test.cpp(15): message : 查看对正在编译的函数 模板 实例化“KtMstPfs<GRAPH,WEIGHTOR>::KtMstPfs(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=GraphDd,
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+C:\Project\kGraph\src\test\min_span_tree_test.cpp(15): message : 查看对正在编译的 类 模板 实例化“KtMstPfs<GRAPH,WEIGHTOR>”的引用
+          with
+          [
+              GRAPH=GraphDd,
+              WEIGHTOR=KtWeightor<KtWeightSelf<double>,KtAdder<double>,true>
+          ]
+  resort_test.cpp
+C:\Project\kGraph\src\test\resort_test.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtTopologySort.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\resort.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<int,true>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<int,true>”的引用
+C:\Project\kGraph\src\test\resort_test.cpp(31): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<int,true>>”的引用
+C:\Project\kGraph\src\core\KtDfsIter.h(156,20): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtDfsIter.h(154): message : 在编译 类 模板 成员函数“unsigned int KtDfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true,false>::firstUnvisited(void) const”时
+C:\Project\kGraph\src\core\KtDfsIter.h(221): message : 查看对正在编译的函数 模板 实例化“unsigned int KtDfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true,false>::firstUnvisited(void) const”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(132): message : 查看对正在编译的 类 模板 实例化“KtDfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true,false>”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(130): message : 在编译 类 模板 成员函数“void KtGraphImpl<KtGraphDense<int,true>>::eraseLoop(void)”时
+C:\Project\kGraph\src\test\resort_test.cpp(48): message : 查看对正在编译的函数 模板 实例化“void KtGraphImpl<KtGraphDense<int,true>>::eraseLoop(void)”的引用
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true>::operator ++(void)”时
+C:\Project\kGraph\src\test\resort_test.cpp(19): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true>::operator ++(void)”的引用
+C:\Project\kGraph\src\test\resort_test.cpp(15): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true>”的引用
+C:\Project\kGraph\src\test\resort_test.cpp(44): message : 查看对正在编译的函数 模板 实例化“void resort_test_<DigraphDi>(const DAG &)”的引用
+          with
+          [
+              DAG=DigraphDi
+          ]
+  shortest_path_test.cpp
+C:\Project\kGraph\src\test\shortest_path_test.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtShortestPath.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtTopologySort.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<double,true>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<double,true>”的引用
+C:\Project\kGraph\src\test\shortest_path_test.cpp(120): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<double,true>>”的引用
+C:\Project\kGraph\src\core\KtDfsIter.h(156,20): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtDfsIter.h(154): message : 在编译 类 模板 成员函数“unsigned int KtDfsIter<const KtGraphImpl<KtGraphDense<double,true>>,true,true,true>::firstUnvisited(void) const”时
+C:\Project\kGraph\src\core\KtDfsIter.h(221): message : 查看对正在编译的函数 模板 实例化“unsigned int KtDfsIter<const KtGraphImpl<KtGraphDense<double,true>>,true,true,true>::firstUnvisited(void) const”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(118): message : 查看对正在编译的 类 模板 实例化“KtDfsIter<const KtGraphImpl<KtGraphDense<double,true>>,true,true,true>”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(117): message : 在编译 类 模板 成员函数“bool KtGraphImpl<KtGraphDense<double,true>>::hasLoop(void) const”时
+C:\Project\kGraph\src\test\shortest_path_test.cpp(153): message : 查看对正在编译的函数 模板 实例化“bool KtGraphImpl<KtGraphDense<double,true>>::hasLoop(void) const”的引用
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,true>>,false,false>::operator ++(void)”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(176): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,true>>,false,false>::operator ++(void)”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(174): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<const KtGraphImpl<KtGraphDense<double,true>>,false,false>”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(173): message : 在编译 类 模板 成员函数“bool KtGraphImpl<KtGraphDense<double,true>>::isConnected(void) const”时
+C:\Project\kGraph\src\test\shortest_path_test.cpp(50): message : 查看对正在编译的函数 模板 实例化“bool KtGraphImpl<KtGraphDense<double,true>>::isConnected(void) const”的引用
+  sparse_graph_test.cpp
+C:\Project\kGraph\src\test\sparse_graph_test.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<double,false>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<double,false>”的引用
+C:\Project\kGraph\src\test\sparse_graph_test.cpp(17): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<double,false>>”的引用
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,true,true>::operator ++(void)”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(89): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,true,true>::operator ++(void)”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(88): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<const KtGraphImpl<KtGraphDense<double,false>>,true,true>”的引用
+C:\Project\kGraph\src\test\sparse_graph_test.cpp(20): message : 查看对正在编译的函数 模板 实例化“GRAPH KtGraphImpl<KtGraphDense<double,false>>::copy<GraphDd,KtWeightSelf<double>>(void) const”的引用
+          with
+          [
+              GRAPH=GraphDd
+          ]
+C:\Project\kGraph\src\test\sparse_graph_test.cpp(20): message : 查看对正在编译的函数 模板 实例化“GRAPH KtGraphImpl<KtGraphDense<double,false>>::copy<GraphDd,KtWeightSelf<double>>(void) const”的引用
+          with
+          [
+              GRAPH=GraphDd
+          ]
+  strongly_connected_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtStronglyConnected.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtTopologySort.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<int,true>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<int,true>”的引用
+C:\Project\kGraph\src\test\strongly_connected_test.cpp(30): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<int,true>>”的引用
+C:\Project\kGraph\src\core\KtDfsIter.h(156,20): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtDfsIter.h(154): message : 在编译 类 模板 成员函数“unsigned int KtDfsIter<GRAPH,false,true,true>::firstUnvisited(void) const”时
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+C:\Project\kGraph\src\core\KtDfsIterX.h(55): message : 查看对正在编译的函数 模板 实例化“unsigned int KtDfsIter<GRAPH,false,true,true>::firstUnvisited(void) const”的引用
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+C:\Project\kGraph\src\core\KtDfsIterX.h(12): message : 查看对正在编译的 类 模板 实例化“KtDfsIter<GRAPH,false,true,true>”的引用
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+C:\Project\kGraph\src\core\KtStronglyConnected.h(99): message : 查看对正在编译的 类 模板 实例化“KtDfsIterX<const GRAPH,true>”的引用
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+C:\Project\kGraph\src\core\KtStronglyConnected.h(94): message : 在编译 类 模板 成员函数“KtStronglyConnectedTar<GRAPH>::KtStronglyConnectedTar(const GRAPH &)”时
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+C:\Project\kGraph\src\test\strongly_connected_test.cpp(12): message : 查看对正在编译的函数 模板 实例化“KtStronglyConnectedTar<GRAPH>::KtStronglyConnectedTar(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+C:\Project\kGraph\src\test\strongly_connected_test.cpp(12): message : 查看对正在编译的 类 模板 实例化“KtStronglyConnectedTar<GRAPH>”的引用
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+C:\Project\kGraph\src\test\strongly_connected_test.cpp(46): message : 查看对正在编译的函数 模板 实例化“void strongly_connected_test_<DigraphDi>(const GRAPH &)”的引用
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+C:\Project\kGraph\src\core\KtBfsIter.h(87,60): warning C4244: “参数”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtBfsIter.h(35): message : 在编译 类 模板 成员函数“void KtBfsIter<const KtGraphImpl<KtGraphDense<int,true>>,true,true>::operator ++(void)”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(161): message : 查看对正在编译的函数 模板 实例化“void KtBfsIter<const KtGraphImpl<KtGraphDense<int,true>>,true,true>::operator ++(void)”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(160): message : 查看对正在编译的 类 模板 实例化“KtBfsIter<const KtGraphImpl<KtGraphDense<int,true>>,true,true>”的引用
+C:\Project\kGraph\src\core\KtStronglyConnected.h(56): message : 查看对正在编译的函数 模板 实例化“GRAPH KtGraphImpl<KtGraphDense<int,true>>::inverse<GRAPH>(void) const”的引用
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+C:\Project\kGraph\src\core\KtStronglyConnected.h(56): message : 查看对正在编译的函数 模板 实例化“GRAPH KtGraphImpl<KtGraphDense<int,true>>::inverse<GRAPH>(void) const”的引用
+          with
+          [
+              GRAPH=DigraphDi
+          ]
+  test_all.cpp
+  test_util.cpp
+  topology_sort_test.cpp
+C:\Project\kGraph\src\test\topology_sort_test.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtTopologySort.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<int,true>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<int,true>”的引用
+C:\Project\kGraph\src\test\topology_sort_test.cpp(42): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<int,true>>”的引用
+C:\Project\kGraph\src\core\KtDfsIter.h(156,20): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtDfsIter.h(154): message : 在编译 类 模板 成员函数“unsigned int KtDfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true,false>::firstUnvisited(void) const”时
+C:\Project\kGraph\src\core\KtDfsIter.h(221): message : 查看对正在编译的函数 模板 实例化“unsigned int KtDfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true,false>::firstUnvisited(void) const”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(132): message : 查看对正在编译的 类 模板 实例化“KtDfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true,false>”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(130): message : 在编译 类 模板 成员函数“void KtGraphImpl<KtGraphDense<int,true>>::eraseLoop(void)”时
+C:\Project\kGraph\src\test\topology_sort_test.cpp(59): message : 查看对正在编译的函数 模板 实例化“void KtGraphImpl<KtGraphDense<int,true>>::eraseLoop(void)”的引用
+  transitive_closure_test.cpp
+C:\Project\kGraph\src\GraphX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphSparse.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphBase.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtSparseMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtRange.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\base\KtMatrix.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphImpl.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\test\test_util.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIterX.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtDfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtBfsIter.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtWeightor.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphVoa.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtSubGraph.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtTransitiveClosure.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtStronglyConnected.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtTopologySort.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\util\randgen.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Project\kGraph\src\core\KtGraphDense.h(30,24): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtGraphDense.h(29): message : 在编译 类 模板 成员函数“unsigned int KtGraphDense<int,true>::outdegree(unsigned int) const”时
+C:\Project\kGraph\src\core\KtGraphImpl.h(13): message : 查看对正在编译的 类 模板 实例化“KtGraphDense<int,true>”的引用
+C:\Project\kGraph\src\test\transitive_closure_test.cpp(55): message : 查看对正在编译的 类 模板 实例化“KtGraphImpl<KtGraphDense<int,true>>”的引用
+C:\Project\kGraph\src\core\KtDfsIter.h(156,20): warning C4244: “return”: 从“__int64”转换到“unsigned int”，可能丢失数据
+C:\Project\kGraph\src\core\KtDfsIter.h(154): message : 在编译 类 模板 成员函数“unsigned int KtDfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true,false>::firstUnvisited(void) const”时
+C:\Project\kGraph\src\core\KtDfsIter.h(221): message : 查看对正在编译的函数 模板 实例化“unsigned int KtDfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true,false>::firstUnvisited(void) const”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(132): message : 查看对正在编译的 类 模板 实例化“KtDfsIter<KtGraphImpl<KtGraphDense<int,true>>,true,true,false>”的引用
+C:\Project\kGraph\src\core\KtGraphImpl.h(130): message : 在编译 类 模板 成员函数“void KtGraphImpl<KtGraphDense<int,true>>::eraseLoop(void)”时
+C:\Project\kGraph\src\test\transitive_closure_test.cpp(88): message : 查看对正在编译的函数 模板 实例化“void KtGraphImpl<KtGraphDense<int,true>>::eraseLoop(void)”的引用
+  正在生成代码...
+  kGraph.vcxproj -> C:\Project\kGraph\x64\Debug\kGraph.exe
