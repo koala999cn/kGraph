@@ -55,7 +55,7 @@ GraphX.h，定义了一些基础的图类型
 
 GraphX.h文件定义了一些常用的图类型，参考下图：
 
-![输入图片说明](pic/graph-calss.png)
+![输入图片说明](pic/graph-calss.jpg)
 
 ### 编译
 
