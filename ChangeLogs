@@ -22,7 +22,7 @@ v0.4 build20211006
 2. 新增实现adj_vertex_iter_r，可以迭代入边
 3. 新增实现const_adj_vertex_iter & const_adj_vertex_iter_r
 4. 新增实现KtRange
-5. 新增实现adj_matrix的_range & col_range支持
+5. 新增实现adj_matrix的row_range & col_range支持
 5. 新增utils目录及有关实用函数
 
 
