@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include <assert.h>
-#include "../test/test_util.h"
 #include "KtDfsIterX.h" 
 #include "KtBfsIter.h"
 #include "KtWeightor.h"
@@ -71,13 +70,13 @@ public:
     }
 
 
-	auto edgeIter(vertex_index_t v = 0) {
-		return edge_iter(*this, v);
-	}
+    auto edgeIter(vertex_index_t v = 0) {
+        return edge_iter(*this, v);
+    }
 
-	auto edgeIter(vertex_index_t v = 0) const {
-		return const_edge_iter(*this, v);
-	}
+    auto edgeIter(vertex_index_t v = 0) const {
+        return const_edge_iter(*this, v);
+    }
 
 
     // @GRAPH: 输出的图类型
@@ -191,26 +190,26 @@ public:
     }
 
 
-	// 设置v可达的顶点标记
-	std::vector<bool> getReachable(vertex_index_t v) const {
-		std::vector<bool> flags(order(), false);
-		const_bfs_iter<> iter(*this, v);
-		for (; !iter.isEnd(); ++iter)
-			flags[*iter] = true;
+    // 设置v可达的顶点标记
+    std::vector<bool> getReachable(vertex_index_t v) const {
+        std::vector<bool> flags(order(), false);
+        const_bfs_iter<> iter(*this, v);
+        for (; !iter.isEnd(); ++iter)
+            flags[*iter] = true;
 
-		return flags;
-	}
+        return flags;
+    }
 
 
-	// 移除v不可达的顶点
-	void eraseUnreachable(vertex_index_t v) {
-		auto flags = reachable(v);
+    // 移除v不可达的顶点
+    void eraseUnreachable(vertex_index_t v) {
+        auto flags = reachable(v);
 
-		// 逆序删除v不可达的顶点
-		for (unsigned i = flags.size() - 1; i != -1; i--)
-			if(!flags[i])
-				super_::eraseVertex(i);
-	}
+        // 逆序删除v不可达的顶点
+        for (unsigned i = flags.size() - 1; i != -1; i--)
+            if(!flags[i])
+                super_::eraseVertex(i);
+    }
 
 
 

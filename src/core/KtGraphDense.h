@@ -20,9 +20,9 @@ public:
     using super_::order;
 
 
-	void reserve(unsigned numVerts, unsigned numEdges) {
-		adjMat_.reserve(numVerts, numEdges);
-	}
+    void reserve(unsigned numVerts, unsigned numEdges) {
+        adjMat_.reserve(numVerts, numEdges);
+    }
 
 
     // 重载虚函数
@@ -75,31 +75,31 @@ private:
         // get the value of current edge
         const_deref_type edge() const { return *range_; }
 
-		virtual vertex_index_t from() const = 0;
-		virtual vertex_index_t to() const = 0;
+        virtual vertex_index_t from() const = 0;
+        virtual vertex_index_t to() const = 0;
 
-		// reset the value of current edge, that is (u_, v_) = val
-		void reedge(const_edge_ref val) {
-			assert(val != null_);
-			*range_ = val;
+        // reset the value of current edge, that is (u_, v_) = val
+        void reedge(const_edge_ref val) {
+            assert(val != null_);
+            *range_ = val;
 
-			if (!graph_.isDigraph() && **this != other())
-				graph_.adjMatrix()(to(), from()) = val;
-		}
+            if (!graph_.isDigraph() && **this != other())
+                graph_.adjMatrix()(to(), from()) = val;
+        }
 
-		// erase the current edge, that is (u_, v_) = null
-		void erase() {
-			*range_ = null_;
-			
-			if (!graph_.isDigraph() && **this != other())
-				graph_.adjMatrix()(to(), from()) = null_;
+        // erase the current edge, that is (u_, v_) = null
+        void erase() {
+            *range_ = null_;
+            
+            if (!graph_.isDigraph() && **this != other())
+                graph_.adjMatrix()(to(), from()) = null_;
 
-			++(*this); // skip the erased element
+            ++(*this); // skip the erased element
 
-			static_assert(std::is_convertible<GRAPH, typename KtGraphDense::super_>::value, "illegal type of GRAPH for KtGraphDense::adj_vertex_iter_base_.");
-			KtGraphDense* g = dynamic_cast<KtGraphDense*>(&graph_);
-			--g->E_;
-		}
+            static_assert(std::is_convertible<GRAPH, typename KtGraphDense::super_>::value, "illegal type of GRAPH for KtGraphDense::adj_vertex_iter_base_.");
+            KtGraphDense* g = dynamic_cast<KtGraphDense*>(&graph_);
+            --g->E_;
+        }
 
     protected:
         GRAPH& graph_;
@@ -141,13 +141,13 @@ private:
         adj_vertex_iter_base(graph_type& g, const vertex_index_t v) :
             super_(g, g.adjMatrix().row(v), v) {}
 
-		virtual vertex_index_t from() const final {
-			return other();
-		}
+        virtual vertex_index_t from() const final {
+            return other();
+        }
 
-		virtual vertex_index_t to() const final {
-			return **this;
-		}
+        virtual vertex_index_t to() const final {
+            return **this;
+        }
     };
 
     template<bool bConst>
@@ -165,13 +165,13 @@ private:
         adj_vertex_iter_r_base(graph_type& g, const vertex_index_t v) :
             super_(g, g.adjMatrix().col(v), v) {}
 
-		virtual vertex_index_t from() const final {
-			return **this;
-		}
+        virtual vertex_index_t from() const final {
+            return **this;
+        }
 
-		virtual vertex_index_t to() const final {
-			return other();
-		}
+        virtual vertex_index_t to() const final {
+            return other();
+        }
     };
 
 public:

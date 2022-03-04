@@ -31,8 +31,8 @@ class KtSptAbstract
     static_assert(GRAPH::isDigraph(), "KtSptAbstract must be instantiated with Digraph.");
 
 public:
-	using weight_type = typename WEIGHTOR::weight_type;
-	using vertex_index_t = typename GRAPH::vertex_index_t;
+    using weight_type = typename WEIGHTOR::weight_type;
+    using vertex_index_t = typename GRAPH::vertex_index_t;
 
     KtSptAbstract(const GRAPH& g, vertex_index_t v0) :
         v0_(v0),
@@ -42,7 +42,7 @@ public:
     // 返回从源点到顶点v的最短路径(逆序)
     auto pathR(vertex_index_t v) const {
         std::vector<vertex_index_t> p;
-		vertex_index_t s = v;
+        vertex_index_t s = v;
         do {
             p.push_back(s);
             s = spt_[s];
@@ -63,10 +63,10 @@ public:
     }
 
 
-	// 是否存在从源点到v的路径
-	bool reachable(vertex_index_t v) const {
-		return spt_[v] != -1;
-	}
+    // 是否存在从源点到v的路径
+    bool reachable(vertex_index_t v) const {
+        return spt_[v] != -1;
+    }
 
 
 protected:
@@ -90,7 +90,7 @@ protected:
     }
 
 protected:
-	vertex_index_t v0_; // 源点
+    vertex_index_t v0_; // 源点
     std::vector<vertex_index_t> spt_; // (spt_[i], i)表示从源点v0_到顶点i的最短路径上的最后一条边
     std::vector<weight_type> dist_; // dist_[i]表示从源点v0_到顶点i的最短距离
 };
@@ -103,8 +103,8 @@ protected:
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSptBfs : public KtSptAbstract<GRAPH, WEIGHTOR>
 {
-	using super_ = KtSptAbstract<GRAPH, WEIGHTOR>;
-	using typename super_::vertex_index_t;
+    using super_ = KtSptAbstract<GRAPH, WEIGHTOR>;
+    using typename super_::vertex_index_t;
 
 public:
     KtSptBfs(const GRAPH& g, vertex_index_t v0) :super_(g, v0) {
@@ -116,7 +116,7 @@ private:
     void bfs_(const GRAPH& g, vertex_index_t v) {
         KtBfsIter<const GRAPH, false, true> iter(g, v);
         for (; !iter.isEnd(); ++iter) {
-			vertex_index_t v = iter.from(), w = *iter;
+            vertex_index_t v = iter.from(), w = *iter;
 
             // 如果relax_更新了已出栈的顶点信息，则需要对出栈顶点重新bfs
             if (super_::relax_(v, w, WEIGHTOR{}(iter.edge())) && iter.isPopped(w))
@@ -130,8 +130,8 @@ private:
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSptDfs : public KtSptAbstract<GRAPH, WEIGHTOR>
 {
-	using super_ = KtSptAbstract<GRAPH, WEIGHTOR>;
-	using typename super_::vertex_index_t;
+    using super_ = KtSptAbstract<GRAPH, WEIGHTOR>;
+    using typename super_::vertex_index_t;
 
 public:
     KtSptDfs(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
@@ -142,7 +142,7 @@ private:
     void dfs_(const GRAPH& g, vertex_index_t v) {
         KtDfsIter<const GRAPH, false, true> iter(g, v);
         for (; !iter.isEnd(); ++iter) {
-			vertex_index_t v = iter.from(), w = *iter;
+            vertex_index_t v = iter.from(), w = *iter;
 
             if (super_::relax_(v, w, WEIGHTOR{}(iter.edge())))
                 if (!iter.isTree() && w != v)
@@ -161,7 +161,7 @@ template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSptDijkstra : public KtSptAbstract<GRAPH, WEIGHTOR>
 {
     using super_ = KtSptAbstract<GRAPH, WEIGHTOR>;
-	using typename super_::vertex_index_t;
+    using typename super_::vertex_index_t;
     using super_::spt_;
     using super_::dist_;
 
@@ -170,14 +170,14 @@ public:
 
         std::vector<bool> vis(g.order(), false); // 用于标记源点v0到顶点i的最短路径是否已计算
 
-		vertex_index_t v = v0;
+        vertex_index_t v = v0;
         while (v != -1) { 
             vis[v] = true;
 
             // 边松弛
             for (vertex_index_t w = 0; w < g.order(); w++)
                 if ((!vis[w] || w == v0/*permit loop path*/) && g.hasEdge(v, w))
-					super_::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w)));
+                    super_::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w)));
 
 
             // 在vis[i]等于false的集合中，寻找距离v0路径最优的顶点. TODO: 使用优先队列实现
@@ -197,7 +197,7 @@ template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSptPfs : public KtSptAbstract<GRAPH, WEIGHTOR>
 {
     using super_ = KtSptAbstract<GRAPH, WEIGHTOR>;
-	using typename super_::vertex_index_t;
+    using typename super_::vertex_index_t;
     using super_::dist_;
 
 public:
@@ -215,7 +215,7 @@ public:
 
         while (!pq.empty()) {
 
-			auto v = pq.top().first; pq.pop();
+            auto v = pq.top().first; pq.pop();
             if (vis[v]) continue;
             vis[v] = true;
 
@@ -234,18 +234,18 @@ public:
 template<typename DAG, class WEIGHTOR = default_wtor<DAG>>
 class KtSptTs : public KtSptAbstract<DAG, WEIGHTOR>
 {
-	using super_ = KtSptAbstract<DAG, WEIGHTOR>;
-	using typename super_::vertex_index_t;
+    using super_ = KtSptAbstract<DAG, WEIGHTOR>;
+    using typename super_::vertex_index_t;
 
 public:
     KtSptTs(const DAG& g, vertex_index_t v0) : super_(g, v0) {
         assert(!g.hasLoop());
         KtTopologySort<DAG> ts(g);
-		auto j = ts.relabel(v0); // j之前的顶点可以忽略，因为按照拓扑排序，v0与它们没有可达路径
+        auto j = ts.relabel(v0); // j之前的顶点可以忽略，因为按照拓扑排序，v0与它们没有可达路径
         for(auto v = ts[j++]; j < g.order(); v = ts[j++]) {
             auto iter = g.adjIter(v);
             while(!iter.isEnd()) {
-				super_::relax_(v, *iter, WEIGHTOR{}(iter.edge()));
+                super_::relax_(v, *iter, WEIGHTOR{}(iter.edge()));
                 ++iter;
             }
         }
@@ -261,8 +261,8 @@ public:
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSptBellmanFord : public KtSptAbstract<GRAPH, WEIGHTOR>
 {
-	using super_ = KtSptAbstract<GRAPH, WEIGHTOR>;
-	using typename super_::vertex_index_t;
+    using super_ = KtSptAbstract<GRAPH, WEIGHTOR>;
+    using typename super_::vertex_index_t;
 
 public:
     KtSptBellmanFord(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
@@ -271,7 +271,7 @@ public:
         q.push(v0); q.push(V); // 标记值V将当前一批顶点与下一批顶点分隔，并使得可以在V遍处理后终止。
         unsigned N = 0;
         while (!q.empty()) {
-			vertex_index_t v = q.front(); q.pop();
+            vertex_index_t v = q.front(); q.pop();
             while (v == V) {
                 if (N++ > V) return; // 存在一条长度超过V的最短路径，这表示肯定存在负环。
                 q.push(V);
@@ -293,11 +293,11 @@ public:
 template<typename GRAPH, class WEIGHTOR>
 class KtAllSptAbstract
 {
-	static_assert(GRAPH::isDigraph(), "KtAllSptAbstract must be instantiated with Digraph.");
+    static_assert(GRAPH::isDigraph(), "KtAllSptAbstract must be instantiated with Digraph.");
 
 public:
-	using weight_type = typename WEIGHTOR::weight_type;
-	using vertex_index_t = typename GRAPH::vertex_index_t;
+    using weight_type = typename WEIGHTOR::weight_type;
+    using vertex_index_t = typename GRAPH::vertex_index_t;
 
     KtAllSptAbstract(const GRAPH& g) 
         : spt_(g.order(), std::vector<vertex_index_t>(g.order(), -1)),
@@ -312,7 +312,7 @@ public:
     // 返回v到w的最短路径(逆序)
     auto pathR(vertex_index_t v, vertex_index_t w) const {
         std::vector<vertex_index_t> p;
-		vertex_index_t s = w;
+        vertex_index_t s = w;
         do {
             p.push_back(s);
             s = spt_[v][s];
@@ -357,7 +357,7 @@ template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtAllSptFloyd : public KtAllSptAbstract<GRAPH, WEIGHTOR>
 {
     using super_ = KtAllSptAbstract<GRAPH, WEIGHTOR>;
-	using typename super_::vertex_index_t;
+    using typename super_::vertex_index_t;
     using super_::spt_;
     using super_::dst_;
 
@@ -367,7 +367,7 @@ public:
         // 按边初始化spt_和dst_
         KtBfsIter<const GRAPH, true, true> iter(g, 0);
         for (; !iter.isEnd(); ++iter) {
-			vertex_index_t v = iter.from(), w = *iter;
+            vertex_index_t v = iter.from(), w = *iter;
             spt_[v][w] = v;
             dst_[v][w] = WEIGHTOR{}(iter.edge());
         }
@@ -392,7 +392,7 @@ template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtAllSptDfs : public KtAllSptAbstract<GRAPH, WEIGHTOR>
 {
     using super_ = KtAllSptAbstract<GRAPH, WEIGHTOR>;
-	using typename super_::vertex_index_t;
+    using typename super_::vertex_index_t;
     using super_::spt_;
     using super_::dst_;
 
@@ -422,7 +422,7 @@ private:
             if (w != v) {
                 for (vertex_index_t i = 0; i < g.order(); i++)
                     if (spt_[w][i] != -1 && w != i)
-						super_::relax_(v, i, w);
+                        super_::relax_(v, i, w);
             }
         }
     }
