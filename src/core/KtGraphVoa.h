@@ -10,7 +10,7 @@ class KtGraphVoa : public BASE_GRAPH
 public:
 
     using typename BASE_GRAPH::edge_type;
-    using typename BASE_GRAPH::const_reference;
+    using typename BASE_GRAPH::const_edge_ref;
     using typename BASE_GRAPH::edge_iter;
     using typename BASE_GRAPH::vertex_index_t;
 
@@ -21,18 +21,22 @@ public:
 
     KtGraphVoa() : BASE_GRAPH(), vos_() { }
 
-    explicit KtGraphVoa(unsigned numVertex, const_reference nullValue = edge_type{ 0 }) :
-        BASE_GRAPH(numVertex, nullValue),
-        vos_(numVertex) { }
+    explicit KtGraphVoa(unsigned numVertex, const_edge_ref nullValue = edge_type{ 0 })
+		: BASE_GRAPH(numVertex, nullValue)
+		, vos_(numVertex) { }
+
+	KtGraphVoa(const KtGraphVoa& g)
+		: BASE_GRAPH(g)
+		, vos_(g.vos_) { }
 
     KtGraphVoa(KtGraphVoa&& g)
-        : BASE_GRAPH(std::forward(g)),
-          vos_(std::move(g.vos_)) { }
+        : BASE_GRAPH(std::forward<BASE_GRAPH>(g))
+		, vos_(std::move(g.vos_)) { }
 
 
     // 重写与顶点对象有关的成员函数
 
-    void reset(unsigned numVertex, const_reference nullEdge = edge_type(0)) {
+    void reset(unsigned numVertex, const_edge_ref nullEdge = edge_type(0)) {
         BASE_GRAPH::reset(numVertex, nullEdge);
         vos_.resize(numVertex);
     }
@@ -46,9 +50,24 @@ public:
     vertex_index_t addVertex() {
         auto v = BASE_GRAPH::addVertex();
         vos_.push_back(VERTEX_TYPE());
-        assert(vos_.size() == v);
+        assert(vos_.size() == order());
         return v;
     }
+ 
+    vertex_index_t addVertex(const VERTEX_TYPE& val) {
+        auto v = BASE_GRAPH::addVertex();
+		vos_.push_back(val);
+        assert(vos_.size() == order());
+        return v;
+    }
+
+    //template<typename... ARG>
+    //vertex_index_t emplaceVertex(ARG&&... arg) {
+    //    auto v = BASE_GRAPH::addVertex();
+    //    vos_.emplace(std::forward<ARG>(arg)...);
+    //    assert(vos_.size() == v);
+    //    return v;
+    //}
 
     void reserve(unsigned V, unsigned E) {
         BASE_GRAPH::reserve(V, E);
