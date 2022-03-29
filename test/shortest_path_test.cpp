@@ -3,6 +3,8 @@
 #include "../src/core/KtShortestPath.h"
 #include "../src/core/KtBfsIter.h"
 #include "../src/util/randgen.h"
+#include "../src/util/loop.h"
+#include "../src/util/is_connected.h"
 #include "test_util.h"
 
 
@@ -47,10 +49,10 @@ void equal_test(const GRAPH& g, unsigned v, const SPTALL& all, const SPT& single
 template<typename GRAPH, typename WEIGHTOR = default_wtor<GRAPH>>
 void shortest_path_test_(const GRAPH& g)
 {
-    assert(g.isConnected());
+    assert(is_connected(g));
 
     bool hasNegWt = ::hasNegWt<GRAPH, WEIGHTOR>(g);
-    bool isDag = !g.hasLoop();
+    bool isDag = !has_loop(g);
     KtAllSptFloyd<GRAPH, WEIGHTOR> floyd(g);
 
     
@@ -136,7 +138,7 @@ void shortest_path_test()
     shortest_path_test_(g);
 
 
-    g.eraseLoop();
+    erase_loop(g);
     printf("   specific dag V = %d, E = %d\n", g.order(), g.size());
     fflush(stdout);
     shortest_path_test_(g);
@@ -149,8 +151,7 @@ void shortest_path_test()
 
 
     // 构造无环图
-    rg.eraseLoop();
-    assert(!rg.hasLoop());
+    erase_loop(rg);
     printf("   random dag V = %d, E = %d\n", rg.order(), rg.size());
     fflush(stdout);
     shortest_path_test_(rg);

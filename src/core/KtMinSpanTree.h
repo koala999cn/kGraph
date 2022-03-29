@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
-#include <iostream>
+#include <algorithm>
+#include "KtWeightor.h"
+#include "KtBfsIter.h"
 #include "../base/union_find_set.h"
 
 
@@ -13,10 +15,11 @@ class KtMst
     static_assert(!GRAPH::isDigraph(), "KtMst cannot instantiated with Digraph.");
 
 public:
-    KtMst(const GRAPH& g) : 
-        graph_(g),
-        dist_(0.0) {
-        assert(g.isConnected());
+    using weight_type = typename WEIGHTOR::weight_type;
+    using vertex_index_t = typename GRAPH::vertex_index_t;
+
+    KtMst(const GRAPH& g) : graph_(g), dist_(0.0) {
+        //assert(g.isConnected());
         mst_.reserve(g.order() - 1);
     }
 
@@ -49,6 +52,22 @@ public:
         return g;
     }
 
+protected:
+
+    struct KpEdge_ {
+        vertex_index_t from, to;
+        weight_type wt;
+    };
+
+    static std::vector<KpEdge_> edges(const GRAPH& g) {
+        std::vector<KpEdge_> es; es.reserve(g.size());
+        KtBfsIter<const GRAPH, true, true> iter(g, 0);
+        for (; !iter.isEnd(); ++iter)
+            es.push_back({ iter.from(), *iter, WEIGHTOR{}(iter.edge()) });
+
+        assert(es.size() == g.size());
+        return es;
+    }
 
 protected:
     const GRAPH& graph_;
@@ -67,11 +86,9 @@ protected:
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtMstPrim : public KtMst<GRAPH, WEIGHTOR>
 {
-    using weight_type = typename WEIGHTOR::weight_type;
     using super_ = KtMst<GRAPH, WEIGHTOR>;
     using super_::mst_;
     using super_::dist_;
-
 
 public:
     KtMstPrim(const GRAPH& g) : super_{g} {
@@ -117,18 +134,17 @@ public:
 template<typename GRAPH, typename WEIGHTOR = default_wtor<GRAPH>>
 class KtMstKruskal : public KtMst<GRAPH, WEIGHTOR>
 {
-    using weight_type = typename WEIGHTOR::weight_type;
     using super_ = KtMst<GRAPH, WEIGHTOR>;
     using super_::mst_;
     using super_::dist_;
 
 public:
     KtMstKruskal(const GRAPH& g) : super_{g} {
-        auto all_edges = g.template edges<WEIGHTOR>();
+        auto all_edges = edges(g);
 
         // 降序排序，权值最小的边在尾部，方便出栈
         std::sort(std::begin(all_edges), std::end(all_edges),
-            [](const auto& x1, const auto& x2) { return WEIGHTOR{}.comp(x2.second, x1.second); });
+            [](const auto& x1, const auto& x2) { return WEIGHTOR{}.comp(x2.wt, x1.wt); });
 
         const unsigned V = g.order();
         const unsigned E = g.size();
@@ -137,10 +153,10 @@ public:
 
         for(unsigned i = 0; i < E && mst_.size() < V - 1; i++) {
             const auto& e = all_edges.back();
-            unsigned v = e.first.first, w = e.first.second;
+            unsigned v = e.from, w = e.to;
             if(uf.unite(v, w)) { // 若合并成功，则一定无环
-                mst_.push_back(e.first);
-                dist_ = WEIGHTOR{}.acc(dist_, e.second);
+                mst_.push_back({ e.from, e.to });
+                dist_ = WEIGHTOR{}.acc(dist_, e.wt);
             }
             all_edges.pop_back();
         }
@@ -159,39 +175,37 @@ class KtMstBoruvka : public KtMst<GRAPH, WEIGHTOR>
     using super_ = KtMst<GRAPH, WEIGHTOR>;
     using super_::mst_;
     using super_::dist_;
-    using edges_type = decltype(std::declval<GRAPH>().template edges<WEIGHTOR>());
-    using edge_type = typename edges_type::value_type;
 
 public:
     KtMstBoruvka(const GRAPH& g) : super_{g} {
         assert(mst_.size() == 0);
 
         const unsigned V = g.order();
-        auto edges = g.template edges<WEIGHTOR>();
+        auto edges = this->edges(g);
         unsigned N; // 有效边数量
-        std::vector<const edge_type*> b;
+        std::vector<const KpEdge_*> b;
         union_find_set uf(V);
 
         // 从单顶点子树开始
-        for(unsigned E = edges.size(); E != 0 && mst_.size() < V - 1; E = N) { 
+        for(unsigned E = unsigned(edges.size()); E != 0 && mst_.size() < V - 1; E = N) { 
             b.assign(V, nullptr);
             N = 0;
 
             // 搜索连接每两颗子树的最小跨边，存储到数组b中。
             for(unsigned h = 0; h < E; h++) { 
                 const auto& e = edges[h];
-                unsigned i = uf.find(e.first.first), j = uf.find(e.first.second);
+                unsigned i = uf.find(e.from), j = uf.find(e.to);
                 if(i == j) continue;
                 edges[N] = e; // 复制有效边，等同于删除无效边
-                if (b[i] == nullptr || WEIGHTOR{}.comp(e.second, b[i]->second)) b[i] = &edges[N];
-                if (b[j] == nullptr || WEIGHTOR{}.comp(e.second, b[j]->second)) b[j] = &edges[N];
+                if (b[i] == nullptr || WEIGHTOR{}.comp(e.wt, b[i]->wt)) b[i] = &edges[N];
+                if (b[j] == nullptr || WEIGHTOR{}.comp(e.wt, b[j]->wt)) b[j] = &edges[N];
                 ++N;
             }
 
             // 将存储在b中的最小跨边，按照查并集的模式添加到mst。
             for(unsigned h = 0; h < V; h++)
-                if(b[h] != nullptr && uf.unite(b[h]->first.first, b[h]->first.second)) 
-                    mst_.push_back(b[h]->first), dist_ = WEIGHTOR{}.acc(dist_, b[h]->second);
+                if(b[h] != nullptr && uf.unite(b[h]->from, b[h]->to)) 
+                    mst_.push_back({ b[h]->from, b[h]->to }), dist_ = WEIGHTOR{}.acc(dist_, b[h]->wt);
         }
     }
 };

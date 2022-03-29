@@ -1,8 +1,17 @@
+v0.5 build20220329
+1. 利用现代c++技术对底层代码进行重构，重写图的layout相关实现，可通过模板参数都底层布局进行多样化配置
+2. 在原有稠密图和稀疏图的基础上，增加了扁平图layout
+3. 把邻接顶点迭代器单独作为一个类实现，见KtAdjIter
+4. 把原KtGraphImpl实现拆分为单独模块，集中放在util目录中，底层专注于图的结构操作，不再集成常用算法
+5. 丰富test对layout的测试，并把test从src目录中调整出来
+6. 提供MSVC2019工程文件
+
+
 v0.4.3 build20211222
 1. 对KtTransitiveClosure作了进一步抽象
 2. KtGraphImpl新增getReachable和eraseUnreachable实现
 3. 新增KtGraphBase::reserveEdges接口和相应实现
-4. 对部门代码进行优化
+4. 对部分代码进行优化
 5. 修正bug
 
 

@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include "../src/GraphX.h"
 #include "../src/core/KtMaxFlow.h"
+#include "../src/util/sources.h"
+#include "../src/util/sinks.h"
 #include "test_util.h"
+
 
 template<typename GRAPH, class WEIGHTOR>
 bool verify(const KtMaxFlow<GRAPH, WEIGHTOR>& mf, unsigned V, unsigned s, unsigned t)
@@ -20,9 +23,9 @@ bool verify(const KtMaxFlow<GRAPH, WEIGHTOR>& mf, unsigned V, unsigned s, unsign
 template<typename G>
 void maxflow_test_(const G& g)
 {
-    assert(g.sources().size() == 1 && g.sinks().size() == 1);
+    assert(sources(g).size() == 1 && sinks(g).size() == 1);
 
-    unsigned s = g.sources().front(), t = g.sinks().front();
+    unsigned s = sources(g).front(), t = sinks(g).front();
     KtMaxFlowPfs<DigraphDi> pfs(g, s, t);
     printf("      pfs: outflow(s) = %d, inflow(t) = %d", pfs.outflow(s), pfs.inflow(t)); fflush(stdout);
     if (!verify(pfs, g.order(), s, t))
@@ -56,7 +59,7 @@ void maxflow_test()
     printf("maxflow test...\n");
     fflush(stdout);
 
-    DigraphDi g(6, 0);
+    DigraphDi g(6);
     g.addEdge(0, 1, 2), g.addEdge(0, 2, 3);
     g.addEdge(1, 3, 3), g.addEdge(1, 4, 1);
     g.addEdge(2, 3, 1), g.addEdge(2, 4, 1);
@@ -66,6 +69,5 @@ void maxflow_test()
     fflush(stdout);
     maxflow_test_(g);
 
-    // TODO: �������������㷨�����ͼ
+    // TODO: 构造测试最大流算法的随机图
 }
-

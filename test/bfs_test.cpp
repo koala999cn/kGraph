@@ -61,4 +61,3 @@ void bfs_test()
     fflush(stdout);
     bfs_test_(dg);
 }
-

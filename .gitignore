@@ -1,5 +1,12 @@
-/x64
-/.vs
-/src/.vscode
+/bin
+/.vscode
+/test/Win32/.vs
+/test/Win32/Debug
+/test/Win32/Release
+/test/Win32/x64
 *.code-workspace
+*.vsd
+*.opensdf
 *.sdf
+*.user
+

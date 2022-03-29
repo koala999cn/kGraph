@@ -4,7 +4,6 @@
 #include "../src/util/randgen.h"
 #include "test_util.h"
 
-
 template<typename GRAPH>
 void strongly_connected_test_(const GRAPH& g)
 {
@@ -50,4 +49,3 @@ void strongly_connected_test()
     fflush(stdout);
     strongly_connected_test_(dg);
 }
-

@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "KtWeightor.h"
 #include "KtShortestPath.h"
+#include "../util/copy.h"
 #include "../GraphX.h"
 
 
@@ -30,7 +31,7 @@ protected:
     //   2. 若v-w为g的边，则w-v不能是g的边。
     KtMaxFlow(const GRAPH& g, unsigned s, unsigned t)
         : graph_(g), // 保存原图引用
-          rg_(g.template copy<RGRAPH, WEIGHTOR>()) { // 构造余留网
+          rg_(copy<GRAPH, RGRAPH, WEIGHTOR>(g)) { // 构造余留网
         assert(s != t);
     }
 
@@ -46,14 +47,14 @@ public:
     // 返回边v-w的网流量
     auto flow(unsigned v, unsigned w) const {
         assert(graph_.hasEdge(v, w));
-        return rg_.getEdge(w, v);
+        return rg_.hasEdge(w, v) ? rg_.getEdge(w, v) : 0;
     }
 
 
     // 返回边v-w的余留量 := cap - flow
     auto residual(unsigned v, unsigned w) const {
         assert(graph_.hasEdge(v, w));
-        return rg_.getEdge(v, w);
+        return rg_.hasEdge(v, w) ? rg_.getEdge(v, w) : 0;
     }
 
 
@@ -61,7 +62,7 @@ public:
     auto outflow(unsigned v) const {
         flow_type f(0);
 
-        auto iter = graph_.adjIter(v);
+        auto iter = KtAdjIter(graph_, v);
         for (; !iter.isEnd(); ++iter)
             f += flow(v, *iter);
 
@@ -316,7 +317,7 @@ public:
             if (excessFlow[v] == 0)
                 continue;
 
-            auto iter = rg_.adjIter(v);
+            auto iter = KtAdjIter(rg_, v);
 
             // 由于addFlow_会动态删增边，这将破坏迭代器数据，所以先统一收集邻接点
             std::vector<std::pair<unsigned, flow_type>> adjs;

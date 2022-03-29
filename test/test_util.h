@@ -1,33 +1,15 @@
 #pragma once
 #include <fstream>
 #include <string>
+#include <vector>
+#include "../src/util/dump.h"
 
 
 // dump graph "g" to file "path"
 template<typename GRAPH>
-void dump(const GRAPH& g, const char* path, bool dumpValue)
+void dump(const GRAPH& g, const char* path)
 {
-    std::ofstream of(path);
-
-    auto V = g.order();
-    for (unsigned v = 0; v < V; v++) {
-        auto iter = g.adjIter(v);
-        std::string s = std::to_string(v);
-        s += ", ";
-        bool empty_line(true);
-        for (; !iter.isEnd(); ++iter) {
-            if (!g.isDigraph() && *iter < v)
-                continue; // 对于无向图，只显示v <= w的边
-
-            of << '(' << s << *iter;
-            //if (dumpValue) of << ", " << iter.value();
-            of << ") ";
-            empty_line = false;
-        }
-
-        if (!empty_line)
-            of << '\n';
-    }
+    dump(g, std::ofstream(path));
 }
 
 
@@ -37,13 +19,26 @@ void test_failed(const GRAPH& g, bool detail = false)
 {
     printf("  > :( failed\n");
     printf("   dumping failed graph to 'graph_dump.txt'...\n");
-    dump(g, "graph_dump.txt", detail);
+    dump(g, "graph_dump.txt");
     printf("press any key to exit.\n");
     fflush(stdout);
     getchar();
     exit(1);
 }
 
+
+template<typename G1, typename G2>
+void test_failed(const G1& g1, const G2& g2)
+{
+    printf("  > :( failed\n");
+    printf("   dumping failed graph to 'graph_dump1.txt & graph_dump2.txt'...\n");
+    dump(g1, "graph_dump1.txt");
+    dump(g2, "graph_dump2.txt");
+    printf("press any key to exit.\n");
+    fflush(stdout);
+    getchar();
+    exit(1);
+}
 
 bool almostEqual(double x1, double x2, double tol = 1e-10);
 

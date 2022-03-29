@@ -17,7 +17,7 @@ class KtTopologySort
 
 public:
     KtTopologySort(const DAG& dag) {
-        assert(!dag.hasLoop());
+        //assert(!dag.hasLoop());
         unsigned V = dag.order();
         ts_.resize(V, -1); tsI_.resize(V, -1);
 
@@ -38,7 +38,7 @@ public:
             unsigned v = q.front(); q.pop();
             ts_[i] = v; 
             tsI_[v] = i;
-            auto iter = dag.adjIter(v);
+            auto iter = KtAdjIter(dag, v);
             for (; !iter.isEnd(); ++iter)
                 if(0 == --ins[*iter]) 
                     q.push(*iter);

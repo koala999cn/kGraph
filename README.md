@@ -20,46 +20,34 @@ test\，测试代码
 GraphX.h，定义了一些基础的图类型
 
 
-### 功能
+### 图结构
 
-1.  稠密图、稀疏图、平行图（一对顶点多条边）和带顶点对象的图、嵌套子图等多类图结构
-2.  邻接顶点迭代器、逆邻接顶点迭代器
-3.  深度优先（Dfs）、广度优先（Bfs）和基于优先队列（Pfs）的迭代器
-4.  连通、强连通检测
-5.  二分图检测
-6.  桥、割点检测
-7.  拓扑排序：基于源点队列, 基于Dfs的逆排序
-8.  传递闭包：Warshall, Dfs, Dag-Dfs, Strongly-Connected
-9.  最小生成树：Prim, Kruskal, Boruvka, Pfs
-10. 最优路径：单源（Dijkstra, Pfs, TS, Bellman-Ford），全源（Dijkstra, Pfs, Dfs, Floyd）
-11. 最大流：Path-Augment, Pfs, Edmonds-Karp/Bfs, Preflow
+图的结构布局与算法相对独立实现。
+
+纵向上有稠密图、稀疏图、扁平图3类基本结构；
+
+横向上有无向/有向、单边/多边、始终排序3类配置参数。
+
+两者结合可构造丰富多样的底层结构。
 
 
-### 软件架构
+### 图算法
 
-全C++模板实现，通过模板类的继承和特化提供多种图类型。
+1.  邻接顶点迭代器
+2.  深度优先（Dfs）、广度优先（Bfs）和基于优先队列（Pfs）的迭代器
+3.  连通、强连通检测
+4.  二分图检测
+5.  桥、割点检测
+6.  拓扑排序：基于源点队列, 基于Dfs的逆排序
+7.  传递闭包：Warshall, Dfs, Dag-Dfs, Strongly-Connected
+8.  最小生成树：Prim, Kruskal, Boruvka, Pfs
+9. 最优路径：单源（Dijkstra, Pfs, TS, Bellman-Ford），全源（Dijkstra, Pfs, Dfs, Floyd）
+10. 最大流：Path-Augment, Pfs, Edmonds-Karp/Bfs, Preflow
 
-最底层的类为KtGraphBase，提供ADJ_MATRIX、direction、parallel三个模板参量，分别实现稠密/稀疏、有向/无向、平行/非平行图。
-
-次一级为KtGraphDense和KtGraphSparse，分别为稠密矩阵和稀疏矩阵对KtGraphBase的特化，同时实现各自的邻接顶点迭代器。
-
-再次一级为KtGraphImpl，通过模板参量GRAPH_BASE特化，继承自KtGraphDense或KtGraphSparse，提供基于一致接口的常用函数实现。
-
-再次一级为KtGraphVoa，通过继承自特化的KtGraphImpl，扩展实现带顶点对象的图类型。
-
-最上一层为KtGraphSub，实现嵌套图类型。
-
-具体参见下图，嵌套图未画出。
-
-![输入图片说明](https://images.gitee.com/uploads/images/2021/1102/100032_d62dde5c_8396825.jpeg "arch.jpg")
-
-GraphX.h文件定义了一些常用的图类型，参考下图：
-
-![输入图片说明](pic/graph-calss.jpg)
 
 ### 编译
 
-编译器须支持c++17。核心代码不需编译，测试代码通过vc和gcc编译测试。
+编译器须支持c++17。核心代码全C++模板实现，不需编译，测试代码通过MSVC2019编译。
 
 
 ### 使用说明

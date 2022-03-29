@@ -2,6 +2,7 @@
 #include "../src/GraphX.h"
 #include "../src/core/KtTransitiveClosure.h"
 #include "../src/util/randgen.h"
+#include "../src/util/loop.h"
 #include "test_util.h"
 
 
@@ -18,7 +19,7 @@ void equal_test(const GRAPH& g, const TC1& tc1, const TC2& tc2)
 template<typename GRAPH>
 void transitive_closure_test_(const GRAPH& g)
 {
-    bool doDag = !g.hasLoop();
+    bool doDag = !has_loop(g);
 
     KtTcWarshall<GRAPH> war(g);
     KtTcDfs<GRAPH> dfs(g);
@@ -85,7 +86,7 @@ void transitive_closure_test()
     transitive_closure_test_(dg);
 
 
-    dg.eraseLoop();
+    erase_loop(dg);
     printf("   random dag V = %d, E = %d\n", dg.order(), dg.size());
     fflush(stdout);
     transitive_closure_test_(dg);

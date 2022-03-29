@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "../src/GraphX.h"
+#include "../src/core/KtBridges.h"
 #include "../src/core/KtConnected.h"
 #include "../src/util/randgen.h"
+#include "../src/util/is_connected.h"
 #include "../src/util/make_connect.h"
 #include "test_util.h"
 
@@ -9,16 +11,16 @@
 template<typename GRAPH>
 void bridge_test_(const GRAPH& g)
 {
-    assert(g.isConnected());
-    auto b = g.bridges();
+    assert(is_connected(g));
+    KtBridges b(g);
 
-    printf("  @%d bridges", b.size());
+    printf("  @%d bridges", unsigned(b.size()));
     fflush(stdout);
 
     for (auto e : b) {
         GRAPH gn(g);
         gn.eraseEdge(e.first, e.second);
-        if (gn.isConnected())
+        if (is_connected(gn))
             test_failed(gn);
     }
 }

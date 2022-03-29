@@ -53,14 +53,15 @@ public:
         }
         else if (fullGraph) {
             unsigned unvisted = firstUnvisited();
-            if (unvisted != -1) begin(unvisted);
+            if (unvisted != -1)
+                start(unvisted);
         }
     }
 
 
-    // 重写父类的begin方法，以同步更新low值
-    void begin(unsigned v) {
-        super_::begin(v);
+    // 重写父类的start方法，以同步更新low值
+    void start(unsigned v) {
+        super_::start(v);
         low_[v] = pushingIndex();
     }
 

@@ -6,19 +6,20 @@ template<typename ITER_TYPE>
 class KtRange
 {
 public:
-    using iter_type = ITER_TYPE;
-    using deref_type = decltype(*std::declval<iter_type>());
-    using const_deref_type = decltype(*std::declval<std::add_const_t<iter_type>>());
+    using iterator = ITER_TYPE;
+    using const_iterator = std::add_const_t<iterator>;
+    using deref_type = decltype(*std::declval<iterator>());
+    using const_deref_type = decltype(*std::declval<const_iterator>());
     using value_type = std::remove_reference_t<deref_type>;
     constexpr static bool is_const = std::is_const<deref_type>::value;
 
 
     KtRange() {}
 
-    KtRange(const iter_type& first, const iter_type& last) :
+    KtRange(const iterator& first, const iterator& last) :
         first_(first), last_(last) {}
 
-    KtRange(const iter_type& first, unsigned count) :
+    KtRange(const iterator& first, unsigned count) :
         first_(first), last_(std::next(first, count)) {}
 
     KtRange(const KtRange& rhs) : 
@@ -32,23 +33,26 @@ public:
 
     // 作为容器使用
 
-    iter_type& begin() { return first_; }
-    iter_type& end() { return last_; }
+	iterator& begin() { return first_; }
+	iterator& end() { return last_; }
 
-    const iter_type& begin() const { return first_; }
-    const iter_type& end() const { return last_; }
+    const iterator& begin() const { return first_; }
+    const iterator& end() const { return last_; }
 
     auto size() const { return std::distance(first_, last_); }
 
-    KtRange subRange(unsigned offset, unsigned size) const { 
+    KtRange subrange(unsigned offset, unsigned size) const { 
         auto b = std::next(first_, offset);
         return KtRange(b, std::next(b, size));
     }
 
-    
+    deref_type at(unsigned idx) { return *std::next(first_, idx); }
+    const_deref_type at(unsigned idx) const { return *std::next(first_, idx); }
+
+
     // 作为迭代器使用
 
-    iter_type& operator++() { return ++first_; }
+	iterator& operator++() { return ++first_; }
 
     void advance(unsigned n) { std::advance(first_, n); }
 
@@ -79,6 +83,5 @@ public:
 
 
 private:
-    iter_type first_, last_;
+	iterator first_, last_;
 };
-

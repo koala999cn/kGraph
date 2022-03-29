@@ -1,6 +1,7 @@
 #pragma once
 #include <queue>
 #include <assert.h>
+#include "KtAdjIter.h"
 
 
 // 广度优先遍历
@@ -16,20 +17,21 @@ class KtBfsIter
 public:
     using graph_type = GRAPH;
     using edge_type = typename GRAPH::edge_type;
-    using vertex_index_t = typename GRAPH::vertex_index_t;
-    using adj_vertex_iter = decltype(std::declval<graph_type>().adjIter(0));
+    using vertex_index_t = typename graph_type::vertex_index_t;
+    using adj_vertex_iter = KtAdjIter<graph_type>;
     using const_edge_ref = decltype(std::declval<adj_vertex_iter>().edge());
-    constexpr static auto null_vertex = GRAPH::null_vertex;
+    constexpr static vertex_index_t null_vertex = -1;
 
 
     // graph -- 待遍历的图
-    // startVertex -- 遍历的起始顶点，-1表示只构建迭代器，需要另外调用begin方法开始遍历
+    // startVertex -- 遍历的起始顶点，-1表示只构建迭代器，需要另外调用start方法开始遍历
     KtBfsIter(graph_type& graph, vertex_index_t startVertex)
         : graph_(graph),
           v0_(null_vertex),
           isPushed_(graph.order(), false),
           isPopped_(graph.order(), false) {
-        if (startVertex != null_vertex) begin(startVertex);
+        if (startVertex != null_vertex) 
+            start(startVertex);
     }
 
     void operator++() {
@@ -38,14 +40,14 @@ public:
         if (!isPushed_[v0_]) {
             assert(todo_.empty());
             isPushed_[v0_] = true;
-            todo_.push(graph_.adjIter(v0_));
+            todo_.push(adj_vertex_iter(graph_, v0_));
         } else {
             assert(!todo_.empty());
             auto& iter = todo_.front();
             vertex_index_t v = *iter;
             if (!isPushed_[v]) {
                 isPushed_[v] = true;
-                todo_.push(graph_.adjIter(v));
+                todo_.push(adj_vertex_iter(graph_, v));
             }
             ++iter;
         }
@@ -55,7 +57,7 @@ public:
 
             // 移出已到末尾的迭代器
             if (iter.isEnd()) {
-                isPopped_[todo_.front().other()] = true;
+                isPopped_[from()] = true;
                 todo_.pop();
                 continue;
             }
@@ -84,7 +86,8 @@ public:
 
         if (fullGraph && isEnd()) {
             auto pos = std::find(isPushed_.begin(), isPushed_.end(), false);
-            if (pos != isPushed_.end()) begin(std::distance(isPushed_.begin(), pos));
+            if (pos != isPushed_.end()) 
+                start(static_cast<vertex_index_t>(std::distance(isPushed_.begin(), pos)));
         }
     }
 
@@ -97,7 +100,7 @@ public:
     // 与当前顶点（to顶点）构成边的from顶点
     vertex_index_t from() const {
         assert(!isEnd());
-        return todo_.empty() ? null_vertex : todo_.front().other();
+        return todo_.empty() ? null_vertex : todo_.front().from();
     }
 
 
@@ -107,7 +110,7 @@ public:
 
 
     // 从顶点v开始接续进行广度优先遍历
-    void begin(vertex_index_t v) {
+    void start(vertex_index_t v) {
         assert(isEnd() && !isPushed_[v]);
         v0_ = v;
 

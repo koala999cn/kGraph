@@ -2,6 +2,7 @@
 #include <vector>
 #include <assert.h>
 #include "../core/KtConnected.h"
+#include "is_connected.h"
 
 
 // 在图g的基础上增加边，以保证g为连通图
@@ -27,7 +28,7 @@ auto make_connect(GRAPH& g)
             edges.push_back({ v[i - 1], v[i] });
         }
 
-        assert(g.isConnected());
+        assert(is_connected(g));
     }
 
     return edges;

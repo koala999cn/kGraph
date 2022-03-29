@@ -1,6 +1,7 @@
 #pragma once
 #include <queue>
 #include <assert.h>
+#include "KtAdjIter.h"
 
 
 // 基于优先队列的图遍历
@@ -13,7 +14,6 @@ template <typename GRAPH, typename PRIORITOR, typename COMP, bool fullGraph = fa
 class KtPfsIter
 {
 public:
-    using adj_vertex_iter = typename GRAPH::adj_vertex_iter;
     using edge_type = typename GRAPH::edge_type;
     using prior_type = decltype(std::declval<PRIORITOR>()(0, 0, edge_type(0))); // 得到PRIORITOR算子的返回类型
     using element_type = std::pair<std::pair<unsigned, unsigned>, prior_type>;
@@ -28,11 +28,11 @@ public:
 
 public:
     KtPfsIter(GRAPH& g, unsigned v0)
-        : graph_(g),
-          v0_(v0),
-          isPushed_(g.order(), false),
-          st_(g.order(), -1) {
-        begin(v0);
+        : graph_(g)
+        , v0_(v0)
+        , isPushed_(g.order(), false)
+        , st_(g.order(), -1) {
+        start(v0);
     }
 
 
@@ -42,7 +42,7 @@ public:
         unsigned w = x.second;
         st_[w] = x.first;
 
-        auto iter= graph_.adjIter(w);
+        auto iter= KtAdjIter(graph_, w);
         for (; !iter.isEnd(); ++iter) {
             unsigned t = *iter;
             if (!isPushed(t)) {
@@ -58,7 +58,8 @@ public:
 
         if (fullGraph && isEnd()) {
             auto pos = std::find(isPushed_.begin(), isPushed_.end(), false);
-            if (pos != isPushed_.end()) begin(std::distance(isPushed_.begin(), pos));
+            if (pos != isPushed_.end()) 
+                start(unsigned(std::distance(isPushed_.begin(), pos)));
         }
     }
 
@@ -97,7 +98,7 @@ public:
 
 
     // 从顶点v开始接续进行广度优先遍历
-    void begin(unsigned v) {
+    void start(unsigned v) {
         assert(isEnd() && !isPushed(v));
         pq_.emplace(std::pair<unsigned, unsigned>{-1, v}, 0);
         isPushed_[v] = true;

@@ -239,11 +239,11 @@ class KtSptTs : public KtSptAbstract<DAG, WEIGHTOR>
 
 public:
     KtSptTs(const DAG& g, vertex_index_t v0) : super_(g, v0) {
-        assert(!g.hasLoop());
+        assert(!has_loop(g));
         KtTopologySort<DAG> ts(g);
         auto j = ts.relabel(v0); // j之前的顶点可以忽略，因为按照拓扑排序，v0与它们没有可达路径
         for(auto v = ts[j++]; j < g.order(); v = ts[j++]) {
-            auto iter = g.adjIter(v);
+            auto iter = KtAdjIter(g, v);
             while(!iter.isEnd()) {
                 super_::relax_(v, *iter, WEIGHTOR{}(iter.edge()));
                 ++iter;
@@ -278,7 +278,7 @@ public:
                 v = q.front(); q.pop();
             }
 
-            auto iter = g.adjIter(v);
+            auto iter = KtAdjIter(g, v);
             for (; !iter.isEnd(); ++iter)
                 if (super_::relax_(v, *iter, WEIGHTOR{}(iter.edge()))
                     && *iter != v/*ignore self-loop*/)
@@ -398,7 +398,7 @@ class KtAllSptDfs : public KtAllSptAbstract<GRAPH, WEIGHTOR>
 
 public:
     KtAllSptDfs(const GRAPH& g) : super_(g), done_(g.order(), false) {
-        assert(!g.hasLoop());
+        assert(!has_loop(g));
 
         for (vertex_index_t v = 0; v < g.order(); v++)
             if(!done_[v]) dfs_(g, v);
@@ -408,7 +408,7 @@ private:
     void dfs_(const GRAPH& g, vertex_index_t v) {
         done_[v] = true;
 
-        auto iter = g.adjIter(v);
+        auto iter = KtAdjIter(g, v);
         for (; !iter.isEnd(); ++iter) {
             auto w = *iter;
             auto wt = WEIGHTOR{}(iter.edge());

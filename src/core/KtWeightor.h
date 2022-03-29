@@ -1,6 +1,7 @@
 #pragma once
 #include <limits>
 
+#undef max
 
 // 与权值有关的操作：包括从边值到权值的转换，权值的比较，权值的累加
 
@@ -44,7 +45,7 @@ public:
     using weight_type = typename WeightorBase::weight_type;
     const weight_type worst_weight = minimum ? 
         std::numeric_limits<weight_type>::max() : 
-        std::numeric_limits<weight_type>::min();
+        std::numeric_limits<weight_type>::lowest();
 
 
     // w1是否比w2更优？

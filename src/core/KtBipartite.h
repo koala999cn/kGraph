@@ -38,7 +38,7 @@ public:
 
 
     // 是否二分图
-    bool bipartite() const { return bipartite_; }
+    bool ok() const { return bipartite_; }
 
 
     // 返回顶点v的着色，值为1或者2，分别代表对应节点在不同分图，-1代表冲突点

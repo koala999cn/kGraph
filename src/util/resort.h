@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <assert.h>
-
+#include "../core/KtAdjIter.h"
 
 
 // 对图g的顶点按照order进行重排序，即g[v]变为g[order[v]]
@@ -22,7 +22,7 @@ void resort(GRAPH& g, const ORDER& order)
 
         // 收集顶点v的出边
         std::vector<std::pair<vertex_index_t, edge_type>> v_outEdges;
-        typename GRAPH::adj_vertex_iter iter(g, v);
+        auto iter = KtAdjIter(g, v);
         for (; !iter.isEnd(); ++iter)
             v_outEdges.emplace_back(*iter, iter.edge());
 
@@ -34,7 +34,7 @@ void resort(GRAPH& g, const ORDER& order)
             // 将顶点v的出边调整为nv的出边之前，先保存nv的出边，以免信息丢失
             std::vector<std::pair<vertex_index_t, edge_type>> nv_outEdges;
             if (!flags[nv]) { // 若nv已处理，则出边信息已重排过，不必再收集保留
-                typename GRAPH::adj_vertex_iter iter(g, nv);
+                auto iter = KtAdjIter(g, nv);
                 for (; !iter.isEnd(); ++iter)
                     nv_outEdges.emplace_back(*iter, iter.edge());
             }

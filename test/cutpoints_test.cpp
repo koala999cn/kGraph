@@ -1,24 +1,26 @@
 #include <stdio.h>
 #include "../src/GraphX.h"
+#include "../src/core/KtCutPoints.h"
 #include "../src/util/randgen.h"
 #include "../src/util/make_connect.h"
+#include "../src/util/is_connected.h"
 #include "test_util.h"
 
 
 template<typename GRAPH>
 void cutpoints_test_(const GRAPH& g)
 {
-    assert(g.isConnected());
-    auto c = g.cutpoints();
+    assert(is_connected(g));
+    KtCutPoints c(g);
 
-    printf("  @%d cutpoints", c.size());
+    printf("  @%d cutpoints", unsigned(c.size()));
     fflush(stdout);
 
     for (unsigned v = 0; v < g.order(); v++) {
         bool cut = std::find(c.begin(), c.end(), v) != c.end();
         GRAPH gn(g);
         gn.eraseVertex(v);
-        bool con = gn.isConnected();
+        bool con = is_connected(gn);
         if(cut && con || !cut && !con)
             test_failed(gn);
     }

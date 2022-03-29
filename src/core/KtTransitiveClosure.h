@@ -16,7 +16,7 @@ public:
     using vertex_index_t = typename GRAPH::vertex_index_t;
     using closure_graph_t = std::conditional_t<useSpare, DigraphSx<bool>, DigraphDx<bool>>;
 
-    explicit KtTcAbstract(const GRAPH& g) : clsg_(g.order(), false){}
+    explicit KtTcAbstract(const GRAPH& g) : clsg_(g.order()){}
 
     KtTcAbstract(const KtTcAbstract& c) : clsg_(c.clsg) {}
     KtTcAbstract(KtTcAbstract&& c) : clsg_(std::move(c.clsg_)) {}
@@ -47,7 +47,7 @@ protected:
     }
 
     auto adjIter_(unsigned v) const {
-        return clsg_.adjIter(v);
+        return KtAdjIter(clsg_, v);
     }
 
 private:
@@ -135,7 +135,7 @@ public:
     using super_::set_;
 
     KtTcDag(const GRAPH& g) : super_(g) {
-        assert(g.isDag());
+        //assert(g.isDag());
 
         unsigned V = g.order();
         for (unsigned i = 0; i < V; i++)
@@ -177,7 +177,7 @@ public:
         // 以每个强连通分量为一个顶点构建DAG
         DigraphDx<bool> K(scc_.count());
         for (unsigned v = 0; v < g.order(); v++) {
-            auto iter = g.adjIter(v);
+            auto iter = KtAdjIter(g, v);
             while (!iter.isEnd()) {
                 auto x = scc_[v];
                 auto y = scc_[*iter];

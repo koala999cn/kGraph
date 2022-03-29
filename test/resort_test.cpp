@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include "../src/GraphX.h"
 #include "../src/core/KtTopologySort.h"
-#include "../src/util/randgen.h"
+#include "../src/core/KtBfsIter.h"
 #include "../src/util/resort.h"
+#include "../src/util/randgen.h"
+#include "../src/util/loop.h"
 #include "test_util.h"
 
 
@@ -12,7 +14,7 @@ void resort_test_(const DAG& g)
     KtTopologySort<DigraphDi> ts(g);
     DAG d(g);
     resort(d, ts.relabels());
-    typename DAG::edge_iter iter(d, 0);
+    KtBfsIter<const DAG, true, true> iter(d, 0);
     while (!iter.isEnd()) { // 迭代每条有向边
         if (iter.from() > *iter) // 小编号指向大编号
             test_failed(d);
@@ -45,7 +47,7 @@ void resort_test()
 
 
     DigraphDi rg = randgen<DigraphDi>(300, 30000);
-    rg.eraseLoop();
+    erase_loop(rg);
     printf("   random dag V = %d, E = %d", rg.order(), rg.size());
     fflush(stdout);
     resort_test_(rg);

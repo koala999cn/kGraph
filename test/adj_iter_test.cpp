@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../src/GraphX.h"
+#include "../src/core/KtAdjIter.h"
 #include "../src/util/randgen.h"
 #include "../src/util/is_same.h"
 #include "test_util.h"
@@ -47,9 +48,9 @@ edges adj_iter_reedge_test_(GRAPH& g, ITER iter)
     for (; !iter.isEnd(); ++iter) {
         auto v = iter.from();
         auto w = iter.to();
-        if ((g.isDigraph() || v >= w) && rand() < RAND_MAX / 4) { // ��25%�ĸ����޸ı�Ȩֵ
+        if ((g.isDigraph() || v >= w) && rand() < RAND_MAX / 4) { // 以25%的概率修改边权值
             double wt = double(rand()) / double(RAND_MAX);
-            if (wt != g.nullEdge()) {
+            if (wt != g.null_edge) {
                 iter.reedge(wt);
                 es.push_back({ { v, w }, wt });
             }
@@ -64,13 +65,13 @@ template<typename GRAPH, typename ITER>
 std::pair<edges, unsigned> adj_iter_erase_test_(GRAPH& g, ITER iter)
 {
     edges es;
-    unsigned erased(0); // ����ɾ���Ĵ���
+    unsigned erased(0); // 连续删除的次数
 
-    bool flag(false); // �ϴ��Ƿ�ִ��ɾ������
+    bool flag(false); // 上次是否执行删除操作
     for (; !iter.isEnd(); ) {
         auto v = iter.from();
         auto w = iter.to();
-        if ((g.isDigraph() || v >= w) && rand() < RAND_MAX / 5) { // ��50%�ĸ���ɾ����
+        if ((g.isDigraph() || v >= w) && rand() < RAND_MAX / 5) { // 以20%的概率删除边
             es.push_back({ { v, w }, iter.edge() });
             iter.erase();
 
@@ -97,16 +98,16 @@ void adj_iter_test__(GRAPH& g, bool iterR)
 
     for (unsigned v = 0; v < g.order(); v++) {
         edges e;
-        if (iterR)
-            e = adj_iter_access_test_(g, g.adjIterR(v));
-        else
-            e = adj_iter_access_test_(g, g.adjIter(v));
+        //if (iterR)
+        //    e = adj_iter_access_test_(g, g.adjIterR(v));
+        //else
+            e = adj_iter_access_test_(g, KtAdjIter<GRAPH>(g, v));
         
         for (auto& i : e)
             esAll.push_back(i);
     }
 
-    printf(" = %d", esAll.size());
+    printf(" = %d", unsigned(esAll.size()));
     fflush(stdout);
 
     if(esAll.size() != g.size())
@@ -121,16 +122,16 @@ void adj_iter_test__(GRAPH& g, bool iterR)
     edges esReedge;
     for (unsigned v = 0; v < g.order(); v++) {
         edges e;
-        if (iterR)
-            e = adj_iter_reedge_test_(g, g.adjIterR(v));
-        else
-            e = adj_iter_reedge_test_(g, g.adjIter(v));
+        //if (iterR)
+        //    e = adj_iter_reedge_test_(g, g.adjIterR(v));
+        //else
+            e = adj_iter_reedge_test_(g, KtAdjIter<GRAPH>(g, v));
 
         for (auto& i : e)
             esReedge.push_back(i);
     }
     
-    printf(" = %d", esReedge.size());
+    printf(" = %d", unsigned(esReedge.size()));
     fflush(stdout);
 
     if (esAll.size() != g.size())
@@ -157,11 +158,10 @@ void adj_iter_test__(GRAPH& g, bool iterR)
 
     for (unsigned v = 0; v < g.order(); v++) {
         std::pair<edges, unsigned> x;
-        if (iterR) 
-            x = adj_iter_erase_test_(g, g.adjIterR(v));
-        
-        else
-            x = adj_iter_erase_test_(g, g.adjIter(v));
+        //if (iterR) 
+        //    x = adj_iter_erase_test_(g, KtAdjIterR<GRAPH>(g, v));     
+        //else
+            x = adj_iter_erase_test_(g, KtAdjIter<GRAPH>(g, v));
             
 
         for (auto& i : x.first)
@@ -170,7 +170,7 @@ void adj_iter_test__(GRAPH& g, bool iterR)
         continue_erased += x.second;
     }
 
-    printf(" = %d/%d", esErased.size(), continue_erased);
+    printf(" = %d/%d", unsigned(esErased.size()), continue_erased);
     fflush(stdout);
 
     if (esAll.size() - esErased.size() != g.size())
@@ -179,7 +179,7 @@ void adj_iter_test__(GRAPH& g, bool iterR)
     for (auto& i : esAll) {
         auto& pos = i.first;
         double wt = getWeight(esErased, pos.first, pos.second);
-        if (wt != 0) { // ȷ�ϸ������ѱ�ɾ��
+        if (wt != 0) { // 确认该条边已被删除
             if(g.hasEdge(pos.first, pos.second))
                 test_failed(g);
         }
@@ -198,9 +198,9 @@ void adj_iter_test_(GRAPH& g)
     fflush(stdout);
     adj_iter_test__(g, false);
 
-    printf("      adj_vertex_iter_r\n");
-    fflush(stdout);
-    adj_iter_test__(g, true);
+    //printf("      adj_vertex_iter_r\n");
+    //fflush(stdout);
+    //adj_iter_test__(g, true);
 }
 
 
@@ -210,28 +210,28 @@ void adj_iter_test()
     fflush(stdout);
 
     unsigned V = rand() % 1000;
-    GraphDd dense = randgen<GraphDd>(V, V * V / 64);
+    auto dense = randgen<GraphDd>(V, V * V / 64);
     printf("   dense graph V = %d, E = %d\n", dense.order(), dense.size());
     fflush(stdout);
     adj_iter_test_(dense);
 
 
     V = rand() % 1000;
-    DigraphDd ddense = randgen<DigraphDd>(V, V * V / 64);
-    printf("   dense graph V = %d, E = %d\n", ddense.order(), ddense.size());
+    auto ddense = randgen<DigraphDd>(V, V * V / 64);
+    printf("   dense digraph V = %d, E = %d\n", ddense.order(), ddense.size());
     fflush(stdout);
     adj_iter_test_(ddense);
 
 
     V = rand() % 2000;
-    GraphSd sparse = randgen<GraphSd>(V, V * V / 1000 + 50);
+    auto sparse = randgen<GraphSd<>>(V, V * V / 1000 + 50);
     printf("   sparse graph V = %d, E = %d\n", sparse.order(), sparse.size());
     fflush(stdout);
     adj_iter_test_(sparse);
 
 
     V = rand() % 2000;
-    DigraphSd dsparse = randgen<DigraphSd>(V, V * V / 1000 + 50);
+    auto dsparse = randgen<DigraphSd<>>(V, V * V / 1000 + 50);
     printf("   sparse digraph V = %d, E = %d\n", dsparse.order(), dsparse.size());
     fflush(stdout);
     adj_iter_test_(dsparse);

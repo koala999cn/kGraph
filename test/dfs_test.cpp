@@ -61,7 +61,7 @@ void dfs_test()
     fflush(stdout);
     dfs_test_(sg);
 
-    DigraphSi sdg(13);
+    DigraphSi<> sdg(13);
     sdg.addEdge(10, 12); sdg.addEdge(2, 3);
     sdg.addEdge(7, 6); sdg.addEdge(8, 7); sdg.addEdge(8, 9); sdg.addEdge(0, 6);
     sdg.addEdge(6, 4); sdg.addEdge(7, 8); sdg.addEdge(9, 10); sdg.addEdge(0, 1);

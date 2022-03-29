@@ -17,20 +17,21 @@ public:
     using graph_type = GRAPH;
     using vertex_index_t = typename graph_type::vertex_index_t;
     using edge_type = typename GRAPH::edge_type;
-    using adj_vertex_iter = decltype(std::declval<graph_type>().adjIter(0));
+    using adj_vertex_iter = KtAdjIter<graph_type>;
     using const_edge_ref = decltype(std::declval<adj_vertex_iter>().edge());
-    enum { null_vertex = GRAPH::null_vertex };
+    constexpr static vertex_index_t null_vertex = -1;
 
 
     // graph -- 待遍历的图
-    // startVertex -- 遍历的起始顶点，-1表示只构建迭代器，需要另外调用begin方法开始遍历
+    // startVertex -- 遍历的起始顶点，-1表示只构建迭代器，需要另外调用start方法开始遍历
     KtDfsIter(GRAPH& graph, vertex_index_t startVertex)
         : graph_(graph),
         v_(null_vertex),
         pushOrd_(graph.order(), null_vertex),
         popOrd_(graph.order(), null_vertex),
         pushIdx_(0), popIdx_(0) {
-        if (startVertex != null_vertex) begin(startVertex);
+        if (startVertex != null_vertex) 
+            start(startVertex);
     }
 
     void operator++() {
@@ -46,7 +47,7 @@ public:
                 ++todo_.back();
             if (isPushing()) {
                 pushOrd_[v_] = pushIdx_++;
-                todo_.push_back(graph_.adjIter(v_));
+                todo_.push_back(adj_vertex_iter(graph_, v_));
             }
         }
         
@@ -61,7 +62,7 @@ public:
     vertex_index_t from() const {
         assert(!isEnd());
         return isPopping() ? grandpa() :
-                            todo_.size() > 1 ? todo_.back().other() : null_vertex;
+                            todo_.size() > 1 ? todo_.back().from() : null_vertex;
     }
 
 
@@ -76,7 +77,7 @@ public:
 
 
     // 从顶点v开始接续进行广度优先遍历
-    void begin(vertex_index_t v) {
+    void start(vertex_index_t v) {
         assert(isEnd() && pushOrd_[v] == null_vertex);
         todo_.clear();
         todo_.push_back(adj_vertex_iter(graph_));
@@ -144,16 +145,19 @@ public:
     // 当前节点是否正在出栈，对应于递归的出口
     bool isPopping() const { return stopAtPopping && !isPushing() && todo_.back().isEnd(); }
 
-    unsigned pushIndex(unsigned v) const { return pushOrd_[v]; }
-    unsigned popIndex(unsigned v) const { return popOrd_[v]; }
+    // 获取顶点v的入栈/出栈次序，用于事后检测
+    unsigned pushIndex(vertex_index_t v) const { return pushOrd_[v]; }
+    unsigned popIndex(vertex_index_t v) const { return popOrd_[v]; }
 
+    // 获取当前的入栈/出栈序号
     unsigned pushingIndex() const { return pushIdx_; }
     unsigned poppingIndex() const { return popIdx_; }
 
 
-    unsigned firstUnvisited() const {
-        auto pos = std::find(pushOrd_.begin(), pushOrd_.end(), -1);
-        return pos == pushOrd_.end() ? -1 : std::distance(pushOrd_.begin(), pos);
+    vertex_index_t firstUnvisited() const {
+        auto pos = std::find(pushOrd_.begin(), pushOrd_.end(), null_vertex);
+        return pos == pushOrd_.end() ? -1 
+            : static_cast<vertex_index_t>(std::distance(pushOrd_.begin(), pos));
     }
 
 
@@ -164,7 +168,7 @@ private:
 
     // 返回当前顶点的祖父顶点，即from之from
     vertex_index_t grandpa() const {
-        return todo_.size() > 2 ? todo_[todo_.size() - 2].other() : null_vertex;
+        return todo_.size() > 2 ? todo_[todo_.size() - 2].from() : null_vertex;
     }
 
 
@@ -178,7 +182,7 @@ private:
             // 移除已结束的迭代器
             if (iter.isEnd()) {
                 if (!stopAtPopping) {
-                    popOrd_[todo_.back().other()] = popIdx_++;
+                    popOrd_[iter.from()] = popIdx_++;
                     todo_.pop_back();
                     continue;
                 }
@@ -219,11 +223,13 @@ private:
 
             if (fullGraph) {
                 unsigned unvisted = firstUnvisited();
-                if (unvisted != null_vertex) begin(unvisted); // 接续遍历
+                if (unvisted != null_vertex) 
+                    start(unvisted); // 接续遍历
             }
         }
         else {
-            v_ = todo_.back().isEnd() ? todo_.back().other() : *todo_.back();
+            auto& iter = todo_.back();
+            v_ = iter.isEnd() ? iter.from() : *iter;
         }
     }
 

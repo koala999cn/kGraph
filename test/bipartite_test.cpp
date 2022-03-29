@@ -20,14 +20,14 @@ void bipartite_test()
     fflush(stdout);
 
     KtBipartite<GraphDi> b(g);
-    if (!b.bipartite())
+    if (!b.ok())
         test_failed(g);
 
-    for (size_t i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
         if (b.color(i) != 1)
             test_failed(g);
 
-    for (size_t i = 5; i < 9; i++)
+    for (int i = 5; i < 9; i++)
         if (b.color(i) != 2)
             test_failed(g);
 

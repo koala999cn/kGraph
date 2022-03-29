@@ -1,12 +1,12 @@
 #pragma once
 #include "KtBfsIter.h"
 
-// 图的连通分量
+// 无向图的连通分量
 
 template<typename GRAPH>
 class KtConnected
 {
-    static_assert(!GRAPH::isDigraph(), "KtConnected cannot instantiated with Digraph.");
+    static_assert(!GRAPH::isDigraph(), "KtConnected cannot work for digraph.");
 
 public:
     KtConnected(const GRAPH& g) 
