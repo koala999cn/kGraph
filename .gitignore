@@ -1,9 +1,6 @@
 /bin
 /.vscode
-/test/Win32/.vs
-/test/Win32/Debug
-/test/Win32/Release
-/test/Win32/x64
+/.vs
 *.code-workspace
 *.vsd
 *.opensdf
