@@ -1,9 +1,11 @@
 /bin
 /.vscode
 /.vs
+/TODO
 *.code-workspace
 *.vsd
 *.opensdf
 *.sdf
 *.user
+*.vsd
 
