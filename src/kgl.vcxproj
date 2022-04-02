@@ -162,24 +162,22 @@
     <ClInclude Include="core\KtFlatGraphBase.h" />
     <ClInclude Include="core\KtFlatGraphVectorImpl.h" />
     <ClInclude Include="core\KtGraph.h" />
-    <ClInclude Include="core\KtGraphBase.h" />
-    <ClInclude Include="core\KtGraphDense.h" />
-    <ClInclude Include="core\KtGraphImpl.h" />
-    <ClInclude Include="core\KtGraphSparse.h" />
-    <ClInclude Include="core\KtGraphVoa.h" />
     <ClInclude Include="core\KtMaxFlow.h" />
     <ClInclude Include="core\KtMinSpanTree.h" />
     <ClInclude Include="core\KtPfsIter.h" />
     <ClInclude Include="core\KtShortestPath.h" />
     <ClInclude Include="core\KtStronglyConnected.h" />
-    <ClInclude Include="core\KtSubGraph.h" />
     <ClInclude Include="core\KtTopologySort.h" />
     <ClInclude Include="core\KtTransitiveClosure.h" />
     <ClInclude Include="core\KtWeightor.h" />
     <ClInclude Include="core\vertex_traits.h" />
     <ClInclude Include="core\weight_traits.h" />
     <ClInclude Include="GraphX.h" />
+    <ClInclude Include="util\bipartite_match.h" />
+    <ClInclude Include="util\copy.h" />
     <ClInclude Include="util\dump.h" />
+    <ClInclude Include="util\feasible.h" />
+    <ClInclude Include="util\inverse.h" />
     <ClInclude Include="util\is_connected.h" />
     <ClInclude Include="util\is_same.h" />
     <ClInclude Include="util\loop.h" />
@@ -187,6 +185,7 @@
     <ClInclude Include="util\make_st.h" />
     <ClInclude Include="util\randgen.h" />
     <ClInclude Include="util\reachable.h" />
+    <ClInclude Include="util\resort.h" />
     <ClInclude Include="util\sinks.h" />
     <ClInclude Include="util\sources.h" />
   </ItemGroup>
