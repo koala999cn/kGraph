@@ -21,8 +21,8 @@ namespace kPrivate
     {
     public:
         auto rows() const { return size(); }
-        auto row(unsigned v) { return KtRange(at(v).begin(), static_cast<unsigned>(at(v).size())); }
-        auto row(unsigned v) const { return KtRange(at(v).cbegin(), static_cast<unsigned>(at(v).size())); }
+        decltype(auto) row(unsigned v) { return KtRange(at(v).begin(), static_cast<unsigned>(at(v).size())); }
+        decltype(auto) row(unsigned v) const { return KtRange(at(v).cbegin(), static_cast<unsigned>(at(v).size())); }
     };
 }
 

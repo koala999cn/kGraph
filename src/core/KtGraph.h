@@ -146,7 +146,7 @@ public:
 			
 			static_assert(has_to_v<underly_edge_t>, "edge missing property of 'to'");
 
-			auto pred =	[to](typename decltype(r)::const_deref_type e) {
+			auto pred =	[to](typename decltype(r)::const_reference e) {
 				    return to == edge_traits<underly_edge_t>::to(e); 
 			};
 
@@ -204,7 +204,7 @@ protected:
 
 	template<typename VERTEX_TYPE = underly_vertex_t,
 		std::enable_if_t<has_outdegree_v<VERTEX_TYPE>, bool> = true>
-	decltype(auto) outdegree_(unsigned v) const {
+	auto outdegree_(unsigned v) const {
 		return vertex_traits<VERTEX_TYPE>::outdegree(super_::vertexAt(v));
 	}
 };
@@ -241,7 +241,7 @@ public:
 		}
 		else { // 需要进行全遍历，收集<from, to>的所有multi-edges
 
-			auto pred = [to](typename decltype(r)::const_deref_type e) {
+			auto pred = [to](typename decltype(r)::const_reference e) {
 					return to == edge_traits<underly_edge_t>::to(e); 
 			};
 
@@ -508,8 +508,9 @@ private:
 		}
 		else {// 未排序的多边，依次检查
 			do {
-				edges.begin() = super_::eraseEdge<dummy>(from, edges.begin());	
-				edges.end() = super_::outedges(from).end();
+				auto pos = super_::eraseEdge<dummy>(from, edges.begin());	
+				auto end = super_::outedges(from).end();
+				edges.reset(pos, end);
 				if constexpr (super_::vertexHasOutDegree_())
 					outdegree_(from)--;
 

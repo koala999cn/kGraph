@@ -98,8 +98,9 @@ public:
             }
 
             // É¾³ý(from, to)±ß
-            range_.begin() = graph_.eraseEdge(from(), range_.begin());
-            range_.end() = graph_.outedges(from()).end();
+            auto pos = graph_.eraseEdge(from(), range_.begin());
+            auto end = graph_.outedges(from()).end();
+            range_.reset(pos, end);
 
             if constexpr (has_outdegree_v<underly_vertex_t>)
                 vertex_traits<underly_vertex_t>::outdegree(graph_.vertexAt(from()))--;
