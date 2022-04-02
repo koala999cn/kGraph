@@ -48,11 +48,14 @@ public:
         meetCond_();
     }
 
-
     KtCondRange& operator=(const KtCondRange& rhs) {
         first_ = rhs.first_, last_ = rhs.last_;
         pred_ = rhs, pred_;
         return *this;
+    }
+
+    void reset(const iterator& first, const iterator& last) {
+        first_ = first, last_ = last;
     }
 
 
@@ -60,18 +63,18 @@ public:
         return first_ == rhs.first_ && last_ == rhs.last_;
     }
 
-    const_iterator& begin() const { return first_; }
-    iterator& begin() { return first_; }
-    const_iterator& end() const { return last_; }
-    iterator& end() { return last_; }
+    const_iterator begin() const { return first_; }
+    iterator begin() { return first_; }
+    const_iterator end() const { return last_; }
+    iterator end() { return last_; }
 
     iterator& operator++() { 
         ++first_; meetCond_();
         return first_;
     }
 
-    deref_type operator*() { return *first_; }
-    const_deref_type operator*() const { return *first_; }
+    decltype(auto) operator*() { return *first_; }
+    decltype(auto) operator*() const { return *first_; }
 
     bool empty() const { return first_ == last_; }
 
