@@ -32,19 +32,6 @@ public:
         data_.assign(rows * cols, initValue);
     }
 
-
-    // 访问矩阵的第row行、第col列元素
-    const_reference operator()(unsigned row, unsigned col) const {
-        assert(row < rows_ && col < cols_);
-        return row_major ? data_[row * cols_ + col] : data_[col * rows_ + row];
-    }
-
-    reference operator()(unsigned row, unsigned col) {
-        assert(row < rows_ && col < cols_);
-        return row_major ? data_[row * cols_ + col] : data_[col * rows_ + row];
-    }
-
-
     void resize(unsigned rows, unsigned cols, const_reference init_val) {
         rows_ = rows, cols_ = cols;
         data_.assign(rows * cols, init_val);
@@ -71,16 +58,6 @@ public:
     auto row(unsigned idx) const {
         const_row_element_iter start = std::next(data_.cbegin(), idx * cols_);
         return KtRange<const_row_element_iter>(start, cols_);
-    }
-
-    // 将第row行所有数据置为val
-    void assignRow(unsigned rowIdx, const_reference val) {
-        row(rowIdx).fill(val);
-    }
-
-    // 将第col列所有数据置为val
-    void assignCol(unsigned colIdx, const_reference val) {
-        col(colIdx).fill(val);
     }
 
 

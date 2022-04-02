@@ -1,5 +1,5 @@
 #pragma once
-#include "KtBfsIter.h"
+#include "../core/KtBfsIter.h"
 
 
 // 计算当前图的逆

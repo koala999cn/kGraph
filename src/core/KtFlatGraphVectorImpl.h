@@ -41,6 +41,11 @@ public:
 	using vertex_traits_t = vertex_traits<typename super_::vertex_type>;
 	using vertex_traits_helper_t = vertex_traits_helper<vertex_traits_t>;
 
+	using super_::vertexes_;
+	using super_::edges_;
+	using super_::order;
+	using super_::outedges;
+
 
 	unsigned size() const {
 		return static_cast<unsigned>(super_::size() - dummyEdges_);
@@ -64,7 +69,7 @@ public:
 		&& std::is_convertible_v<T, vertex_type>, bool> = false>
 	unsigned addVertex(const T& v) {
 		vertexes_.push_back(vertex_type(v));
-		vertex_traits_t::edgeindex(vertexes_.back()) = static_cast<unsigned>(edge_.size());
+		vertex_traits_t::edgeindex(vertexes_.back()) = static_cast<unsigned>(edges_.size());
 
 		return vertexes_.size();
 	}
@@ -73,7 +78,7 @@ public:
 		&& std::is_same_v<T, vertex_type>, bool> = false>
 	unsigned addVertex(T&& v) {
 		vertexes_.push_back(std::move(v));
-		vertex_traits_t::edgeindex(vertexes_.back()) = static_cast<unsigned>(.size());
+		vertex_traits_t::edgeindex(vertexes_.back()) = static_cast<unsigned>(edges_.size());
 
 		return static_cast<unsigned>(vertexes_.size());
 	}
@@ -101,7 +106,7 @@ public:
 
 	// 删除顶点v
 	void eraseVertex(unsigned v) {
-		assert(super_::outedges(v).size() == 0);
+		assert(outedges(v).size() == 0);
 		vertexes_.erase(vertexes_.begin() + v);
 	}
 
@@ -109,7 +114,7 @@ public:
 	// 删除顶点v的出边e
 	template<bool dummy = false>
 	edge_iter eraseEdge(unsigned v, edge_iter e) {
-		assert(v == edgeFrom(unsigned(std::distance(edges_.begin(), e))));
+		assert(v == super_::edgeFrom(unsigned(std::distance(edges_.begin(), e))));
 
 		updateEdgeIndex_(v, -1);
 
@@ -121,7 +126,7 @@ public:
 
 	template<bool dummy = false>
 	edge_iter eraseEdges(unsigned v, edge_iter first, edge_iter last) {
-		assert(first >= super_::outedges(v).begin() && last <= super_::outedges(v).end());
+		assert(first >= outedges(v).begin() && last <= outedges(v).end());
 
 		int ne = int(std::distance(first, last));
 		if (dummy) dummyEdges_ -= ne;
@@ -136,7 +141,7 @@ private:
 	// 更新v后接顶点（不含v）的偏移：edgeIndex += diff
 	void updateEdgeIndex_(unsigned v, int diff) {
 		for (++v; v < order(); v++) 
-			edgeIndex(v) += diff;
+			super_::edgeIndex(v) += diff;
 	}
 
 	

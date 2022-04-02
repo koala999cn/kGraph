@@ -5,11 +5,11 @@
 #include <assert.h>
 
 
-// »ùÓÚÏ¡ÊèÕóµÄÁÚ½Ó¾ØÕóÍ¼ÊµÏÖ
+// åŸºäºç¨€ç–é˜µçš„é‚»æ¥çŸ©é˜µå›¾å®ç°
 
 namespace kPrivate
 {
-    // »ùÓÚvectorµÄÏ¡Êè¾ØÕó
+    // åŸºäºvectorçš„ç¨€ç–çŸ©é˜µ
     template<typename EDGE_TYPE>
     using underly_edge_t = edge_has_to_t<EDGE_TYPE>;
 
@@ -20,9 +20,19 @@ namespace kPrivate
     class KtSpMatrix : public std::vector<row_type<EDGE_TYPE>>
     {
     public:
-        auto rows() const { return size(); }
-        decltype(auto) row(unsigned v) { return KtRange(at(v).begin(), static_cast<unsigned>(at(v).size())); }
-        decltype(auto) row(unsigned v) const { return KtRange(at(v).cbegin(), static_cast<unsigned>(at(v).size())); }
+        using super_ = std::vector<row_type<EDGE_TYPE>>;
+
+        auto rows() const { return super_::size(); }
+
+        decltype(auto) row(unsigned v) { 
+            return KtRange(super_::at(v).begin(), 
+            static_cast<unsigned>(super_::at(v).size())); 
+        }
+
+        decltype(auto) row(unsigned v) const { 
+            return KtRange(super_::at(v).cbegin(), 
+            static_cast<unsigned>(super_::at(v).size())); 
+        }
     };
 }
 
@@ -42,25 +52,30 @@ public:
     static_assert(std::is_same_v<kPrivate::underly_edge_t<EDGE_TYPE>, underly_edge_t>, "edge type mismatch");
     static_assert(edge_traits_helper<edge_traits<underly_edge_t>>::has_to, "edge type construct error");
 
+    using super_::E_;
+    using super_::adjMat_;
+    using super_::order;
+    using super_::outedges;
+
 
     KtAdjGraphSparseImpl() = default;
 
-    // ÖØÖÃÍ¼Îªnv¶¥µã£¬
+    // é‡ç½®å›¾ä¸ºnvé¡¶ç‚¹.
     void reset(unsigned nv) {
         E_ = 0;
         adjMat_.clear(); adjMat_.resize(nv);
         if constexpr (!std::is_void_v<vertex_type>)
-            vertexes_.resize(nv);
+            super_::vertexes_.resize(nv);
     }
 
-    // Ô¤Áônv¸ö¶¥µãºÍneÌõ±ßµÄ´æ´¢.
+    // é¢„ç•™nvä¸ªé¡¶ç‚¹å’Œneæ¡è¾¹çš„å­˜å‚¨.
     void reserve(unsigned nv, unsigned ne) {
         adjMat_.reserve(nv);
         if constexpr (!std::is_void_v<vertex_type>)
-            vertexes_.reserve(nv);
+            super_::vertexes_.reserve(nv);
     }
 
-    // ¶Ô¶¥µãvÔ¤ÁôneÌõ±ßµÄ´æ´¢.
+    // å¯¹é¡¶ç‚¹vé¢„ç•™neæ¡è¾¹çš„å­˜å‚¨.
     void reserveEdges(unsigned v, unsigned ne) {
         adjMat_[v].reserve(ne);
     }
@@ -76,16 +91,16 @@ public:
         && std::is_convertible_v<T, vertex_type>, bool> = false>
     unsigned addVertex(const T& v) {
         adjMat_.push_back(kPrivate::row_type<edge_type>());
-        vertexes_.push_back(vertex_type(v));
-        return vertexes_.size();
+        super_::vertexes_.push_back(vertex_type(v));
+        return super_::vertexes_.size();
     }
 
     template<typename T, std::enable_if_t<!std::is_void_v<T>
         && std::is_same_v<T, vertex_type>, bool> = false>
     unsigned addVertex(T&& v) {
         adjMat_.push_back(kPrivate::row_type<edge_type>());
-        vertexes_.push_back(std::move(v));
-        return vertexes_.size();
+        super_::vertexes_.push_back(std::move(v));
+        return super_::vertexes_.size();
     }
 
 
@@ -99,40 +114,40 @@ public:
     }
 
 
-    // É¾³ı¶¥µãv
-    // µ÷ÓÃ¸Ãº¯ÊıÇ°£¬È·±£ÒÑÉ¾³ıvÏà½ÓµÄËùÓĞ±ß
+    // åˆ é™¤é¡¶ç‚¹v
+    // è°ƒç”¨è¯¥å‡½æ•°å‰ï¼Œç¡®ä¿å·²åˆ é™¤vç›¸æ¥çš„æ‰€æœ‰è¾¹
     void eraseVertex(unsigned v) {
         assert(v < order() && adjMat_[v].empty());
 
         adjMat_.erase(std::next(adjMat_.begin(), v));
 
         if constexpr (!std::is_void_v<vertex_type>)
-            vertexes_.erase(std::next(vertexes_.begin(), v));
+            super_::vertexes_.erase(std::next(super_::vertexes_.begin(), v));
     }
 
-    // É¾³ı¶¥µãvµÄ³ö±ße
+    // åˆ é™¤é¡¶ç‚¹vçš„å‡ºè¾¹e
     template<bool dummy = false>
     edge_iter eraseEdge(unsigned v, edge_iter e) {
-        assert(e >= super_::outedges(v).begin() && e < super_::outedges(v).end());
+        assert(e >= outedges(v).begin() && e < outedges(v).end());
         if constexpr (!dummy) --E_;
 
         return adjMat_[v].erase(e);
     }
 
-    // const_edge_iter°æ±¾
+    // const_edge_iterç‰ˆæœ¬
     template<bool dummy = false>
     edge_iter eraseEdge(unsigned v, const_edge_iter e) {
-        assert(e >= super_::outedges(v).cbegin() && e < super_::outedges(v).cend());
+        assert(e >= outedges(v).cbegin() && e < outedges(v).cend());
         if constexpr (!dummy) --E_;
 
         return adjMat_[v].erase(e);
     }
 
 
-    // É¾³ıfirstµ½lastÖ®¼äµÄ±ß
+    // åˆ é™¤firståˆ°lastä¹‹é—´çš„è¾¹
     template<bool dummy = false>
     edge_iter eraseEdges(unsigned v, edge_iter first, edge_iter last) {
-        assert(first >= super_::outedges(v).begin() && last <= super_::outedges(v).end());
+        assert(first >= outedges(v).begin() && last <= outedges(v).end());
 
         if constexpr (!dummy) 
             E_ -= static_cast<decltype(E_)>(std::distance(first, last));

@@ -87,6 +87,7 @@ template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtMstPrim : public KtMst<GRAPH, WEIGHTOR>
 {
     using super_ = KtMst<GRAPH, WEIGHTOR>;
+    using typename super_::weight_type;
     using super_::mst_;
     using super_::dist_;
 
@@ -140,7 +141,7 @@ class KtMstKruskal : public KtMst<GRAPH, WEIGHTOR>
 
 public:
     KtMstKruskal(const GRAPH& g) : super_{g} {
-        auto all_edges = edges(g);
+        auto all_edges = super_::edges(g);
 
         // 降序排序，权值最小的边在尾部，方便出栈
         std::sort(std::begin(all_edges), std::end(all_edges),
@@ -181,9 +182,9 @@ public:
         assert(mst_.size() == 0);
 
         const unsigned V = g.order();
-        auto edges = this->edges(g);
+        auto edges = super_::edges(g);
         unsigned N; // 有效边数量
-        std::vector<const KpEdge_*> b;
+        std::vector<const typename super_::KpEdge_*> b;
         union_find_set uf(V);
 
         // 从单顶点子树开始
@@ -204,8 +205,10 @@ public:
 
             // 将存储在b中的最小跨边，按照查并集的模式添加到mst。
             for(unsigned h = 0; h < V; h++)
-                if(b[h] != nullptr && uf.unite(b[h]->from, b[h]->to)) 
-                    mst_.push_back({ b[h]->from, b[h]->to }), dist_ = WEIGHTOR{}.acc(dist_, b[h]->wt);
+                if(b[h] != nullptr && uf.unite(b[h]->from, b[h]->to)) {
+                    mst_.push_back(std::pair<unsigned, unsigned>(b[h]->from, b[h]->to));
+                    dist_ = WEIGHTOR{}.acc(dist_, b[h]->wt);
+                }
         }
     }
 };

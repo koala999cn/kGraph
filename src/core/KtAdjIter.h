@@ -90,7 +90,7 @@ public:
                         while ((const edge_type&)(*edges.begin()) != (const edge_type&)(*range_.begin()))
                             ++edges;
                     assert((const edge_type&)(*edges.begin()) == (const edge_type&)(*range_.begin()));
-                    graph_.eraseEdge<true>(to(), edges.begin());
+                    graph_.template eraseEdge<true>(to(), edges.begin());
 
                     if constexpr (has_outdegree_v<underly_vertex_t>)
                         vertex_traits<underly_vertex_t>::outdegree(graph_.vertexAt(to()))--;

@@ -16,6 +16,7 @@ namespace kPrivate
 		using const_outside_value_t = std::add_const_t<outside_value_t>;
 		using inside_value_t = INSIDE_TYPE;
 		using const_inside_value_t = std::add_const_t<inside_value_t>;
+		using super_::inside;
 
 		KtHolder2Impl_() : oval_{}, super_{} {}
 		KtHolder2Impl_(const KtHolder2Impl_& h) : oval_(h.oval_), super_{h} {}
@@ -74,6 +75,7 @@ namespace kPrivate
 		using const_outside_value_t = std::add_const_t<outside_value_t>;
 		using inside_value_t = INSIDE_TYPE;
 		using const_inside_value_t = std::add_const_t<inside_value_t>;
+		using super_::inside;
 
 		KtHolder2Impl_() = default;
 		KtHolder2Impl_(const KtHolder2Impl_& h) = default;

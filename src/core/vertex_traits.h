@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include "../base/KtHolder.h"
 #include "../base/traits_helper.h"
 

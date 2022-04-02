@@ -18,7 +18,7 @@ bool has_self_loop(const GRAPH& g)
 template<typename GRAPH>
 void erase_self_loop(GRAPH& g) 
 {
-    auto V = order();
+    auto V = g.order();
     for(decltype(V) i = 0; i < V; i++)
         if(g.hasEdge(i, i))
             g.eraseEdge(i, i); 

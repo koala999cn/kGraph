@@ -9,7 +9,8 @@
 template<typename GRAPH>
 void dump(const GRAPH& g, const char* path)
 {
-    dump(g, std::ofstream(path));
+    std::ofstream of(path);
+    dump(g, of);
 }
 
 

@@ -18,6 +18,11 @@ public:
     using edge_iter = typename graph_traits<super_>::edge_iter;
     inline constexpr static const EDGE_TYPE& null_edge = edge_traits<EDGE_TYPE>::null_edge;
 
+    using super_::E_;
+    using super_::adjMat_;
+    using super_::order;
+    using super_::outedges;
+
 
     KtAdjGraphDenseImpl() = default;
 
@@ -26,14 +31,14 @@ public:
         E_ = 0;
         adjMat_.resize(nv, nv, null_edge);
         if constexpr (!std::is_void_v<vertex_type>)
-            vertexes_.resize(nv);
+            super_::vertexes_.resize(nv);
     }
 
     // 预留nv个顶点和ne条边的存储.
     void reserve(unsigned nv, unsigned ne) { 
         adjMat_.reserve(nv, ne);
         if constexpr (!std::is_void_v<vertex_type>)
-            vertexes_.reserve(nv);
+            super_::vertexes_.reserve(nv);
     }
 
     // 对顶点v预留ne条边的存储.
@@ -51,9 +56,9 @@ public:
     unsigned addVertex(const T& v) {
         adjMat_.appendRow(null_edge);
         adjMat_.appendCol(null_edge);
-        vertexes_.push_back(vertex_type(v));
+        super_::vertexes_.push_back(vertex_type(v));
 
-        return static_cast<unsigned>(vertexes_.size());
+        return static_cast<unsigned>(super_::vertexes_.size());
     }
 
     template<typename T, std::enable_if_t<!std::is_void_v<T>
@@ -61,9 +66,9 @@ public:
     unsigned addVertex(T&& v) {
         adjMat_.appendRow(null_edge);
         adjMat_.appendCol(null_edge);
-        vertexes_.push_back(std::move(v));
+        super_::vertexes_.push_back(std::move(v));
 
-        return static_cast<unsigned>(vertexes_.size());
+        return static_cast<unsigned>(super_::vertexes_.size());
     }
 
         
@@ -89,13 +94,13 @@ public:
         adjMat_.eraseRow(v), adjMat_.eraseCol(v);
 
         if constexpr (!std::is_void_v<vertex_type>)
-            vertexes_.erase(std::next(vertexes_.begin(), v));
+            super_::vertexes_.erase(std::next(super_::vertexes_.begin(), v));
     }
 
     // 删除顶点v的出边e
     template<bool dummy = false>
     edge_iter eraseEdge(unsigned v, edge_iter pos) {
-        assert(pos >= super_::outedges(v).begin() && pos < super_::outedges(v).end());
+        assert(pos >= outedges(v).begin() && pos < outedges(v).end());
         assert(*pos != null_edge);
         *pos = null_edge;
         if constexpr (!dummy) --E_;
@@ -105,7 +110,7 @@ public:
 
     template<bool dummy = false>
     edge_iter eraseEdges(unsigned v, edge_iter first, edge_iter last) {
-        assert(first >= super_::outedges(v).begin() && last <= super_::outedges(v).end());
+        assert(first >= outedges(v).begin() && last <= outedges(v).end());
 
         for (; first != last; ++first)
             if (*first != null_edge) {
