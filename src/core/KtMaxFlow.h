@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "KtWeightor.h"
 #include "KtShortestPath.h"
+#include "KtBfsIter.h"
 #include "../util/copy.h"
 #include "../GraphX.h"
 
@@ -25,6 +26,7 @@ protected:
     using flow_type = typename WEIGHTOR::weight_type;
     using RGRAPH = DigraphSx<flow_type>; // 余留网类型
 
+    static_assert(std::is_integral_v<flow_type>, "max flow algorithm only support integral weight");
 
     // 对输入g的限制：
     //   1. g为st网，即有且仅有1个源点、1个汇点；
@@ -85,6 +87,18 @@ public:
     // 返回顶点v的净流量 = 流入量 - 流出量 
     auto netflow(unsigned v) const {
         return inflow(v) - outflow(v);
+    }
+
+
+    bool check(unsigned s, unsigned t) const {
+        if (outflow(s) != inflow(t))
+            return false;
+
+        for (unsigned v = 0; v < graph_.order(); v++)
+            if (v != s && v != t && netflow(v) != 0)
+                return false;
+
+        return true;
     }
 
 
@@ -277,7 +291,7 @@ public:
 //    1. 选择一个活动顶点后，持续选择它的合格边，直至该顶点变为非活动或再无合格边为止。
 //    2. 每次尽可能压入多的流量。
 
-// 以下是一个基于顶点算法的实现，并进一步具体化选项：
+// KtMaxFlowPre是一个基于顶点算法的实现，并进一步具体化选项：
 //    1. 使用FIFO队列依序选择活动顶点。
 //    2. 源点高度初始化为V，其他为0。
 
