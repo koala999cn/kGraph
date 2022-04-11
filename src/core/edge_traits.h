@@ -15,7 +15,7 @@ struct edge_traits
 	template<typename T = edge_type, typename = std::enable_if_t<!std::is_const_v<T>>>
 	static weigth_type& weight(edge_type& edge) { return edge; }
 
-	inline constexpr static const edge_type null_edge = {};
+	inline static const edge_type null_edge = {};
 };
 
 
