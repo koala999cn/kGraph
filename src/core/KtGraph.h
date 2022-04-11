@@ -168,8 +168,7 @@ public:
 	}
 
 
-	// 仅对单边图有效
-	template<bool dummy = !multiEdges, typename = std::enable_if_t<dummy>>
+	// 对多边图，返回第一条边
 	const edge_type& getEdge(unsigned from, unsigned to) const {
 		assert(hasEdge(from, to));
 		auto edges = this->edges(from, to);
