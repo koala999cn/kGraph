@@ -60,7 +60,7 @@ public:
 
 
     // get the value of current edge
-    const_deref_type edge() const { return *range_; }
+    const edge_type& edge() const { return *range_; }
 
     // reset the value of current edge
     void reedge(const edge_type& val) {
