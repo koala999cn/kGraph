@@ -1,4 +1,5 @@
 #include <ostream>
+#include "../base/traits_helper.h"
 
 
 // dump graph "g" to file "path"
@@ -14,8 +15,9 @@ void dump(const GRAPH& g, std::ostream& os)
                 continue;
 
             os << "(" << i << ", " << j;
-            for (; !r.empty(); ++r)
-                os << ", " << *r;
+            if constexpr (has_operator_output<decltype(os), decltype(r)>::value)
+                for (; !r.empty(); ++r)
+                    os << ", " << *r;
             os << ") ";
         }
 
