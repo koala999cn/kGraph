@@ -40,7 +40,7 @@ public:
         if constexpr (GRAPH::isDense())
             return static_cast<unsigned>(std::distance(graph_.outedges(from_).begin(), range_.begin()));
         else
-            return edge_traits<underly_edge_t>::to(edge());           
+            return edge_traits<underly_edge_t>::to(*range_);
     }
 
     unsigned operator*() const { return to(); }
