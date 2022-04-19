@@ -7,12 +7,10 @@ class KtRange
 {
 public:
     using iterator = ITER_TYPE;
-    using const_iterator = std::add_const_t<iterator>;
-    using element_type = typename std::iterator_traits<iterator>::value_type;
+    using const_iterator = ITER_TYPE; // std::add_const_t<iterator>;
+    using element_type = decltype(*std::declval<iterator>());
     using const_element_type = std::add_const_t<element_type>;
     using value_type = std::decay_t<element_type>;
-    using reference = element_type&;
-    using const_reference = const element_type&;
     constexpr static bool is_const = std::is_const_v<element_type>;
 
 
