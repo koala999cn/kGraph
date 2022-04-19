@@ -8,12 +8,12 @@ template<typename EDGE_TYPE>
 struct edge_traits
 {
 	using edge_type = EDGE_TYPE;
-	using weigth_type = EDGE_TYPE;
+	using weight_type = EDGE_TYPE;
 
-	static weigth_type weight(const edge_type& edge) { return edge; }
+	static weight_type weight(const edge_type& edge) { return edge; }
 
 	template<typename T = edge_type, typename = std::enable_if_t<!std::is_const_v<T>>>
-	static weigth_type& weight(edge_type& edge) { return edge; }
+	static weight_type& weight(edge_type& edge) { return edge; }
 
 	inline static const edge_type null_edge = {};
 };
