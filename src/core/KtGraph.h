@@ -148,7 +148,7 @@ public:
 			
 			static_assert(has_to_v<underly_edge_t>, "edge missing property of 'to'");
 
-			auto pred =	[to](typename decltype(r)::const_reference e) {
+			auto pred =	[to](typename decltype(r)::const_element_type e) {
 				    return to == edge_traits<underly_edge_t>::to(e); 
 			};
 
@@ -246,7 +246,7 @@ public:
 		}
 		else { 
 
-			auto pred = [to](typename decltype(r)::const_reference e) {
+			auto pred = [to](typename decltype(r)::const_element_type e) {
 					return to == edge_traits<underly_edge_t>::to(e); 
 			};
 
