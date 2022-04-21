@@ -8,6 +8,10 @@
 #include "KtAdjIter.h"
 
 
+// 实现图基本操作的封装，统一处理digraph, multiEdges, alwaysSorted等配置项，以及
+// 边和顶点对象可能内置的to、outdegree等属性，确保底层只需专注数据结构，不用关心
+// 选项配置和内置属性的更新
+
 namespace kPrivate
 {
 	template<bool reshapable, bool immutable>
