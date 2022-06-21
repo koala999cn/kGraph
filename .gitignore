@@ -1,7 +1,9 @@
 /bin
+/obj
 /.vscode
 /.vs
 /TODO
+/Debug
 *.code-workspace
 *.vsd
 *.opensdf
