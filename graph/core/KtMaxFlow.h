@@ -220,7 +220,7 @@ public:
         using weightor = KtWeightorMax<KtWeightSelf<flow_type>, adder>;
 
         while (true) {
-            KtSptPfs<RGRAPH, weightor> pfs(rg_, s);
+            KtSsptPfs<RGRAPH, weightor> pfs(rg_, s);
             auto path = pfs.pathR(t);
             if (path.size() < 2)
                 break;
@@ -255,7 +255,7 @@ public:
         using weightor = KtWeightorMin<KtWeightUnit<flow_type>, KtAdder<typename KtWeightUnit<flow_type>::weight_type>>;
 
         while (true) {
-            KtSptPfs<RGRAPH, weightor> bfs(rg_, s);
+            KtSsptPfs<RGRAPH, weightor> bfs(rg_, s);
             auto path = bfs.pathR(t);
             if (path.size() < 2)
                 break;

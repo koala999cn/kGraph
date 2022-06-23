@@ -25,7 +25,7 @@ bool hasNegWt(const GRAPH& g)
 template<typename GRAPH>
 bool hasNegLoop(const GRAPH& g)
 {
-    KtAllSptFloyd<GRAPH> floyd(g);
+    KtFsptFloyd<GRAPH> floyd(g);
     for (unsigned i = 0; i < g.order(); i++)
         if (floyd.distance(i, i) < 0)
             return true;
@@ -53,13 +53,13 @@ void shortest_path_test_(const GRAPH& g)
 
     bool hasNegWt = ::hasNegWt<GRAPH, WEIGHTOR>(g);
     bool isDag = !has_loop(g);
-    KtAllSptFloyd<GRAPH, WEIGHTOR> floyd(g);
+    KtFsptFloyd<GRAPH, WEIGHTOR> floyd(g);
 
     
     printf("      floyd vs. bellman-ford");
     fflush(stdout);
     for (unsigned i = 0; i < g.order(); i++)
-        equal_test(g, i, floyd, KtSptBellmanFord<GRAPH, WEIGHTOR>(g, i));
+        equal_test(g, i, floyd, KtSsptBellmanFord<GRAPH, WEIGHTOR>(g, i));
     printf("  > passed\n"); fflush(stdout);
 
 
@@ -67,14 +67,14 @@ void shortest_path_test_(const GRAPH& g)
         printf("      floyd vs. dijkstra");
         fflush(stdout);
         for (unsigned i = 0; i < g.order(); i++)
-            equal_test(g, i, floyd, KtSptDijkstra<GRAPH, WEIGHTOR>(g, i));
+            equal_test(g, i, floyd, KtSsptDijkstra<GRAPH, WEIGHTOR>(g, i));
         printf("  > passed\n"); fflush(stdout);
 
 
         printf("      floyd vs. pfs");
         fflush(stdout);
         for (unsigned i = 0; i < g.order(); i++)
-            equal_test(g, i, floyd, KtSptPfs<GRAPH, WEIGHTOR>(g, i));
+            equal_test(g, i, floyd, KtSsptPfs<GRAPH, WEIGHTOR>(g, i));
         printf("  > passed\n"); fflush(stdout);
     }
 
@@ -82,7 +82,7 @@ void shortest_path_test_(const GRAPH& g)
     printf("      floyd vs. bfs");
     fflush(stdout);
     for (unsigned i = 0; i < g.order(); i++) 
-        equal_test(g, i, floyd, KtSptBfs<GRAPH, WEIGHTOR>(g, i));
+        equal_test(g, i, floyd, KtSsptBfs<GRAPH, WEIGHTOR>(g, i));
     printf("  > passed\n"); fflush(stdout);
 
 
@@ -98,13 +98,13 @@ void shortest_path_test_(const GRAPH& g)
         printf("      floyd vs. ts(dag)");
         fflush(stdout);
         for (unsigned i = 0; i < g.order(); i++) 
-            equal_test(g, i, floyd, KtSptTs<GRAPH, WEIGHTOR>(g, i));
+            equal_test(g, i, floyd, KtSsptTs<GRAPH, WEIGHTOR>(g, i));
         printf("  > passed\n"); fflush(stdout);
 
 
         printf("      floyd vs. dfs(dag)");
         fflush(stdout);
-        KtAllSptDfs<GRAPH, WEIGHTOR> allDfs(g);
+        KtFsptDfs<GRAPH, WEIGHTOR> allDfs(g);
         for (unsigned v = 0; v < g.order(); v++)
             for (unsigned w = 0; w < g.order(); w++)
                 if (!almostEqual(floyd.distance(v, w), allDfs.distance(v, w)))
