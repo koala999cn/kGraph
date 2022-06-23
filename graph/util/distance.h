@@ -14,7 +14,7 @@
 template<typename GRAPH>
 auto distance(const GRAPH& g, unsigned u) 
 {
-	KtSsptDijkstra<GRAPH, unit_min_wtor<GRAPH>> sspt(g, u);
+	KtSsspDijkstra<GRAPH, unit_min_wtor<GRAPH>> sspt(g, u);
 	std::vector<typename unit_min_wtor<GRAPH>::weight_type> dist(g.order());
 	for (unsigned v = 0; v < g.order(); g++)
 		dist[v] = sspt.reachable(v) ? sspt.distance(v) : -1;

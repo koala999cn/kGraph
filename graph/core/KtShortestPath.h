@@ -25,16 +25,17 @@
 
 
 // 单源最短路径的基类：计算起始顶点v0（源点）到图g中其他各顶点的最短路径
-template<typename GRAPH, class WEIGHTOR, bool tracePath = true>
-class KtSsptAbstract
+// SSSP(Single Source Shortest Path)
+template<typename GRAPH, class WEIGHTOR>
+class KtSsspAbstract
 {
-    static_assert(GRAPH::isDigraph(), "KtSsptAbstract must be instantiated with Digraph.");
+    static_assert(GRAPH::isDigraph(), "KtSsspAbstract must be instantiated with Digraph.");
 
 public:
     using weight_type = typename WEIGHTOR::weight_type;
     using vertex_index_t = typename GRAPH::vertex_index_t;
 
-    KtSsptAbstract(const GRAPH& g, vertex_index_t v0) :
+    KtSsspAbstract(const GRAPH& g, vertex_index_t v0) :
         v0_(v0),
         spt_(g.order(), -1),
         dist_(g.order(), WEIGHTOR{}.worst_weight) {}
@@ -101,13 +102,13 @@ protected:
 // 处理DAG较有优势，貌似比TS方法还快
 // NOTE: 当有负环的时候，会陷入无限递归
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtSsptBfs : public KtSsptAbstract<GRAPH, WEIGHTOR>
+class KtSsspBfs : public KtSsspAbstract<GRAPH, WEIGHTOR>
 {
-    using super_ = KtSsptAbstract<GRAPH, WEIGHTOR>;
+    using super_ = KtSsspAbstract<GRAPH, WEIGHTOR>;
     using typename super_::vertex_index_t;
 
 public:
-    KtSsptBfs(const GRAPH& g, vertex_index_t v0) :super_(g, v0) {
+    KtSsspBfs(const GRAPH& g, vertex_index_t v0) :super_(g, v0) {
         bfs_(g, v0);
     }
 
@@ -128,13 +129,13 @@ private:
 
 // 速度比bfs还慢，慢很多，弃疗
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtSsptDfs : public KtSsptAbstract<GRAPH, WEIGHTOR>
+class KtSsspDfs : public KtSsspAbstract<GRAPH, WEIGHTOR>
 {
-    using super_ = KtSsptAbstract<GRAPH, WEIGHTOR>;
+    using super_ = KtSsspAbstract<GRAPH, WEIGHTOR>;
     using typename super_::vertex_index_t;
 
 public:
-    KtSsptDfs(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
+    KtSsspDfs(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
         dfs_(g, v0);
     }
 
@@ -158,15 +159,15 @@ private:
 // 可能会出现一条比之前更短的路径，这会破坏始终延着最短路径生长的准则
 // 也就是说，我们无法判断当前的最短路径是不是真的最短，因为后面出现的负权值可能会让其他路径更短
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtSsptDijkstra : public KtSsptAbstract<GRAPH, WEIGHTOR>
+class KtSsspDijkstra : public KtSsspAbstract<GRAPH, WEIGHTOR>
 {
-    using super_ = KtSsptAbstract<GRAPH, WEIGHTOR>;
+    using super_ = KtSsspAbstract<GRAPH, WEIGHTOR>;
     using typename super_::vertex_index_t;
     using super_::spt_;
     using super_::dist_;
 
 public:
-    KtSsptDijkstra(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
+    KtSsspDijkstra(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
 
         std::vector<bool> vis(g.order(), false); // 用于标记源点v0到顶点i的最短路径是否已计算
 
@@ -194,14 +195,14 @@ public:
 
 
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtSsptPfs : public KtSsptAbstract<GRAPH, WEIGHTOR>
+class KtSsspPfs : public KtSsspAbstract<GRAPH, WEIGHTOR>
 {
-    using super_ = KtSsptAbstract<GRAPH, WEIGHTOR>;
+    using super_ = KtSsspAbstract<GRAPH, WEIGHTOR>;
     using typename super_::vertex_index_t;
     using super_::dist_;
 
 public:
-    KtSsptPfs(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
+    KtSsspPfs(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
         using element_type = std::pair<vertex_index_t, typename WEIGHTOR::weight_type>;
         struct Comp {
             bool operator()(const element_type& a, const element_type& b) {
@@ -232,13 +233,13 @@ public:
 // 基于拓扑排序算法的单源最短路径实现，仅适用于DAG.
 // 运行速度没有想像中快，效率还比不上bfs方法
 template<typename DAG, class WEIGHTOR = default_wtor<DAG>>
-class KtSsptTs : public KtSsptAbstract<DAG, WEIGHTOR>
+class KtSsspTs : public KtSsspAbstract<DAG, WEIGHTOR>
 {
-    using super_ = KtSsptAbstract<DAG, WEIGHTOR>;
+    using super_ = KtSsspAbstract<DAG, WEIGHTOR>;
     using typename super_::vertex_index_t;
 
 public:
-    KtSsptTs(const DAG& g, vertex_index_t v0) : super_(g, v0) {
+    KtSsspTs(const DAG& g, vertex_index_t v0) : super_(g, v0) {
         assert(!has_loop(g));
         KtTopologySort<DAG> ts(g);
         auto j = ts.relabel(v0); // j之前的顶点可以忽略，因为按照拓扑排序，v0与它们没有可达路径
@@ -259,13 +260,13 @@ public:
 // 对于稠密图，其运行时间不比Floyd算法更好，Floyd算法则要找出全部最短路径，而不仅仅是单源。
 // 对于稀疏图，其运行时间最多比Floyd算法快V倍，但对于无负权值的图，其运行时间比Dijkstra算法慢约V倍。
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtSsptBellmanFord : public KtSsptAbstract<GRAPH, WEIGHTOR>
+class KtSsspBellmanFord : public KtSsspAbstract<GRAPH, WEIGHTOR>
 {
-    using super_ = KtSsptAbstract<GRAPH, WEIGHTOR>;
+    using super_ = KtSsspAbstract<GRAPH, WEIGHTOR>;
     using typename super_::vertex_index_t;
 
 public:
-    KtSsptBellmanFord(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
+    KtSsspBellmanFord(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
         std::queue<vertex_index_t> q;
         unsigned V = g.order();
         q.push(v0); q.push(V); // 标记值V将当前一批顶点与下一批顶点分隔，并使得可以在V遍处理后终止。
@@ -290,16 +291,17 @@ public:
 
 
 // 全源最短路径的基类：计算任意顶点到图中其他各顶点的最短路径
+// FSSP(Full Source Shortest Path)
 template<typename GRAPH, class WEIGHTOR>
-class KtFsptAbstract
+class KtFsspAbstract
 {
-    static_assert(GRAPH::isDigraph(), "KtFsptAbstract must be instantiated with Digraph.");
+    static_assert(GRAPH::isDigraph(), "KtFsspAbstract must be instantiated with Digraph.");
 
 public:
     using weight_type = typename WEIGHTOR::weight_type;
     using vertex_index_t = typename GRAPH::vertex_index_t;
 
-    KtFsptAbstract(const GRAPH& g) 
+    KtFsspAbstract(const GRAPH& g) 
         : spt_(g.order(), std::vector<vertex_index_t>(g.order(), -1)),
         dst_(g.order(), std::vector<weight_type>(g.order(), WEIGHTOR{}.worst_weight)) {}
 
@@ -358,15 +360,15 @@ protected:
 // NOTE: 该算法未对权值作任何假设，因此即使存在负权值也是有效的。
 // 如果不存在负环，则会计算出最短路径；否则，只能找出一条不包括负环的最短路径。
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtFsptFloyd : public KtFsptAbstract<GRAPH, WEIGHTOR>
+class KtFsspFloyd : public KtFsspAbstract<GRAPH, WEIGHTOR>
 {
-    using super_ = KtFsptAbstract<GRAPH, WEIGHTOR>;
+    using super_ = KtFsspAbstract<GRAPH, WEIGHTOR>;
     using typename super_::vertex_index_t;
     using super_::spt_;
     using super_::dst_;
 
 public:
-    KtFsptFloyd(const GRAPH& g) : super_(g) {
+    KtFsspFloyd(const GRAPH& g) : super_(g) {
 
         // 按边初始化spt_和dst_
         KtBfsIter<const GRAPH, true, true> iter(g, 0);
@@ -393,15 +395,15 @@ public:
 // 时间复杂度O(V*E)
 // 速度比TS方法快很多
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
-class KtFsptDfs : public KtFsptAbstract<GRAPH, WEIGHTOR>
+class KtFsspDfs : public KtFsspAbstract<GRAPH, WEIGHTOR>
 {
-    using super_ = KtFsptAbstract<GRAPH, WEIGHTOR>;
+    using super_ = KtFsspAbstract<GRAPH, WEIGHTOR>;
     using typename super_::vertex_index_t;
     using super_::spt_;
     using super_::dst_;
 
 public:
-    KtFsptDfs(const GRAPH& g) : super_(g), done_(g.order(), false) {
+    KtFsspDfs(const GRAPH& g) : super_(g), done_(g.order(), false) {
         assert(!has_loop(g));
 
         for (vertex_index_t v = 0; v < g.order(); v++)
