@@ -186,6 +186,7 @@
     <ClInclude Include="util\make_connect.h" />
     <ClInclude Include="util\make_st.h" />
     <ClInclude Include="util\minmax_degree.h" />
+    <ClInclude Include="util\radius.h" />
     <ClInclude Include="util\randgen.h" />
     <ClInclude Include="util\reachable.h" />
     <ClInclude Include="util\resort.h" />
