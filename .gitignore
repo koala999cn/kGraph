@@ -1,5 +1,6 @@
 /bin
 /obj
+/old
 /.vscode
 /.vs
 /TODO
