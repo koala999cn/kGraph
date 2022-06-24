@@ -175,6 +175,7 @@
     <ClInclude Include="GraphX.h" />
     <ClInclude Include="util\bipartite_match.h" />
     <ClInclude Include="util\copy.h" />
+    <ClInclude Include="util\diameter.h" />
     <ClInclude Include="util\distance.h" />
     <ClInclude Include="util\dump.h" />
     <ClInclude Include="util\eccentricity.h" />
