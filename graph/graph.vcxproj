@@ -177,6 +177,7 @@
     <ClInclude Include="util\copy.h" />
     <ClInclude Include="util\distance.h" />
     <ClInclude Include="util\dump.h" />
+    <ClInclude Include="util\eccentricity.h" />
     <ClInclude Include="util\feasible.h" />
     <ClInclude Include="util\inverse.h" />
     <ClInclude Include="util\is_connected.h" />
