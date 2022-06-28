@@ -12,3 +12,4 @@
 *.user
 *.vsd
 
+/test/graph/graph_dump.txt
