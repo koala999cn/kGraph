@@ -3,7 +3,7 @@
 
 
 template<typename GRAPH>
-bool has_self_loop(const GRAPH& g) 
+bool has_selfloop(const GRAPH& g) 
 {
     auto V = g.order();
     for(decltype(V) i = 0; i < V; i++) 
@@ -14,9 +14,17 @@ bool has_self_loop(const GRAPH& g)
 }
 
 
+// 自环<v, v>的数量
+template<typename GRAPH>
+unsigned selfloops(const GRAPH& g, unsigned v)
+{
+    return g.edges(v, v).size();
+}
+
+
 // 删除自环
 template<typename GRAPH>
-void erase_self_loop(GRAPH& g) 
+void erase_selfloop(GRAPH& g) 
 {
     auto V = g.order();
     for(decltype(V) i = 0; i < V; i++)
