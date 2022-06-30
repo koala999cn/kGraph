@@ -15,9 +15,14 @@ void dump(const GRAPH& g, std::ostream& os)
                 continue;
 
             os << "(" << i << ", " << j;
-            if constexpr (has_operator_output<decltype(os), decltype(r)>::value)
-                for (; !r.empty(); ++r)
-                    os << ", " << *r;
+            for (; !r.empty(); ++r) {
+                os << ", ";
+                if constexpr (has_operator_output<decltype(os), decltype(r)>::value)
+                    os << *r;
+                else
+                    os << "?"; // Êä³öÕ¼Î»·ûºÅ?
+            }
+                    
             os << ") ";
         }
 
