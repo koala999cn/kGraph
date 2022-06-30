@@ -8,9 +8,10 @@
 // 模板参数：
 //    -- stopAtPopping，若为true，则每个顶点出栈时迭代器暂停，用户有机会处理出栈顶点.
 //    -- fullGraph，参见KtBfsIter.
-//    -- modeEdge，参见KtBfsIter.
-// 当modeEdge为true， stopAtPopping为false时，则实质为边迭代器，起始顶点被跳过，已保证起始状态即为第一条边
-// 当modeEdge为true， stopAtPopping为true时，初始状态仍返回起始顶点，此时from()返回-1.
+//    -- modeEdge，迭代模式，false为顶点迭代模式，true为边迭代模式
+//    -- stopAtPopping，是否处理出栈情况
+// 边模式下，若stopAtPopping为false，初始状态即为有效边， 此时from()返回起始顶点
+// 边模式下，若stopAtPopping为true，初始状态仍返回起始顶点，此时from()返回-1，*操作符返回起始顶点.
 template<typename GRAPH, bool fullGraph = false, bool modeEdge = false, bool stopAtPopping = false>
 class KtDfsIter
 {
@@ -34,8 +35,8 @@ public:
     KtDfsIter(GRAPH& graph, vertex_index_t startVertex)
         : graph_(graph)
         , v_(null_vertex)
-        , pushOrd_(graph.order(), null_vertex)
-        , popOrd_(graph.order(), null_vertex)
+        , pushOrd_(graph.order(), -1)
+        , popOrd_(graph.order(), -1)
         , pushIdx_(0)
         , popIdx_(0) {
         if (startVertex != null_vertex) 
@@ -49,7 +50,7 @@ public:
         assert(!isEnd());
 
         if (isPopping()) { // 处理出栈顶点
-            assert(popOrd_[v_] == null_vertex);
+            assert(popOrd_[v_] == -1);
             popOrd_[v_] = popIdx_++;
             todo_.pop_back();
         }
@@ -60,6 +61,7 @@ public:
 
                 ++todo_.back();
             }
+
             if (isPushing()) {
                 pushOrd_[v_] = pushIdx_++;
                 todo_.push_back(adj_vertex_iter(graph_, v_));
@@ -82,6 +84,7 @@ public:
 
 
     // 返回边(from, to)的值
+    // TODO: 暂不支持修改权值。若支持，须同步更新medges_
     const_edge_ref edge() const {
         assert(!isEnd() && from() != null_vertex);
         return todo_.back().edge();
@@ -93,11 +96,11 @@ public:
 
     // 从顶点v开始接续进行广度优先遍历
     void start(vertex_index_t v) {
-        assert(isEnd() && pushOrd_[v] == null_vertex);
+        assert(isEnd() && pushOrd_[v] == -1);
         todo_.clear();
         todo_.push_back(adj_vertex_iter(graph_));
         v_ = v;
-        if (modeEdge && !stopAtPopping) 
+        if constexpr (modeEdge && !stopAtPopping) 
             ++(*this); // skip v0
     }
 
@@ -106,9 +109,13 @@ public:
         assert(!isEnd() && from() != null_vertex);
 
         if (isPopping()) { // 处理出栈顶点
-            assert(popOrd_[v_] == null_vertex);
+            assert(popOrd_[v_] == -1);
             popOrd_[v_] = popIdx_++;
             todo_.pop_back();
+        }
+        else {
+            if constexpr (trace_multi_edges)
+                markMultiEdge_();
         }
 
         todo_.back().erase();
@@ -130,20 +137,20 @@ public:
 
     // 树边，表示递归调用（即第一次访问该节点）
     bool isTree() const {
-        return pushOrd_[v_] == null_vertex;
+        return pushOrd_[v_] == -1;
     }
 
 
     // 回边，表示当前节点是前序节点的祖先
     bool isBack() const {
-        return !isTree() && !isPopping() && popOrd_[v_] == null_vertex;
+        return !isTree() && !isPopping() && popOrd_[v_] == -1;
     }
 
 
     // 下边/前边，表示当前节点是前序节点的子孙
     bool isDown() const {
         //return !isTree() && !isBack() && pushOrd_[**this] > pushOrd_[from()];
-        assert(pushOrd_[from()] != null_vertex);
+        assert(pushOrd_[from()] != -1);
         return static_cast<int>(pushOrd_[v_]) > static_cast<int>(pushOrd_[from()]);
     }
 
@@ -151,7 +158,7 @@ public:
     // 跨边，表示当前节点既不是前序节点的祖先，也不是子孙
     bool isCross() const {
         //return !isTree() && !isBack() && !isDown();
-        return GRAPH::isDigraph() && popOrd_[v_] != null_vertex; // 只有有向图才有跨边
+        return GRAPH::isDigraph() && popOrd_[v_] != -1; // 只有有向图才有跨边
     }
 
     // 当前节点是否正在入栈，对应于递归的入口
@@ -172,7 +179,7 @@ public:
 
 
     vertex_index_t firstUnvisited() const {
-        auto pos = std::find(pushOrd_.begin(), pushOrd_.end(), null_vertex);
+        auto pos = std::find(pushOrd_.begin(), pushOrd_.end(), -1);
         return pos == pushOrd_.end() ? null_vertex
             : static_cast<vertex_index_t>(std::distance(pushOrd_.begin(), pos));
     }
@@ -250,8 +257,10 @@ void KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::fixStack_()
 
         // 移除已结束的迭代器
         if (iter.isEnd()) {
-            if constexpr (stopAtPopping) 
-                break; // stop at popping
+            if constexpr (stopAtPopping) {
+                v_ = iter.from();
+                return; // stop at popping
+            }
  
             popOrd_[iter.from()] = popIdx_++;
             todo_.pop_back();
@@ -279,8 +288,8 @@ void KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::fixStack_()
         }
     }
     else {
-        auto& iter = todo_.back();
-        v_ = iter.isEnd() ? iter.from() : *iter;
+        assert(!todo_.back().isEnd());
+        v_ = *todo_.back();
     }
 }
 
@@ -288,21 +297,25 @@ void KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::fixStack_()
 template<typename GRAPH, bool fullGraph, bool modeEdge, bool stopAtPopping>
 bool KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::testSkip_() const
 {
-    auto& iter = todo_.back();
+    auto v = *todo_.back();
 
-    // 防止无向图的顶点回溯，即防止已遍历的无向边(v, w)再次通过(w, v)遍历
-    if (!GRAPH::isDigraph() && *iter == grandpa_())
-        if constexpr (trace_multi_edges)
-            return testMultiEdge_();
-        else
+    if constexpr (!modeEdge) // 对于顶点模式，每个顶点只遍历一次
+        return pushOrd_[v] != -1;
+
+    // 处理无向图的边迭代模式
+    if constexpr (!GRAPH::isDigraph()) {
+
+        if (popOrd_[v] != -1) // 对于无向图，若某顶点已出栈，则与之邻接的边必然已遍历
             return true;
 
-    if (modeEdge) {
-        if (!GRAPH::isDigraph() && popOrd_[*iter] != null_vertex)
-            return true; // 对于无向图，若某顶点已出栈，则与之邻接的边必然已遍历
+        if (v == grandpa_()) { // 防止无向图的顶点回溯，即防止已遍历的无向边(v, w)再次通过(w, v)遍历
+            if constexpr (trace_multi_edges)
+                if (!testMultiEdge_())
+                    return false;
+
+            return true;
+        }
     }
-    else if (pushOrd_[*iter] != null_vertex)
-        return true; // 跳过已遍历的顶点，确保每个顶点只遍历一次
 
     return false;
 }
