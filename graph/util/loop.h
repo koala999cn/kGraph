@@ -22,6 +22,22 @@ unsigned selfloops(const GRAPH& g, unsigned v)
 }
 
 
+template<typename GRAPH>
+std::pair<unsigned, unsigned> selfloops(const GRAPH& g)
+{
+    unsigned N(0), V(0);
+    for (decltype(g.order()) i = 0; i < g.order(); i++) {
+        auto n = selfloops(g, i);
+        if (n > 0) {
+            ++V;
+            N += n;
+        }
+    }
+
+    return { N, V };
+}
+
+
 // 删除自环
 template<typename GRAPH>
 void erase_selfloop(GRAPH& g) 
