@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <map>
 #include <assert.h>
 
 
@@ -20,19 +21,28 @@ public:
     using adj_vertex_iter = KtAdjIter<graph_type>;
     using const_edge_ref = decltype(std::declval<adj_vertex_iter>().edge());
     constexpr static vertex_index_t null_vertex = -1;
-    constexpr static bool trace_multi = !GRAPH::isDigraph() && GRAPH::isMultiEdges(); // 对于无向平行图，dfs须追踪平行边
+
+    constexpr static bool trace_multi_edges = !GRAPH::isDigraph() && GRAPH::isMultiEdges(); // 对于无向平行图，dfs须追踪平行边
+    using tracing_map = std::map<vertex_index_t, std::multimap<vertex_index_t, edge_type>>;
+    using tracing_type = std::conditional_t<trace_multi_edges, tracing_map, void*>;
+    using const_from_iter = typename tracing_map::const_iterator;
+    using const_to_iter = typename std::multimap<vertex_index_t, edge_type>::const_iterator;
 
 
     // graph -- 待遍历的图
     // startVertex -- 遍历的起始顶点，-1表示只构建迭代器，需要另外调用start方法开始遍历
     KtDfsIter(GRAPH& graph, vertex_index_t startVertex)
-        : graph_(graph),
-        v_(null_vertex),
-        pushOrd_(graph.order(), null_vertex),
-        popOrd_(graph.order(), null_vertex),
-        pushIdx_(0), popIdx_(0) {
+        : graph_(graph)
+        , v_(null_vertex)
+        , pushOrd_(graph.order(), null_vertex)
+        , popOrd_(graph.order(), null_vertex)
+        , pushIdx_(0)
+        , popIdx_(0) {
         if (startVertex != null_vertex) 
             start(startVertex);
+
+        if constexpr (trace_multi_edges)
+            collectMultiEdges_();
     }
 
     void operator++() {
@@ -44,8 +54,12 @@ public:
             todo_.pop_back();
         }
         else {
-            if (todo_.size() > 1)
+            if (todo_.size() > 1) {
+                if constexpr (trace_multi_edges) 
+                    markMultiEdge_();
+
                 ++todo_.back();
+            }
             if (isPushing()) {
                 pushOrd_[v_] = pushIdx_++;
                 todo_.push_back(adj_vertex_iter(graph_, v_));
@@ -175,7 +189,42 @@ private:
     // 步进或删除的后处理
     void fixStack_();
 
+    // 测试是否需要跳过当前顶点/边
     bool testSkip_() const;
+
+    // 搜集graph_中的所有平行边
+    template<bool dummy = trace_multi_edges, typename = std::enable_if_t<dummy>>
+    void collectMultiEdges_();
+      
+    // 标记平行边<from, to, wt>已遍历
+    template<bool dummy = trace_multi_edges, typename = std::enable_if_t<dummy>>
+    void markMultiEdge_();
+
+    // 测试平行边<from, to, wt>遍历状态，返回true表示已遍历
+    template<bool dummy = trace_multi_edges, typename = std::enable_if_t<dummy>>
+    bool testMultiEdge_() const;
+
+    // 辅助函数：定位当前边在graph_中的位置
+    template<bool dummy = trace_multi_edges, typename = std::enable_if_t<dummy>>
+    std::pair<const_from_iter, const_to_iter>  findMultiEdges_() const {
+        auto adj = todo_.back();
+        auto v = adj.from(), w = *adj;
+        if (v > w) std::swap(v, w);
+
+        auto iter = medges_.find(v);
+        if (iter == medges_.end())
+            return { iter, {} };
+
+        auto r = iter->second.equal_range(w);
+        auto pos = iter->second.cend();
+
+        if (r.first != r.second && r.first->first == w)
+            for (pos = r.first; pos != r.second; ++pos)
+                if (pos->second == adj.edge())
+                   break;
+
+        return { iter, pos };
+    }
 
 private:
     graph_type& graph_;
@@ -187,6 +236,8 @@ private:
 
     std::vector<unsigned> pushOrd_, popOrd_; // 用于记录各顶点的压栈/出栈顺序
     unsigned pushIdx_, popIdx_; // 当前压栈/出栈序号
+
+    tracing_type medges_; // 存储graph_所有未遍历的平行边
 };
 
 
@@ -239,9 +290,12 @@ bool KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::testSkip_() const
 {
     auto& iter = todo_.back();
 
-    // 防止无向图的顶点回溯
+    // 防止无向图的顶点回溯，即防止已遍历的无向边(v, w)再次通过(w, v)遍历
     if (!GRAPH::isDigraph() && *iter == grandpa_())
-        return true;
+        if constexpr (trace_multi_edges)
+            return testMultiEdge_();
+        else
+            return true;
 
     if (modeEdge) {
         if (!GRAPH::isDigraph() && popOrd_[*iter] != null_vertex)
@@ -251,4 +305,53 @@ bool KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::testSkip_() const
         return true; // 跳过已遍历的顶点，确保每个顶点只遍历一次
 
     return false;
+}
+
+
+template<typename GRAPH, bool fullGraph, bool modeEdge, bool stopAtPopping>
+template<bool dummy, typename>
+void KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::collectMultiEdges_()
+{
+    assert(medges_.empty());
+    for (vertex_index_t v = 0; v < graph_.order(); v++) {
+
+        auto& edgeMap = medges_[v];
+        for (adj_vertex_iter iter(graph_, v); !iter.isEnd(); ++iter)
+            if(*iter > v) // 只保存to顶点大于from顶点的边，忽略自环
+                edgeMap.insert({ *iter, iter.edge() });
+       
+        for (auto iter = edgeMap.cbegin(); iter != edgeMap.cend();) {
+            if (edgeMap.count(iter->first) == 1)
+                iter = edgeMap.erase(iter); // 删除非平行边
+            else
+                ++iter;
+        }
+
+        if (edgeMap.empty())
+            medges_.erase(v);
+    }
+}
+
+
+template<typename GRAPH, bool fullGraph, bool modeEdge, bool stopAtPopping>
+template<bool dummy, typename>
+void KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::markMultiEdge_()
+{
+    auto pos = findMultiEdges_();
+    if (pos.first != medges_.cend()
+        && pos.second != pos.first->second.cend()) {
+        unsigned v = pos.first->first;
+        auto iter = medges_[v].erase(pos.second);
+        if (iter == medges_[v].end())
+            medges_.erase(v);
+    }
+}
+
+
+template<typename GRAPH, bool fullGraph, bool modeEdge, bool stopAtPopping>
+template<bool dummy, typename>
+bool KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::testMultiEdge_() const
+{
+    auto pos = findMultiEdges_();
+    return pos.first == medges_.cend() || pos.second == pos.first->second.cend();
 }
