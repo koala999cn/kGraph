@@ -3,18 +3,29 @@
 #include "core/KtDfsIter.h"
 #include "util/randgen.h"
 #include "test_util.h"
+#include "util/loop.h"
 
 
 template<typename GRAPH>
 void dfs_test_(const GRAPH& g)
 {
-    printf("      normal mode");
+    printf("      vertex mode");
     fflush(stdout);
     KtDfsIter<const GRAPH, true> dfs1(g, 0);
     std::vector<unsigned> v;
     for (; !dfs1.isEnd(); ++dfs1) 
         v.push_back(*dfs1);
     if (v.size() != g.order())
+        test_failed(g);
+    printf("  > passed\n"); fflush(stdout);
+
+    printf("      vertex popping mode");
+    fflush(stdout);
+    KtDfsIter<const GRAPH, true, false, true> dfs3(g, 0);
+    v.clear();
+    for (; !dfs3.isEnd(); ++dfs3)
+        v.push_back(*dfs3);
+    if (v.size() != 2 * g.order())
         test_failed(g);
     printf("  > passed\n"); fflush(stdout);
 
@@ -25,23 +36,14 @@ void dfs_test_(const GRAPH& g)
     std::vector<std::pair<unsigned, unsigned>> e;
     for (; !dfs2.isEnd(); ++dfs2)
         e.push_back({ dfs2.from(), *dfs2 });
-    if (e.size() != g.size())
+    if (e.size() != g.size()) {
+        printf("  expected %d but got %d edges", g.size(), e.size());
         test_failed(g);
+    }
     for (auto i : e) {
         if (!g.hasEdge(i.first, i.second))
             test_failed(g);
     }
-    printf("  > passed\n"); fflush(stdout);
-
-
-    printf("      normal popping mode");
-    fflush(stdout);
-    KtDfsIter<const GRAPH, true, false, true> dfs3(g, 0);
-    v.clear();
-    for (; !dfs3.isEnd(); ++dfs3) 
-        v.push_back(*dfs3);
-    if (v.size() != 2 * g.order())
-        test_failed(g);
     printf("  > passed\n"); fflush(stdout);
 }
 
@@ -81,4 +83,19 @@ void dfs_test()
     printf("   random digraph V = %d, E = %d\n", rdg.order(), rdg.size());
     fflush(stdout);
     dfs_test_(rdg);
+
+    GraphPd<> rpg = randgen<GraphPd<>>(300, 30000);
+    auto sls = selfloops(rpg);
+    printf("   random parallel graph V = %d, E = %d, selfloops = %d/%d\n", 
+        rpg.order(), rpg.size(), sls.first, sls.second);
+    fflush(stdout);
+    dfs_test_(rpg);
+
+    DigraphPd<> rpdg = randgen<DigraphPd<>>(300, 30000);
+    sls = selfloops(rpdg);
+    printf("   random parallel digraph V = %d, E = %d, selfloops = %d/%d\n", 
+        rpdg.order(), rpdg.size(), sls.first, sls.second);
+    fflush(stdout);
+    dfs_test_(rpdg);
+
 }
