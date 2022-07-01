@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <map>
+#include <set>
 #include <assert.h>
 
 
@@ -24,10 +24,8 @@ public:
     constexpr static vertex_index_t null_vertex = -1;
 
     constexpr static bool trace_multi_edges = !GRAPH::isDigraph() && GRAPH::isMultiEdges(); // 对于无向平行图，dfs须追踪平行边
-    using tracing_map = std::map<vertex_index_t, std::multimap<vertex_index_t, edge_type>>;
-    using tracing_type = std::conditional_t<trace_multi_edges, tracing_map, void*>;
-    using const_from_iter = typename tracing_map::const_iterator;
-    using const_to_iter = typename std::multimap<vertex_index_t, edge_type>::const_iterator;
+    using tracing_element_t = std::tuple<vertex_index_t, vertex_index_t, const_edge_ref>;
+    using tracing_container_t = std::multiset<tracing_element_t>;
 
 
     // graph -- 待遍历的图
@@ -84,7 +82,7 @@ public:
 
 
     // 返回边(from, to)的值
-    // TODO: 暂不支持修改权值。若支持，须同步更新medges_
+    // TODO: 暂不支持修改权值。若支持，须同步更新pedges_
     const_edge_ref edge() const {
         assert(!isEnd() && from() != null_vertex);
         return todo_.back().edge();
@@ -213,24 +211,13 @@ private:
 
     // 辅助函数：定位当前边在graph_中的位置
     template<bool dummy = trace_multi_edges, typename = std::enable_if_t<dummy>>
-    std::pair<const_from_iter, const_to_iter>  findMultiEdges_() const {
+    typename tracing_container_t::const_iterator findMultiEdges_() const {
+
         auto adj = todo_.back();
         auto v = adj.from(), w = *adj;
         if (v > w) std::swap(v, w);
 
-        auto iter = medges_.find(v);
-        if (iter == medges_.end())
-            return { iter, {} };
-
-        auto r = iter->second.equal_range(w);
-        auto pos = iter->second.cend();
-
-        if (r.first != r.second && r.first->first == w)
-            for (pos = r.first; pos != r.second; ++pos)
-                if (pos->second == adj.edge())
-                   break;
-
-        return { iter, pos };
+        return pedges_.find({ v, w, adj.edge() });
     }
 
 private:
@@ -244,7 +231,7 @@ private:
     std::vector<unsigned> pushOrd_, popOrd_; // 用于记录各顶点的压栈/出栈顺序
     unsigned pushIdx_, popIdx_; // 当前压栈/出栈序号
 
-    tracing_type medges_; // 存储graph_所有未遍历的平行边
+    tracing_container_t pedges_; // 存储graph_所有未遍历的平行边
 };
 
 
@@ -325,24 +312,16 @@ template<typename GRAPH, bool fullGraph, bool modeEdge, bool stopAtPopping>
 template<bool dummy, typename>
 void KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::collectMultiEdges_()
 {
-    assert(medges_.empty());
-    for (vertex_index_t v = 0; v < graph_.order(); v++) {
-
-        auto& edgeMap = medges_[v];
-        for (adj_vertex_iter iter(graph_, v); !iter.isEnd(); ++iter)
-            if(*iter > v) // 只保存to顶点大于from顶点的边，忽略自环
-                edgeMap.insert({ *iter, iter.edge() });
-       
-        for (auto iter = edgeMap.cbegin(); iter != edgeMap.cend();) {
-            if (edgeMap.count(iter->first) == 1)
-                iter = edgeMap.erase(iter); // 删除非平行边
-            else
-                ++iter;
+    assert(pedges_.empty());
+    for (vertex_index_t v = 0; v < graph_.order(); v++) 
+        for (vertex_index_t w = v; w < graph_.order(); w++) {
+            auto r = graph_.edges(v, w);
+            if (r.size() > 1) {
+                for (; !r.empty(); ++r)
+                    pedges_.emplace(v, w, *r);
+            }
         }
 
-        if (edgeMap.empty())
-            medges_.erase(v);
-    }
 }
 
 
@@ -350,14 +329,9 @@ template<typename GRAPH, bool fullGraph, bool modeEdge, bool stopAtPopping>
 template<bool dummy, typename>
 void KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::markMultiEdge_()
 {
-    auto pos = findMultiEdges_();
-    if (pos.first != medges_.cend()
-        && pos.second != pos.first->second.cend()) {
-        unsigned v = pos.first->first;
-        auto iter = medges_[v].erase(pos.second);
-        if (iter == medges_[v].end())
-            medges_.erase(v);
-    }
+    auto it = findMultiEdges_();
+    if (it != pedges_.cend())
+        pedges_.erase(it);
 }
 
 
@@ -365,6 +339,6 @@ template<typename GRAPH, bool fullGraph, bool modeEdge, bool stopAtPopping>
 template<bool dummy, typename>
 bool KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::testMultiEdge_() const
 {
-    auto pos = findMultiEdges_();
-    return pos.first == medges_.cend() || pos.second == pos.first->second.cend();
+    auto it = findMultiEdges_();
+    return it == pedges_.cend();
 }
