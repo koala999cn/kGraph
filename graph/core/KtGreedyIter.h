@@ -67,7 +67,6 @@ public:
 
 
     // 返回边(from, to)的值
-    // TODO: 暂不支持修改权值。若支持，须同步更新pedges_
     const_edge_ref edge() const {
         assert(!isEnd());
         return graph_.edgeAt(std::get<1>(todo_.back()));
@@ -157,30 +156,32 @@ private:
     void markEdge_(unsigned edgeidx) {
         assert(!vedges_[edgeidx]);
 
-        const edge_type& wt = graph_.edgeAt(edgeidx);
         vedges_[edgeidx] = true; // 设置为已遍历
         auto edgefrom = from();
         auto edgeto = **this;
 
         // 对于无向图，还须标记反向边
         if constexpr (!flat_graph_t::isDigraph()) {
-            auto posbase = graph_.outedges(edgeto).begin();
-            auto idxbase = graph_.edgeIndex(edgeto);
-            auto edges = graph_.edges(edgeto, edgefrom);
-            assert(!edges.empty());
-            auto pos = edges.begin();
-            auto idx = idxbase + std::distance(posbase, pos); // from pos to edgeidx
+            if (edgefrom != edgeto) {
+                const edge_type& wt = graph_.edgeAt(edgeidx);
+                auto posbase = graph_.outedges(edgeto).begin();
+                auto idxbase = graph_.edgeIndex(edgeto);
+                auto edges = graph_.edges(edgeto, edgefrom);
+                assert(!edges.empty());
+                auto pos = edges.begin();
+                auto idx = idxbase + std::distance(posbase, pos); // from pos to edgeidx
 
-            if constexpr (flat_graph_t::isMultiEdges()) {
-                while (wt != *pos || vedges_[idx]) {
-                    ++edges;
-                    pos = edges.begin();
-                    idx = idxbase + std::distance(posbase, pos);
+                if constexpr (flat_graph_t::isMultiEdges()) {
+                    while (wt != *pos || vedges_[idx]) {
+                        ++edges;
+                        pos = edges.begin();
+                        idx = idxbase + std::distance(posbase, pos);
+                    }
                 }
-            }
 
-            assert(!vedges_[idx]);
-            vedges_[idx] = true;
+                assert(!vedges_[idx]);
+                vedges_[idx] = true;
+            }
         }
     }
 
