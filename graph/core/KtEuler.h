@@ -3,10 +3,11 @@
 #include "KtGreedyIter.h"
 #include "../util/is_connected.h"
 #include "../util/degree.h"
+#include "../util/underlying_graph.h"
 
 
 // 欧拉图判定和求解，实现
-
+// 参考'Graph Algorithms', 2nd Edition, Shimon Even, 2012
 /* 
  * 判定原则：
  * 
@@ -50,24 +51,62 @@ public:
 	// 返回0表示非欧拉图，返回1表示有欧拉环，返回2表示有欧拉路径
 	// @oddVertex: 若非nullptr，则返回第一个奇度顶点
 	int test(unsigned* oddVertex = nullptr) const {
-		if (!is_connected(g_))
-			return 0;
 
-		int odd(0); // 奇度顶点数
-		for (unsigned v = 0; v < g_.order(); v++) {
-			if (degree(g_, v) % 2) {
-				++odd;
-				if (oddVertex) {
-					*oddVertex = v;
-					oddVertex = nullptr;
+		if constexpr (GRAPH::isDigraph()) {
+			graph_of<flat_of<GRAPH, bool, void>> g;
+			underlying_graph(g_, g);
+			if (!is_connected(g))
+				return 0;
+
+			bool odd[2] = { false }; // odd[0]为true，表示检测到outdegree(a) = indegree(a)+1
+			                         // odd[1]为true，表示检测到outdegree(b) = indegree(b)-1
+
+			for (unsigned v = 0; v < g_.order(); v++) {
+				auto ideg = g_.indegree(v);
+				auto odeg = g_.outdegree(v);
+				if (odeg == ideg) continue;
+
+				if (odeg == ideg + 1) {
+					if (odd[0]) return 0;
+					odd[0] = true;
+					if (oddVertex) {
+						*oddVertex = v;
+						oddVertex = nullptr;
+					}
+				}
+				else if (odeg == ideg - 1) {
+					if (odd[1]) return 0;
+					odd[1] = true;
+				}
+				else {
+					return 0;
 				}
 			}
-			if (odd > 2) return 0;
+
+			if (odd[0] && odd[1]) return 2;
+			if (!odd[0] && !odd[1]) return 1;
+			return 0;
 		}
+		else {
+			if (!is_connected(g_))
+				return 0;
 
-		assert(odd != 1); // 无向图不可能只有1个奇度顶点
+			int odd(0); // 奇度顶点数
+			for (unsigned v = 0; v < g_.order(); v++) {
+				if (degree(g_, v) % 2) {
+					++odd;
+					if (oddVertex) {
+						*oddVertex = v;
+						oddVertex = nullptr;
+					}
+				}
+				if (odd > 2) return 0;
+			}
 
-		return odd == 0 ? 1 : 2;
+			assert(odd != 1); // 无向图不可能只有1个奇度顶点
+
+			return odd == 0 ? 1 : 2;
+		}
 	}
 
 
