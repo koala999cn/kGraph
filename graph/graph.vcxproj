@@ -27,7 +27,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -88,10 +88,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -159,9 +162,11 @@
     <ClInclude Include="core\KtCutPoints.h" />
     <ClInclude Include="core\KtDfsIter.h" />
     <ClInclude Include="core\KtDfsIterX.h" />
+    <ClInclude Include="core\KtEuler.h" />
     <ClInclude Include="core\KtFlatGraphBase.h" />
     <ClInclude Include="core\KtFlatGraphVectorImpl.h" />
     <ClInclude Include="core\KtGraph.h" />
+    <ClInclude Include="core\KtGreedyIter.h" />
     <ClInclude Include="core\KtMaxFlow.h" />
     <ClInclude Include="core\KtMinSpanTree.h" />
     <ClInclude Include="core\KtPfsIter.h" />
@@ -175,6 +180,7 @@
     <ClInclude Include="GraphX.h" />
     <ClInclude Include="util\bipartite_match.h" />
     <ClInclude Include="util\copy.h" />
+    <ClInclude Include="util\degree.h" />
     <ClInclude Include="util\diameter.h" />
     <ClInclude Include="util\distance.h" />
     <ClInclude Include="util\dump.h" />

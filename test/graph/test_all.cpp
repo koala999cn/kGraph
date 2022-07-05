@@ -17,10 +17,12 @@ extern void min_span_tree_test();
 extern void shortest_path_test();
 extern void maxflow_test();
 extern void resort_test();
+extern void euler_test();
 
 
 int main(int argc, char const *argv[])
 {
+    euler_test(); printf("\n");
     layout_test(); printf("\n");
     adj_iter_test(); printf("\n");
     bfs_test(); printf("\n");

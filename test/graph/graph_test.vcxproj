@@ -140,6 +140,7 @@
     <ClCompile Include="connected_component_test.cpp" />
     <ClCompile Include="cutpoints_test.cpp" />
     <ClCompile Include="dfs_test.cpp" />
+    <ClCompile Include="euler_test.cpp" />
     <ClCompile Include="graph_test_helper.h" />
     <ClCompile Include="max_flow_test.cpp" />
     <ClCompile Include="min_span_tree_test.cpp" />
