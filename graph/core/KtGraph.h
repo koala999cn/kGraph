@@ -55,23 +55,23 @@ template<typename GRAPH_IMPL, bool digraph, bool multiEdges = false, bool always
 class KtGraph : public GRAPH_IMPL
 {
 public:
-	using super_ = GRAPH_IMPL;
+	using graph_impl = GRAPH_IMPL;
 
 	// 导入类型
-	using vertex_type = typename super_::vertex_type;
-	using edge_type = typename super_::edge_type;
+	using vertex_type = typename graph_impl::vertex_type;
+	using edge_type = typename graph_impl::edge_type;
 
-	using underly_vertex_t = typename graph_traits<GRAPH_IMPL>::underly_vertex_t;
-	using underly_edge_t = typename graph_traits<GRAPH_IMPL>::underly_edge_t;
+	using underly_vertex_t = typename graph_traits<graph_impl>::underly_vertex_t;
+	using underly_edge_t = typename graph_traits<graph_impl>::underly_edge_t;
 
 	using vertex_index_t = unsigned;
 
 
 	// 导入函数
-	using super_::super_;
-	using super_::order;
-	using super_::size;
-	using super_::outedges;
+	using graph_impl::graph_impl;
+	using graph_impl::order;
+	using graph_impl::size;
+	using graph_impl::outedges;
 
 
 	constexpr static bool isDigraph() { return digraph; }
@@ -102,7 +102,7 @@ public:
 		else {
 			struct {
 				bool operator()(const edge_type& e) {
-					return super_::null_edge != e;
+					return graph_impl::null_edge != e;
 				}
 			} pred;
 
@@ -135,10 +135,10 @@ public:
 	}
 
 	auto edges(unsigned from, unsigned to) const {
-		decltype(auto) r = super_::outedges(from);
+		decltype(auto) r = graph_impl::outedges(from);
 		if constexpr (isDense()) {
 			auto first = std::next(r.begin(), to);
-			if (*first == super_::null_edge)
+			if (*first == graph_impl::null_edge)
 				return KtRange(first, 0);
 			else
 				return KtRange(first, 1);
@@ -210,7 +210,7 @@ protected:
 	template<typename VERTEX_TYPE = underly_vertex_t,
 		std::enable_if_t<has_outdegree_v<VERTEX_TYPE>, bool> = true>
 	auto outdegree_(unsigned v) const {
-		return vertex_traits<VERTEX_TYPE>::outdegree(super_::vertexAt(v));
+		return vertex_traits<VERTEX_TYPE>::outdegree(graph_impl::vertexAt(v));
 	}
 };
 
@@ -223,22 +223,22 @@ class KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 1>
 	: public KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 0>
 {
 public:
-	using super_ = KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 0>;
-	using typename super_::edge_type;
-	using typename super_::underly_edge_t;
-	using super_::edges;  // 导入const版本的edges
-	using super_::isDigraph;
-	using super_::isDense;
-	using super_::isAlwaysSorted;
-	using super_::isMultiEdges;
+	using graph_level_0 = KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 0>;
+	using typename graph_level_0::edge_type;
+	using typename graph_level_0::underly_edge_t;
+	using graph_level_0::edges;  // 导入const版本的edges
+	using graph_level_0::isDigraph;
+	using graph_level_0::isDense;
+	using graph_level_0::isAlwaysSorted;
+	using graph_level_0::isMultiEdges;
 
 
 	// 提供一个可写版本的edges实现
 	auto edges(unsigned from, unsigned to) {
-		decltype(auto) r = super_::outedges(from);
+		decltype(auto) r = graph_level_0::outedges(from);
 		if constexpr (isDense()) {
 			auto first = std::next(r.begin(), to);
-			if (*first == super_::null_edge)
+			if (*first == graph_level_0::null_edge)
 				return KtRange(first, 0);
 			else
 				return KtRange(first, 1);
@@ -268,7 +268,7 @@ public:
 	// 仅对多边图有效
 	template<bool dummy = !multiEdges, typename = std::enable_if_t<dummy>>
 	void setEdge(unsigned from, unsigned to, const edge_type& edge) {
-		assert(super_::hasEdge(from, to));
+		assert(graph_level_0::hasEdge(from, to));
 		auto edges = this->edges(from, to);
 		assert(edges.size() == 1);
 		*edges = edge;
@@ -280,19 +280,19 @@ public:
 	// 仅对多边图有效
 	template<bool dummy = multiEdges, typename = std::enable_if_t<dummy>>
 	void setEdge(unsigned from, unsigned to, const edge_type& curEdge, const edge_type& newEdge) {
-		assert(super_::hasEdge(from, to, curEdge));
+		assert(graph_level_0::hasEdge(from, to, curEdge));
 		decltype(auto) iter = getEdge_(from, to, curEdge);
 		*iter = newEdge;
 		if constexpr (!isDigraph())
 			if (from != to) {
-				assert(super_::hasEdge(to, from, curEdge));
+				assert(graph_level_0::hasEdge(to, from, curEdge));
 				decltype(auto) iter = getEdge_(to, from, curEdge);
 				*iter = newEdge;
 			}
 	}
 
 
-	using super_::getEdge;
+	using graph_level_0::getEdge;
 
 	// 对于有向单边图提供getEdge的左值接口，无向图则不行
 	// 因为无向图实际上保存着两条边，需要保持权值一致性
@@ -331,19 +331,19 @@ class KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 2>
 	: public KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 1>
 {
 public:
-	using super_ = KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 1>;
-	using typename super_::edge_type;
-	using underly_vertex_t = typename graph_traits<super_>::underly_vertex_t;
-	using underly_edge_t = typename graph_traits<super_>::underly_edge_t;
-	using edge_iter = typename graph_traits<super_>::edge_iter;
-	using const_edge_iter = typename graph_traits<super_>::const_edge_iter;
+	using graph_level_1 = KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 1>;
+	using typename graph_level_1::edge_type;
+	using underly_vertex_t = typename graph_traits<graph_level_1>::underly_vertex_t;
+	using underly_edge_t = typename graph_traits<graph_level_1>::underly_edge_t;
+	using edge_iter = typename graph_traits<graph_level_1>::edge_iter;
+	using const_edge_iter = typename graph_traits<graph_level_1>::const_edge_iter;
 
-	using super_::isDigraph;
-	using super_::isDense;
-	using super_::isAlwaysSorted;
-	using super_::isMultiEdges;	
-	using super_::reset;
-	using super_::order;
+	using graph_level_1::isDigraph;
+	using graph_level_1::isDense;
+	using graph_level_1::isAlwaysSorted;
+	using graph_level_1::isMultiEdges;
+	using graph_level_1::reset;
+	using graph_level_1::order;
 
 
 	KtGraph() = default;
@@ -354,7 +354,7 @@ public:
 
 
 	// addVertex直接使用基类的实现
-	using super_::addVertex;
+	using graph_level_1::addVertex;
 
 	void addEdge(unsigned from, unsigned to, const edge_type& edge) {
 		addEdge_(from, to, edge);
@@ -381,7 +381,7 @@ public:
 	}
 
 
-	using super_::eraseEdge;  // 导出基类的eraseEdge，KtAdjIter要用到
+	using graph_level_1::eraseEdge;  // 导出基类的eraseEdge，KtAdjIter要用到
 
 	// 删除from到to的所有边
 	void eraseEdge(unsigned from, unsigned to) {
@@ -396,17 +396,17 @@ public:
 	// 仅对多边图有效
 	template<bool dummy = multiEdges, typename = std::enable_if_t<dummy>>
 	void eraseEdge(unsigned v, unsigned w, const edge_type& val) {
-		assert(super_::hasEdge(v, w, val));
+		assert(graph_level_1::hasEdge(v, w, val));
 
-		auto pos = super_::getEdge_(v, w, val);
-		super_::eraseEdge(v, pos);
-		if constexpr (super_::vertexHasOutDegree_())
+		auto pos = graph_level_1::getEdge_(v, w, val);
+		graph_level_1::eraseEdge(v, pos);
+		if constexpr (graph_level_1::vertexHasOutDegree_())
 			outdegree_(v)--;
 
 		if constexpr (!isDigraph()) 
 			if (v != w) {
-				super_::template eraseEdge<true>(w, super_::getEdge_(w, v, val));
-				if constexpr (super_::vertexHasOutDegree_())
+				graph_level_1::template eraseEdge<true>(w, graph_level_1::getEdge_(w, v, val));
+				if constexpr (graph_level_1::vertexHasOutDegree_())
 					outdegree_(w)--;
 			}
 	}
@@ -419,7 +419,7 @@ public:
 				eraseEdgeIfExist_(v, u);
 		}
 		else {
-			decltype(auto) r = super_::outedges(v);
+			decltype(auto) r = graph_level_1::outedges(v);
 
 			std::set<unsigned> us; // 兼容类似flat图的边存储布局，先保存各条边的to顶点，而后再删除无向图(to, from)边
 								   // 如果先执行删除操作，可能会影响已在r中的迭代器
@@ -428,9 +428,9 @@ public:
 				for (auto& e : r)
 					us.insert(to_(e));
 
-			if constexpr (super_::vertexHasOutDegree_())
+			if constexpr (graph_level_1::vertexHasOutDegree_())
 				outdegree_(v) -= r.size();
-			super_::eraseEdges(v, r.begin(), r.end());
+			graph_level_1::eraseEdges(v, r.begin(), r.end());
 
 			if constexpr (!isDigraph())
 				for(auto u : us)
@@ -461,13 +461,13 @@ public:
 
 	void eraseVertex(unsigned v) {
 		eraseEdges(v);
-		super_::eraseVertex(v);
+		graph_level_1::eraseVertex(v);
 
 		// 调整各边的to值
 		// TODO: 考虑alwaysSorted优化
 		if constexpr (!isDense()) {
 			for (unsigned i = 0; i < order(); i++) {
-				decltype(auto) r = super_::outedges(i);
+				decltype(auto) r = graph_level_1::outedges(i);
 				for (auto& e : r) {
 					assert(to_(e) != v);
 					if (to_(e) > v) to_(e)--;
@@ -482,52 +482,52 @@ private:
 	// @dummy: 若为true，则表示添加的是无向图边的反向边
 	template<bool dummy = false>
 	void addEdge_(unsigned from, unsigned to, const edge_type& edge) {
-		decltype(auto) r = super_::outedges(from);
+		decltype(auto) r = graph_level_1::outedges(from);
 		if constexpr (isDense()) {
-			super_::template addEdge<dummy>(from, std::next(r.begin(), to), edge);
+			graph_level_1::template addEdge<dummy>(from, std::next(r.begin(), to), edge);
 		}
 		else if constexpr (!isAlwaysSorted()) {
 			static_assert(has_to_v<underly_edge_t>, "edge missing property of 'to'");
 
-			auto iter = super_::template addEdge<dummy>(from, r.end(), edge); // 若不排序，添加边到尾部
+			auto iter = graph_level_1::template addEdge<dummy>(from, r.end(), edge); // 若不排序，添加边到尾部
 			to_(*iter) = to;
 		}
 		else {
 			auto pos = std::lower_bound(r.begin(), r.end(), to, 
 				kPrivate::KpEdgeCompAllInOne<underly_edge_t>{});
-			auto iter = super_::template addEdge<dummy>(from, pos, edge);
+			auto iter = graph_level_1::template addEdge<dummy>(from, pos, edge);
 			to_(*iter) = to;
 		}
 
-		if constexpr (super_::vertexHasOutDegree_())
+		if constexpr (graph_level_1::vertexHasOutDegree_())
 			outdegree_(from)++;
 	}
 
 
 	template<bool dummy = false>
 	void eraseEdge_(unsigned from, unsigned to) {
-		auto edges = super_::edges(from, to);
+		auto edges = graph_level_1::edges(from, to);
 		assert(edges.size() > 0);
 			
 		if constexpr (!isMultiEdges()) {
 			assert(edges.size() == 1);
-			super_::template eraseEdge<dummy>(from, edges.begin());
+			graph_level_1::template eraseEdge<dummy>(from, edges.begin());
 
-			if constexpr (super_::vertexHasOutDegree_())
+			if constexpr (graph_level_1::vertexHasOutDegree_())
 				outdegree_(from)--;
 		}
 		else if constexpr (isAlwaysSorted()) {
-			super_::template eraseEdges<dummy>(from, edges.begin(), edges.end());
+			graph_level_1::template eraseEdges<dummy>(from, edges.begin(), edges.end());
 
-			if constexpr (super_::vertexHasOutDegree_())
+			if constexpr (graph_level_1::vertexHasOutDegree_())
 				outdegree_(from) -= edges.size();
 		}
 		else {// 未排序的多边，依次检查
 			do {
-				auto pos = super_::template eraseEdge<dummy>(from, edges.begin());	
-				auto end = super_::outedges(from).end();
+				auto pos = graph_level_1::template eraseEdge<dummy>(from, edges.begin());
+				auto end = graph_level_1::outedges(from).end();
 				edges.reset(pos, end);
-				if constexpr (super_::vertexHasOutDegree_())
+				if constexpr (graph_level_1::vertexHasOutDegree_())
 					outdegree_(from)--;
 
 				edges.meetCond_();
@@ -537,7 +537,7 @@ private:
 
 
 	void eraseEdgeIfExist_(unsigned from, unsigned to) {
-		if (!super_::edges(from, to).empty()) {
+		if (!graph_level_1::edges(from, to).empty()) {
 			eraseEdge_(from, to);
 			if constexpr (!isDigraph())
 				if(from != to )
@@ -563,6 +563,6 @@ private:
 	template<typename VERTEX_TYPE = underly_vertex_t,
 		std::enable_if_t<has_outdegree_v<VERTEX_TYPE>, bool> = true>
 	decltype(auto) outdegree_(unsigned v) {
-		return vertex_traits<VERTEX_TYPE>::outdegree(super_::vertexAt(v));
+		return vertex_traits<VERTEX_TYPE>::outdegree(graph_level_1::vertexAt(v));
 	}
 };

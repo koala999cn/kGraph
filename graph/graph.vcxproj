@@ -186,6 +186,7 @@
     <ClInclude Include="util\dump.h" />
     <ClInclude Include="util\eccentricity.h" />
     <ClInclude Include="util\feasible.h" />
+    <ClInclude Include="util\type_converter.h" />
     <ClInclude Include="util\inverse.h" />
     <ClInclude Include="util\is_connected.h" />
     <ClInclude Include="util\is_same.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="util\resort.h" />
     <ClInclude Include="util\sinks.h" />
     <ClInclude Include="util\sources.h" />
+    <ClInclude Include="util\underlying_graph.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

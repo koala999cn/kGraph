@@ -14,7 +14,6 @@ template<typename GRAPH>
 class KtGraphX : public GRAPH
 {
 public:
-	using super_ = GRAPH;
 	using graph_type = GRAPH;
 	using const_graph_type = std::add_const_t<graph_type>;
 
@@ -34,8 +33,8 @@ public:
 	using edge_iter = bfs_iter<true, true>;
 	using const_edge_iter = const_bfs_iter<true, true>;
 
-	using typename super_::vertex_index_t;
-	using super_::super_;
+	using typename graph_type::vertex_index_t;
+	using graph_type::graph_type;
 
 
 	auto adjIter(vertex_index_t s) {
@@ -49,23 +48,23 @@ public:
 
 	template<bool fullGraph, bool modeEdge>
 	auto bfsIter(vertex_index_t s) {
-		retrn bfs_iter<fullGraph, modeEdge>(*this, s);
+		return bfs_iter<fullGraph, modeEdge>(*this, s);
 	}
 
 	template<bool fullGraph, bool modeEdge>
 	auto bfsIter(vertex_index_t s) const {
-		retrn const_bfs_iter<fullGraph, modeEdge>(*this, s);
+		return const_bfs_iter<fullGraph, modeEdge>(*this, s);
 	}
 
 
 	template<bool fullGraph, bool modeEdge, bool stopAtPopping>
 	auto dfsIter(vertex_index_t s) {
-		retrn dfs_iter<fullGraph, modeEdge, stopAtPopping>(*this, s);
+		return dfs_iter<fullGraph, modeEdge, stopAtPopping>(*this, s);
 	}
 
 	template<bool fullGraph, bool modeEdge, bool stopAtPopping>
 	auto dfsIter(vertex_index_t s) const {
-		retrn const_dfs_iter<fullGraph, modeEdge, stopAtPopping>(*this, s);
+		return const_dfs_iter<fullGraph, modeEdge, stopAtPopping>(*this, s);
 	}
 
 
