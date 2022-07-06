@@ -7,21 +7,6 @@
 #include <sstream>
 
 
-std::string print_path(const std::vector<unsigned>& path)
-{
-    std::ostringstream oss;
-
-    for (auto v : path) 
-        oss << v << " - ";
-
-    auto s = oss.str();
-    if (!s.empty())
-        s.erase(s.size() - 3);
-
-    return s;
-}
-
-
 template<typename GRAPH>
 bool is_euler_path(const GRAPH& g, const std::vector<unsigned>& path)
 {

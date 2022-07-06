@@ -20,7 +20,7 @@ void make_euler(GRAPH& g, bool cycle)
 
 	assert(odds.size() % 2 == 0); // 奇数顶点的个数必为偶数
 
-	auto resid = cycle ? 0 : 2;
+	unsigned resid = cycle ? 0 : 2;
 	while (odds.size() > resid) {
 		g.addEdge(odds[odds.size() - 2], odds.back());
 		odds.pop_back(), odds.pop_back();
