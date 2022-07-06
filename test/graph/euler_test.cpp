@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "GraphX.h"
 #include "core/KtEuler.h"
+#include "util/degree.h"
+#include "util/make_euler.h"
 #include "test_util.h"
 #include <sstream>
 
@@ -20,6 +22,52 @@ std::string print_path(const std::vector<unsigned>& path)
 }
 
 
+template<typename GRAPH>
+bool is_euler_path(const GRAPH& g, const std::vector<unsigned>& path)
+{
+    std::vector<int> degs(g.order(), 0);
+    for (unsigned v = 0; v < g.order(); v++)
+        degs[v] = degree(g, v);
+
+    for (unsigned i = 1; i < path.size(); i++) {
+        if (!g.hasEdge(path[i - 1], path[i]))
+            return false;
+        --degs[path[i - 1]], --degs[path[i]];
+    }
+
+    for (auto d : degs)
+        if (d != 0) return false;
+
+    return true;
+}
+
+
+// r = 0，表示g为非欧拉图
+// r = 1，表示g存在欧拉环
+// r = 2，表示g存在欧拉路径
+template<typename GRAPH>
+void verify(const GRAPH& g, int r)
+{
+    unsigned v;
+    KtEuler euler(g);
+    if (euler.test(&v) != r)
+        test_failed(g);
+
+    if (r > 0) {
+        auto path = r == 1 ? euler.getCycle() : euler.getPath(v);
+        if(!is_euler_path(g, path))
+            test_failed(g);
+    }
+    else {
+        auto path = euler.getCycle();
+        if (is_euler_path(g, path))
+            test_failed(g);
+    }
+
+    printf("  > passed\n"); fflush(stdout);
+}
+
+
 void euler_test()
 {
     printf("euler test...\n");
@@ -34,10 +82,7 @@ void euler_test()
         g.addEdge(3, 4);
         printf("   seven bridges' graph V = %d, E = %d", g.order(), g.size());
         fflush(stdout);
-        KtEuler euler(g);
-        if (euler.test())
-            test_failed(g);
-        printf("  > passed\n"); fflush(stdout);
+        verify(g, 0);
     }
 
     {
@@ -47,11 +92,7 @@ void euler_test()
         g.addEdge(2, 2);
         printf("   specific graph with euler cycle V = %d, E = %d", g.order(), g.size());
         fflush(stdout);
-        KtEuler euler(g);
-        if (euler.test() != 1)
-            test_failed(g);
-        auto cycle = euler.getCycle();
-        printf("\n    %s  > passed\n", print_path(cycle).c_str()); fflush(stdout);
+        verify(g, 1);
     }
 
     {
@@ -61,14 +102,22 @@ void euler_test()
         g.addEdge(3, 4);
         printf("   specific graph with euler path V = %d, E = %d", g.order(), g.size());
         fflush(stdout);
-        KtEuler euler(g);
-        unsigned startV;
-        if (euler.test(&startV) != 2)
-            test_failed(g);
-        auto path = euler.getPath(startV);
-        printf("\n    %s  > passed\n", print_path(path).c_str()); fflush(stdout);
+        verify(g, 2);
     }
 
+    {
+        auto g = make_euler<GraphPi<>>(100, 10000, true);
+        printf("   random graph with euler cycle V = %d, E = %d", g.order(), g.size());
+        fflush(stdout);
+        verify(g, 1);
+    }
+
+    {
+        auto g = make_euler<GraphPi<>>(100, 10000, false);
+        printf("   random graph with euler path V = %d, E = %d", g.order(), g.size());
+        fflush(stdout);
+        verify(g, 2);
+    }
 
     {   // from https://www.geeksforgeeks.org/hierholzers-algorithm-directed-graph/ 
         DigraphPi<> g(7);
@@ -79,13 +128,8 @@ void euler_test()
         g.addEdge(4, 2), g.addEdge(4, 5);
         g.addEdge(5, 0);
         g.addEdge(6, 4);
-        // 0 - 6 - 4 - 5 - 0 - 1 - 2 - 3 - 4 - 2 - 0
         printf("   specific digraph with euler cycle V = %d, E = %d", g.order(), g.size());
         fflush(stdout);
-        KtEuler euler(g);
-        if (euler.test() != 1)
-            test_failed(g);
-        auto cycle = euler.getCycle();
-        printf("\n    %s  > passed\n", print_path(cycle).c_str()); fflush(stdout);
+        verify(g, 1);
     }
 }
