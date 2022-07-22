@@ -1,0 +1,1 @@
+基于kGraph模板库，参考htk和kaldi实现的hmm库，依赖Eigen作协方差矩阵运算。

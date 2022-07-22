@@ -13,3 +13,4 @@
 *.vsd
 
 /test/graph/graph_dump.txt
+/extend/hmm/Debug
