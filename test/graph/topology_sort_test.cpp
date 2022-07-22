@@ -15,8 +15,8 @@ void topology_sort_test_(const DAG& g)
     fflush(stdout);
     KtTopologySort<DigraphDi> ts(g);
     KtDfsIter<const DigraphDi, true, true> iter(g, 0);
-    while (!iter.isEnd()) { // è¿­ä»£æ¯æ¡æœ‰å‘è¾¹
-        if (ts.relabel(iter.from()) >= ts.relabel(*iter)) // å°ç¼–å·æŒ‡å‘å¤§ç¼–å·
+    while (!iter.isEnd()) { // µü´úÃ¿ÌõÓĞÏò±ß
+        if (ts.relabel(iter.from()) >= ts.relabel(*iter)) // Ğ¡±àºÅÖ¸Ïò´ó±àºÅ
             test_failed(g);
         ++iter;
     }
@@ -27,8 +27,8 @@ void topology_sort_test_(const DAG& g)
     fflush(stdout);
     KtTopologySortInv<DigraphDi> tsInv(g);
     KtDfsIter<const DigraphDi, true, true> iterInv(g, 0);
-    while (!iterInv.isEnd()) { // è¿­ä»£æ¯æ¡æœ‰å‘è¾¹
-        if (tsInv.relabel(iterInv.from()) <= tsInv.relabel(*iterInv)) // å¤§ç¼–å·æŒ‡å‘å°ç¼–å·
+    while (!iterInv.isEnd()) { // µü´úÃ¿ÌõÓĞÏò±ß
+        if (tsInv.relabel(iterInv.from()) <= tsInv.relabel(*iterInv)) // ´ó±àºÅÖ¸ÏòĞ¡±àºÅ
             test_failed(g);
         ++iterInv;
     }

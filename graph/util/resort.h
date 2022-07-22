@@ -4,23 +4,23 @@
 #include "../core/KtAdjIter.h"
 
 
-// å¯¹å›¾gçš„é¡¶ç‚¹æŒ‰ç…§orderè¿›è¡Œé‡æ’åºï¼Œå³g[v]å˜ä¸ºg[order[v]]
-//   GRAPH - å›¾ç±»å‹
-//   ORDER - å…·[]æ“ä½œç¬¦çš„ç±»å‹
+// ¶ÔÍ¼gµÄ¶¥µã°´ÕÕorder½øĞĞÖØÅÅĞò£¬¼´g[v]±äÎªg[order[v]]
+//   GRAPH - Í¼ÀàĞÍ
+//   ORDER - ¾ß[]²Ù×÷·ûµÄÀàĞÍ
 template<class GRAPH, class ORDER>
 void resort(GRAPH& g, const ORDER& order)
 {
     using edge_type = typename GRAPH::edge_type;
     using vertex_index_t = typename GRAPH::vertex_index_t;
 
-    auto E = g.size(); // ç”¨äºverify
-    std::vector<bool> flags(g.order(), false); // ç”¨äºæ ‡è®°é¡¶ç‚¹flags[i]æ˜¯å¦å·²é‡æ’åº
+    auto E = g.size(); // ÓÃÓÚverify
+    std::vector<bool> flags(g.order(), false); // ÓÃÓÚ±ê¼Ç¶¥µãflags[i]ÊÇ·ñÒÑÖØÅÅĞò
 
-    // è½®è¯¢é¡¶ç‚¹è¿›è¡Œé‡æ’ï¼Œä¸»è¦æ“ä½œæ˜¯å°†é¡¶ç‚¹vçš„å‡ºè¾¹è°ƒæ•´ä¸ºé¡¶ç‚¹order[v]çš„å‡ºè¾¹
+    // ÂÖÑ¯¶¥µã½øĞĞÖØÅÅ£¬Ö÷Òª²Ù×÷ÊÇ½«¶¥µãvµÄ³ö±ßµ÷ÕûÎª¶¥µãorder[v]µÄ³ö±ß
     for (auto v = 0u; v < g.order(); v++) {
         if (flags[v]) continue;
 
-        // æ”¶é›†é¡¶ç‚¹vçš„å‡ºè¾¹
+        // ÊÕ¼¯¶¥µãvµÄ³ö±ß
         std::vector<std::pair<vertex_index_t, edge_type>> v_outEdges;
         auto iter = KtAdjIter(g, v);
         for (; !iter.isEnd(); ++iter)
@@ -29,23 +29,23 @@ void resort(GRAPH& g, const ORDER& order)
 
         do {
             flags[v] = true;
-            auto nv = order[v]; // é¡¶ç‚¹vå°†é‡æ’ä¸ºnv
+            auto nv = order[v]; // ¶¥µãv½«ÖØÅÅÎªnv
 
-            // å°†é¡¶ç‚¹vçš„å‡ºè¾¹è°ƒæ•´ä¸ºnvçš„å‡ºè¾¹ä¹‹å‰ï¼Œå…ˆä¿å­˜nvçš„å‡ºè¾¹ï¼Œä»¥å…ä¿¡æ¯ä¸¢å¤±
+            // ½«¶¥µãvµÄ³ö±ßµ÷ÕûÎªnvµÄ³ö±ßÖ®Ç°£¬ÏÈ±£´ænvµÄ³ö±ß£¬ÒÔÃâĞÅÏ¢¶ªÊ§
             std::vector<std::pair<vertex_index_t, edge_type>> nv_outEdges;
-            if (!flags[nv]) { // è‹¥nvå·²å¤„ç†ï¼Œåˆ™å‡ºè¾¹ä¿¡æ¯å·²é‡æ’è¿‡ï¼Œä¸å¿…å†æ”¶é›†ä¿ç•™
+            if (!flags[nv]) { // ÈônvÒÑ´¦Àí£¬Ôò³ö±ßĞÅÏ¢ÒÑÖØÅÅ¹ı£¬²»±ØÔÙÊÕ¼¯±£Áô
                 auto iter = KtAdjIter(g, nv);
                 for (; !iter.isEnd(); ++iter)
                     nv_outEdges.emplace_back(*iter, iter.edge());
             }
 
-            // å‡ºè¾¹è°ƒæ•´ï¼šoutEdges(v) -> outEdges(nv)
+            // ³ö±ßµ÷Õû£ºoutEdges(v) -> outEdges(nv)
             g.eraseOutEdges(nv);
             for (const auto& e : v_outEdges)
                 g.addEdge(nv, order[e.first], e.second);
 
 
-            // é¡ºç€v -> order[v] -> order[order[v]] -> ... ä¸€ç›´å¾€å‰èµ°
+            // Ë³×Åv -> order[v] -> order[order[v]] -> ... Ò»Ö±ÍùÇ°×ß
             v = nv;
             std::swap(v_outEdges, nv_outEdges);
         } while (!flags[v]);

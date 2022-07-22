@@ -48,7 +48,7 @@ edges adj_iter_reedge_test_(GRAPH& g, ITER iter)
     for (; !iter.isEnd(); ++iter) {
         auto v = iter.from();
         auto w = iter.to();
-        if ((g.isDigraph() || v >= w) && rand() < RAND_MAX / 4) { // ä»¥25%çš„æ¦‚ç‡ä¿®æ”¹è¾¹æƒå€¼
+        if ((g.isDigraph() || v >= w) && rand() < RAND_MAX / 4) { // ÒÔ25%µÄ¸ÅÂÊĞŞ¸Ä±ßÈ¨Öµ
             double wt = double(rand()) / double(RAND_MAX);
             if (wt != g.null_edge) {
                 iter.reedge(wt);
@@ -65,13 +65,13 @@ template<typename GRAPH, typename ITER>
 std::pair<edges, unsigned> adj_iter_erase_test_(GRAPH& g, ITER iter)
 {
     edges es;
-    unsigned erased(0); // è¿ç»­åˆ é™¤çš„æ¬¡æ•°
+    unsigned erased(0); // Á¬ĞøÉ¾³ıµÄ´ÎÊı
 
-    bool flag(false); // ä¸Šæ¬¡æ˜¯å¦æ‰§è¡Œåˆ é™¤æ“ä½œ
+    bool flag(false); // ÉÏ´ÎÊÇ·ñÖ´ĞĞÉ¾³ı²Ù×÷
     for (; !iter.isEnd(); ) {
         auto v = iter.from();
         auto w = iter.to();
-        if ((g.isDigraph() || v >= w) && rand() < RAND_MAX / 5) { // ä»¥20%çš„æ¦‚ç‡åˆ é™¤è¾¹
+        if ((g.isDigraph() || v >= w) && rand() < RAND_MAX / 5) { // ÒÔ20%µÄ¸ÅÂÊÉ¾³ı±ß
             es.push_back({ { v, w }, iter.edge() });
             iter.erase();
 
@@ -179,7 +179,7 @@ void adj_iter_test__(GRAPH& g, bool iterR)
     for (auto& i : esAll) {
         auto& pos = i.first;
         double wt = getWeight(esErased, pos.first, pos.second);
-        if (wt != 0) { // ç¡®è®¤è¯¥æ¡è¾¹å·²è¢«åˆ é™¤
+        if (wt != 0) { // È·ÈÏ¸ÃÌõ±ßÒÑ±»É¾³ı
             if(g.hasEdge(pos.first, pos.second))
                 test_failed(g);
         }

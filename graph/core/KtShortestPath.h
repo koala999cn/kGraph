@@ -6,25 +6,25 @@
 #include "KtTopologySort.h"
 
 
-// æœ€çŸ­è·¯å¾„ç®—æ³•
-// æ­¤ç±»ç®—æ³•çš„å…³é”®æ˜¯é¡¶ç‚¹å¤„ç†çš„é¡ºåºï¼Œå¯¹åº”æœ‰é¡ºåºéå†ã€Dfsã€Bfsã€Pfsã€Tsç­‰æ–¹æ³•ã€‚
-// ä¸åŒå®ç°çš„æ—¶é—´å¤æ‚åº¦å¦‚ä¸‹ï¼š
-// å•æºï¼š
-//   Dijkstraï¼Œé€‚ç”¨äºéè´Ÿæƒå€¼ï¼ŒO(V^2)ï¼Œç¨ å¯†å›¾æœ€ä¼˜
-//   PFSï¼Œé€‚ç”¨äºéè´Ÿæƒå€¼ï¼ŒO(E*lgV)ï¼Œä¿å®ˆè¾¹ç•Œå€¼
-//   TSï¼Œé€‚ç”¨äºæ— ç¯å›¾ï¼ŒO(E)ï¼Œæœ€ä¼˜
-//   Bellman-Fordï¼Œé€‚ç”¨äºæ— è´Ÿç¯å›¾ï¼ŒO(V*E)ï¼Œæœ‰æ”¹è¿›ä½™åœ°å—ï¼Ÿ
-// å…¨æºï¼š
-//    Dijkstraï¼Œé€‚ç”¨äºéè´Ÿæƒå€¼ï¼ŒO(V^3)ï¼Œå¯¹æ‰€æœ‰å›¾å‡ç›¸åŒ
-//    PFSï¼Œé€‚ç”¨äºéè´Ÿæƒå€¼ï¼ŒO(V*E*lgV)ï¼Œä¿å®ˆè¾¹ç•Œå€¼
-//    DFSï¼Œé€‚ç”¨äºæ— ç¯å›¾ï¼ŒO(V*E)ï¼Œå¯¹æ‰€æœ‰å›¾å‡ç›¸åŒ
-//    Floydï¼Œé€‚ç”¨äºæ— è´Ÿç¯å›¾ï¼ŒO(V^3)ï¼Œå¯¹æ‰€æœ‰å›¾å‡ç›¸åŒ
-//    Johnsonï¼Œé€‚ç”¨äºæ— è´Ÿç¯å›¾ï¼ŒO(V*E*lgV)ï¼Œä¿å®ˆè¾¹ç•Œå€¼
-// æ³¨ï¼šç”±äºæƒå€¼çš„é›¶å€¼å’Œåç§»è½¬æ¢éš¾ä»¥ç»Ÿä¸€ï¼ŒJohnsonå°šæœªå®ç°
+// ×î¶ÌÂ·¾¶Ëã·¨
+// ´ËÀàËã·¨µÄ¹Ø¼üÊÇ¶¥µã´¦ÀíµÄË³Ğò£¬¶ÔÓ¦ÓĞË³Ğò±éÀú¡¢Dfs¡¢Bfs¡¢Pfs¡¢TsµÈ·½·¨¡£
+// ²»Í¬ÊµÏÖµÄÊ±¼ä¸´ÔÓ¶ÈÈçÏÂ£º
+// µ¥Ô´£º
+//   Dijkstra£¬ÊÊÓÃÓÚ·Ç¸ºÈ¨Öµ£¬O(V^2)£¬³íÃÜÍ¼×îÓÅ
+//   PFS£¬ÊÊÓÃÓÚ·Ç¸ºÈ¨Öµ£¬O(E*lgV)£¬±£ÊØ±ß½çÖµ
+//   TS£¬ÊÊÓÃÓÚÎŞ»·Í¼£¬O(E)£¬×îÓÅ
+//   Bellman-Ford£¬ÊÊÓÃÓÚÎŞ¸º»·Í¼£¬O(V*E)£¬ÓĞ¸Ä½øÓàµØÂğ£¿
+// È«Ô´£º
+//    Dijkstra£¬ÊÊÓÃÓÚ·Ç¸ºÈ¨Öµ£¬O(V^3)£¬¶ÔËùÓĞÍ¼¾ùÏàÍ¬
+//    PFS£¬ÊÊÓÃÓÚ·Ç¸ºÈ¨Öµ£¬O(V*E*lgV)£¬±£ÊØ±ß½çÖµ
+//    DFS£¬ÊÊÓÃÓÚÎŞ»·Í¼£¬O(V*E)£¬¶ÔËùÓĞÍ¼¾ùÏàÍ¬
+//    Floyd£¬ÊÊÓÃÓÚÎŞ¸º»·Í¼£¬O(V^3)£¬¶ÔËùÓĞÍ¼¾ùÏàÍ¬
+//    Johnson£¬ÊÊÓÃÓÚÎŞ¸º»·Í¼£¬O(V*E*lgV)£¬±£ÊØ±ß½çÖµ
+// ×¢£ºÓÉÓÚÈ¨ÖµµÄÁãÖµºÍÆ«ÒÆ×ª»»ÄÑÒÔÍ³Ò»£¬JohnsonÉĞÎ´ÊµÏÖ
 
 
 
-// å•æºæœ€çŸ­è·¯å¾„çš„åŸºç±»ï¼šè®¡ç®—èµ·å§‹é¡¶ç‚¹v0ï¼ˆæºç‚¹ï¼‰åˆ°å›¾gä¸­å…¶ä»–å„é¡¶ç‚¹çš„æœ€çŸ­è·¯å¾„
+// µ¥Ô´×î¶ÌÂ·¾¶µÄ»ùÀà£º¼ÆËãÆğÊ¼¶¥µãv0£¨Ô´µã£©µ½Í¼gÖĞÆäËû¸÷¶¥µãµÄ×î¶ÌÂ·¾¶
 // SSSP(Single Source Shortest Path)
 template<typename GRAPH, class WEIGHTOR>
 class KtSsspAbstract
@@ -40,7 +40,7 @@ public:
         spt_(g.order(), -1),
         dist_(g.order(), WEIGHTOR{}.worst_weight) {}
 
-    // è¿”å›ä»æºç‚¹åˆ°é¡¶ç‚¹vçš„æœ€çŸ­è·¯å¾„(é€†åº)
+    // ·µ»Ø´ÓÔ´µãµ½¶¥µãvµÄ×î¶ÌÂ·¾¶(ÄæĞò)
     auto pathR(vertex_index_t v) const {
         std::vector<vertex_index_t> p;
         vertex_index_t s = v;
@@ -49,22 +49,22 @@ public:
             s = spt_[s];
         } while (s != v0_ && s != v && s != -1);
 
-        // s == -1ï¼Œè¡¨ç¤ºæ²¡æœ‰ç¯è·¯ï¼Œè·¯å¾„å…¥æ ˆæˆåŠŸ
-        // s == v0ï¼Œè¡¨ç¤ºv0å­˜åœ¨ç¯è·¯ï¼Œéœ€è¦æ‰‹åŠ¨å°†v0å…¥æ ˆ
-        // s == vï¼Œè¡¨ç¤ºå­˜åœ¨ç»è¿‡vçš„è´Ÿç¯ï¼Œè¿™æ—¶ä¸¢å¤±äº†ä»v0->vçš„æœ€çŸ­è·¯å¾„ï¼Œæ ˆä¸­è·¯å¾„é€€åŒ–ä¸ºä»¥vä¸ºèµ·æ­¢ç‚¹çš„è´Ÿç¯ã€‚
+        // s == -1£¬±íÊ¾Ã»ÓĞ»·Â·£¬Â·¾¶ÈëÕ»³É¹¦
+        // s == v0£¬±íÊ¾v0´æÔÚ»·Â·£¬ĞèÒªÊÖ¶¯½«v0ÈëÕ»
+        // s == v£¬±íÊ¾´æÔÚ¾­¹ıvµÄ¸º»·£¬ÕâÊ±¶ªÊ§ÁË´Óv0->vµÄ×î¶ÌÂ·¾¶£¬Õ»ÖĞÂ·¾¶ÍË»¯ÎªÒÔvÎªÆğÖ¹µãµÄ¸º»·¡£
         if(s != -1) p.push_back(s);
 
         return p;
     }
 
 
-    // è¿”å›ä»æºç‚¹åˆ°é¡¶ç‚¹vçš„æœ€çŸ­è·ç¦»
+    // ·µ»Ø´ÓÔ´µãµ½¶¥µãvµÄ×î¶Ì¾àÀë
     weight_type distance(vertex_index_t v) const {
         return dist_[v];
     }
 
 
-    // æ˜¯å¦å­˜åœ¨ä»æºç‚¹åˆ°vçš„è·¯å¾„
+    // ÊÇ·ñ´æÔÚ´ÓÔ´µãµ½vµÄÂ·¾¶
     bool reachable(vertex_index_t v) const {
         return spt_[v] != -1;
     }
@@ -72,8 +72,8 @@ public:
 
 protected:
 
-    // è¾¹æ¾å¼›. åˆ¤æ–­v0ç»è¿‡è¾¹(v, w)åˆ°wçš„è·¯å¾„æ˜¯å¦æ¯”å½“å‰åˆ°wçš„è·¯å¾„æ›´å¥½
-    // wtä¸ºè¾¹(v, w)çš„æƒå€¼
+    // ±ßËÉ³Ú. ÅĞ¶Ïv0¾­¹ı±ß(v, w)µ½wµÄÂ·¾¶ÊÇ·ñ±Èµ±Ç°µ½wµÄÂ·¾¶¸üºÃ
+    // wtÎª±ß(v, w)µÄÈ¨Öµ
     bool relax_(vertex_index_t v, vertex_index_t w, weight_type wt) {
         if (spt_[v] != -1) {
             if (v != v0_)
@@ -91,16 +91,16 @@ protected:
     }
 
 protected:
-    vertex_index_t v0_; // æºç‚¹
-    std::vector<vertex_index_t> spt_; // (spt_[i], i)è¡¨ç¤ºä»æºç‚¹v0_åˆ°é¡¶ç‚¹içš„æœ€çŸ­è·¯å¾„ä¸Šçš„æœ€åä¸€æ¡è¾¹
-    std::vector<weight_type> dist_; // dist_[i]è¡¨ç¤ºä»æºç‚¹v0_åˆ°é¡¶ç‚¹içš„æœ€çŸ­è·ç¦»
+    vertex_index_t v0_; // Ô´µã
+    std::vector<vertex_index_t> spt_; // (spt_[i], i)±íÊ¾´ÓÔ´µãv0_µ½¶¥µãiµÄ×î¶ÌÂ·¾¶ÉÏµÄ×îºóÒ»Ìõ±ß
+    std::vector<weight_type> dist_; // dist_[i]±íÊ¾´ÓÔ´µãv0_µ½¶¥µãiµÄ×î¶Ì¾àÀë
 };
 
 
-// åŸºäºå¹¿åº¦ä¼˜å…ˆæœç´¢çš„å•æºæœ€çŸ­è·¯å¾„å®ç°
-// å¤„ç†Eè¾ƒå¤§çš„æœ‰ç¯å›¾æ—¶ï¼Œé€Ÿåº¦éå¸¸æ…¢
-// å¤„ç†DAGè¾ƒæœ‰ä¼˜åŠ¿ï¼Œè²Œä¼¼æ¯”TSæ–¹æ³•è¿˜å¿«
-// NOTE: å½“æœ‰è´Ÿç¯çš„æ—¶å€™ï¼Œä¼šé™·å…¥æ— é™é€’å½’
+// »ùÓÚ¹ã¶ÈÓÅÏÈËÑË÷µÄµ¥Ô´×î¶ÌÂ·¾¶ÊµÏÖ
+// ´¦ÀíE½Ï´óµÄÓĞ»·Í¼Ê±£¬ËÙ¶È·Ç³£Âı
+// ´¦ÀíDAG½ÏÓĞÓÅÊÆ£¬Ã²ËÆ±ÈTS·½·¨»¹¿ì
+// NOTE: µ±ÓĞ¸º»·µÄÊ±ºò£¬»áÏİÈëÎŞÏŞµİ¹é
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSsspBfs : public KtSsspAbstract<GRAPH, WEIGHTOR>
 {
@@ -119,7 +119,7 @@ private:
         for (; !iter.isEnd(); ++iter) {
             vertex_index_t v = iter.from(), w = *iter;
 
-            // å¦‚æœrelax_æ›´æ–°äº†å·²å‡ºæ ˆçš„é¡¶ç‚¹ä¿¡æ¯ï¼Œåˆ™éœ€è¦å¯¹å‡ºæ ˆé¡¶ç‚¹é‡æ–°bfs
+            // Èç¹ûrelax_¸üĞÂÁËÒÑ³öÕ»µÄ¶¥µãĞÅÏ¢£¬ÔòĞèÒª¶Ô³öÕ»¶¥µãÖØĞÂbfs
             if (super_::relax_(v, w, WEIGHTOR{}(iter.edge())) && iter.isPopped(w))
                 bfs_(g, w); 
         }
@@ -127,7 +127,7 @@ private:
 };
 
 
-// é€Ÿåº¦æ¯”bfsè¿˜æ…¢ï¼Œæ…¢å¾ˆå¤šï¼Œå¼ƒç–—
+// ËÙ¶È±Èbfs»¹Âı£¬ÂıºÜ¶à£¬ÆúÁÆ
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSsspDfs : public KtSsspAbstract<GRAPH, WEIGHTOR>
 {
@@ -147,17 +147,17 @@ private:
 
             if (super_::relax_(v, w, WEIGHTOR{}(iter.edge())))
                 if (!iter.isTree() && w != v)
-                    dfs_(g, w); // TODO: åŒºåˆ†ä¸åŒç±»å‹çš„è¾¹ï¼ˆè·¨è¾¹ï¼Œä¸‹è¾¹ï¼Œå›è¾¹ï¼‰ï¼Œè¿›ä¸€æ­¥ä¼˜åŒ–
+                    dfs_(g, w); // TODO: Çø·Ö²»Í¬ÀàĞÍµÄ±ß£¨¿ç±ß£¬ÏÂ±ß£¬»Ø±ß£©£¬½øÒ»²½ÓÅ»¯
         }
     }
 };
 
 
 
-// åŸºäºDijkstraç®—æ³•çš„å•æºæœ€çŸ­è·¯å¾„å®ç°
-// NOTE: è¯¥ç®—æ³•ä¸æ”¯æŒè´Ÿç¯ï¼Œä¹Ÿä¸æ”¯æŒè´Ÿæƒå€¼ï¼Œå› ä¸ºä¸€æ—¦å‡ºç°è´Ÿæƒå€¼ï¼Œ
-// å¯èƒ½ä¼šå‡ºç°ä¸€æ¡æ¯”ä¹‹å‰æ›´çŸ­çš„è·¯å¾„ï¼Œè¿™ä¼šç ´åå§‹ç»ˆå»¶ç€æœ€çŸ­è·¯å¾„ç”Ÿé•¿çš„å‡†åˆ™
-// ä¹Ÿå°±æ˜¯è¯´ï¼Œæˆ‘ä»¬æ— æ³•åˆ¤æ–­å½“å‰çš„æœ€çŸ­è·¯å¾„æ˜¯ä¸æ˜¯çœŸçš„æœ€çŸ­ï¼Œå› ä¸ºåé¢å‡ºç°çš„è´Ÿæƒå€¼å¯èƒ½ä¼šè®©å…¶ä»–è·¯å¾„æ›´çŸ­
+// »ùÓÚDijkstraËã·¨µÄµ¥Ô´×î¶ÌÂ·¾¶ÊµÏÖ
+// NOTE: ¸ÃËã·¨²»Ö§³Ö¸º»·£¬Ò²²»Ö§³Ö¸ºÈ¨Öµ£¬ÒòÎªÒ»µ©³öÏÖ¸ºÈ¨Öµ£¬
+// ¿ÉÄÜ»á³öÏÖÒ»Ìõ±ÈÖ®Ç°¸ü¶ÌµÄÂ·¾¶£¬Õâ»áÆÆ»µÊ¼ÖÕÑÓ×Å×î¶ÌÂ·¾¶Éú³¤µÄ×¼Ôò
+// Ò²¾ÍÊÇËµ£¬ÎÒÃÇÎŞ·¨ÅĞ¶Ïµ±Ç°µÄ×î¶ÌÂ·¾¶ÊÇ²»ÊÇÕæµÄ×î¶Ì£¬ÒòÎªºóÃæ³öÏÖµÄ¸ºÈ¨Öµ¿ÉÄÜ»áÈÃÆäËûÂ·¾¶¸ü¶Ì
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSsspDijkstra : public KtSsspAbstract<GRAPH, WEIGHTOR>
 {
@@ -169,19 +169,19 @@ class KtSsspDijkstra : public KtSsspAbstract<GRAPH, WEIGHTOR>
 public:
     KtSsspDijkstra(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
 
-        std::vector<bool> vis(g.order(), false); // ç”¨äºæ ‡è®°æºç‚¹v0åˆ°é¡¶ç‚¹içš„æœ€çŸ­è·¯å¾„æ˜¯å¦å·²è®¡ç®—
+        std::vector<bool> vis(g.order(), false); // ÓÃÓÚ±ê¼ÇÔ´µãv0µ½¶¥µãiµÄ×î¶ÌÂ·¾¶ÊÇ·ñÒÑ¼ÆËã
 
         vertex_index_t v = v0;
         while (v != -1) { 
             vis[v] = true;
 
-            // è¾¹æ¾å¼›
+            // ±ßËÉ³Ú
             for (vertex_index_t w = 0; w < g.order(); w++)
                 if ((!vis[w] || w == v0/*permit loop path*/) && g.hasEdge(v, w))
                     super_::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w)));
 
 
-            // åœ¨vis[i]ç­‰äºfalseçš„é›†åˆä¸­ï¼Œå¯»æ‰¾è·ç¦»v0è·¯å¾„æœ€ä¼˜çš„é¡¶ç‚¹. TODO: ä½¿ç”¨ä¼˜å…ˆé˜Ÿåˆ—å®ç°
+            // ÔÚvis[i]µÈÓÚfalseµÄ¼¯ºÏÖĞ£¬Ñ°ÕÒ¾àÀëv0Â·¾¶×îÓÅµÄ¶¥µã. TODO: Ê¹ÓÃÓÅÏÈ¶ÓÁĞÊµÏÖ
             v = -1;
             for (vertex_index_t w = 0; w < g.order(); w++)
                 if (!vis[w] && (v == -1 || WEIGHTOR{}.comp(dist_[w], dist_[v])))
@@ -206,13 +206,13 @@ public:
         using element_type = std::pair<vertex_index_t, typename WEIGHTOR::weight_type>;
         struct Comp {
             bool operator()(const element_type& a, const element_type& b) {
-                return WEIGHTOR{}.comp(b.second, a.second); // ä¼˜å…ˆé˜Ÿåˆ—çš„æ¯”è¾ƒå‡½æ•°éœ€è¦åè¿‡æ¥æ¯”è¾ƒï¼Œæ‰èƒ½ä¿è¯æœ€ä¼˜å…ƒç´ åœ¨é˜Ÿåˆ—é¡¶ç«¯
+                return WEIGHTOR{}.comp(b.second, a.second); // ÓÅÏÈ¶ÓÁĞµÄ±È½Ïº¯ÊıĞèÒª·´¹ıÀ´±È½Ï£¬²ÅÄÜ±£Ö¤×îÓÅÔªËØÔÚ¶ÓÁĞ¶¥¶Ë
             }
         };
 
         using priority_queue = std::priority_queue<element_type, std::vector<element_type>, Comp>;
         priority_queue pq; pq.emplace(v0, dist_[v0]);
-        std::vector<bool> vis(g.order(), false); // ç”¨äºæ ‡è®°æºç‚¹v0åˆ°é¡¶ç‚¹içš„æœ€çŸ­è·¯å¾„æ˜¯å¦å·²è®¡ç®—
+        std::vector<bool> vis(g.order(), false); // ÓÃÓÚ±ê¼ÇÔ´µãv0µ½¶¥µãiµÄ×î¶ÌÂ·¾¶ÊÇ·ñÒÑ¼ÆËã
 
         while (!pq.empty()) {
 
@@ -220,7 +220,7 @@ public:
             if (vis[v]) continue;
             vis[v] = true;
 
-            // è¾¹æ¾å¼›
+            // ±ßËÉ³Ú
             for (vertex_index_t w = 0; w < g.order(); w++)
                 if ((!vis[w] || w == v0/*permit loop path*/) && g.hasEdge(v, w))
                     if (super_::relax_(v, w, WEIGHTOR{}(g.getEdge(v, w))))
@@ -230,8 +230,8 @@ public:
 };
 
 
-// åŸºäºæ‹“æ‰‘æ’åºç®—æ³•çš„å•æºæœ€çŸ­è·¯å¾„å®ç°ï¼Œä»…é€‚ç”¨äºDAG.
-// è¿è¡Œé€Ÿåº¦æ²¡æœ‰æƒ³åƒä¸­å¿«ï¼Œæ•ˆç‡è¿˜æ¯”ä¸ä¸Šbfsæ–¹æ³•
+// »ùÓÚÍØÆËÅÅĞòËã·¨µÄµ¥Ô´×î¶ÌÂ·¾¶ÊµÏÖ£¬½öÊÊÓÃÓÚDAG.
+// ÔËĞĞËÙ¶ÈÃ»ÓĞÏëÏñÖĞ¿ì£¬Ğ§ÂÊ»¹±È²»ÉÏbfs·½·¨
 template<typename DAG, class WEIGHTOR = default_wtor<DAG>>
 class KtSsspTs : public KtSsspAbstract<DAG, WEIGHTOR>
 {
@@ -242,7 +242,7 @@ public:
     KtSsspTs(const DAG& g, vertex_index_t v0) : super_(g, v0) {
         assert(!has_loop(g));
         KtTopologySort<DAG> ts(g);
-        auto j = ts.relabel(v0); // jä¹‹å‰çš„é¡¶ç‚¹å¯ä»¥å¿½ç•¥ï¼Œå› ä¸ºæŒ‰ç…§æ‹“æ‰‘æ’åºï¼Œv0ä¸å®ƒä»¬æ²¡æœ‰å¯è¾¾è·¯å¾„
+        auto j = ts.relabel(v0); // jÖ®Ç°µÄ¶¥µã¿ÉÒÔºöÂÔ£¬ÒòÎª°´ÕÕÍØÆËÅÅĞò£¬v0ÓëËüÃÇÃ»ÓĞ¿É´ïÂ·¾¶
         for(auto v = ts[j++]; j < g.order(); v = ts[j++]) {
             auto iter = KtAdjIter(g, v);
             while(!iter.isEnd()) {
@@ -255,10 +255,10 @@ public:
 
 
 
-// åŸºäºBellman-Fordç®—æ³•çš„å•æºæœ€çŸ­è·¯å¾„å®ç°
-// NOTE: å¯ç”¨æ¥è§£å†³åŒ…å«è´Ÿæƒå€¼çš„å•æºæœ€çŸ­è·¯å¾„é—®é¢˜ï¼Œæ—¶é—´å¤æ‚åº¦O(VE)ã€‚
-// å¯¹äºç¨ å¯†å›¾ï¼Œå…¶è¿è¡Œæ—¶é—´ä¸æ¯”Floydç®—æ³•æ›´å¥½ï¼ŒFloydç®—æ³•åˆ™è¦æ‰¾å‡ºå…¨éƒ¨æœ€çŸ­è·¯å¾„ï¼Œè€Œä¸ä»…ä»…æ˜¯å•æºã€‚
-// å¯¹äºç¨€ç–å›¾ï¼Œå…¶è¿è¡Œæ—¶é—´æœ€å¤šæ¯”Floydç®—æ³•å¿«Vå€ï¼Œä½†å¯¹äºæ— è´Ÿæƒå€¼çš„å›¾ï¼Œå…¶è¿è¡Œæ—¶é—´æ¯”Dijkstraç®—æ³•æ…¢çº¦Vå€ã€‚
+// »ùÓÚBellman-FordËã·¨µÄµ¥Ô´×î¶ÌÂ·¾¶ÊµÏÖ
+// NOTE: ¿ÉÓÃÀ´½â¾ö°üº¬¸ºÈ¨ÖµµÄµ¥Ô´×î¶ÌÂ·¾¶ÎÊÌâ£¬Ê±¼ä¸´ÔÓ¶ÈO(VE)¡£
+// ¶ÔÓÚ³íÃÜÍ¼£¬ÆäÔËĞĞÊ±¼ä²»±ÈFloydËã·¨¸üºÃ£¬FloydËã·¨ÔòÒªÕÒ³öÈ«²¿×î¶ÌÂ·¾¶£¬¶ø²»½ö½öÊÇµ¥Ô´¡£
+// ¶ÔÓÚÏ¡ÊèÍ¼£¬ÆäÔËĞĞÊ±¼ä×î¶à±ÈFloydËã·¨¿ìV±¶£¬µ«¶ÔÓÚÎŞ¸ºÈ¨ÖµµÄÍ¼£¬ÆäÔËĞĞÊ±¼ä±ÈDijkstraËã·¨ÂıÔ¼V±¶¡£
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtSsspBellmanFord : public KtSsspAbstract<GRAPH, WEIGHTOR>
 {
@@ -269,12 +269,12 @@ public:
     KtSsspBellmanFord(const GRAPH& g, vertex_index_t v0) : super_(g, v0) {
         std::queue<vertex_index_t> q;
         unsigned V = g.order();
-        q.push(v0); q.push(V); // æ ‡è®°å€¼Vå°†å½“å‰ä¸€æ‰¹é¡¶ç‚¹ä¸ä¸‹ä¸€æ‰¹é¡¶ç‚¹åˆ†éš”ï¼Œå¹¶ä½¿å¾—å¯ä»¥åœ¨Véå¤„ç†åç»ˆæ­¢ã€‚
+        q.push(v0); q.push(V); // ±ê¼ÇÖµV½«µ±Ç°Ò»Åú¶¥µãÓëÏÂÒ»Åú¶¥µã·Ö¸ô£¬²¢Ê¹µÃ¿ÉÒÔÔÚV±é´¦ÀíºóÖÕÖ¹¡£
         unsigned N = 0;
         while (!q.empty()) {
             vertex_index_t v = q.front(); q.pop();
             while (v == V) {
-                if (N++ > V) return; // å­˜åœ¨ä¸€æ¡é•¿åº¦è¶…è¿‡Vçš„æœ€çŸ­è·¯å¾„ï¼Œè¿™è¡¨ç¤ºè‚¯å®šå­˜åœ¨è´Ÿç¯ã€‚
+                if (N++ > V) return; // ´æÔÚÒ»Ìõ³¤¶È³¬¹ıVµÄ×î¶ÌÂ·¾¶£¬Õâ±íÊ¾¿Ï¶¨´æÔÚ¸º»·¡£
                 q.push(V);
                 v = q.front(); q.pop();
             }
@@ -290,7 +290,7 @@ public:
 
 
 
-// å…¨æºæœ€çŸ­è·¯å¾„çš„åŸºç±»ï¼šè®¡ç®—ä»»æ„é¡¶ç‚¹åˆ°å›¾ä¸­å…¶ä»–å„é¡¶ç‚¹çš„æœ€çŸ­è·¯å¾„
+// È«Ô´×î¶ÌÂ·¾¶µÄ»ùÀà£º¼ÆËãÈÎÒâ¶¥µãµ½Í¼ÖĞÆäËû¸÷¶¥µãµÄ×î¶ÌÂ·¾¶
 // FSSP(Full Source Shortest Path)
 template<typename GRAPH, class WEIGHTOR>
 class KtFsspAbstract
@@ -311,7 +311,7 @@ public:
     }
 
 
-    // è¿”å›våˆ°wçš„æœ€çŸ­è·¯å¾„(é€†åº)
+    // ·µ»Øvµ½wµÄ×î¶ÌÂ·¾¶(ÄæĞò)
     auto pathR(vertex_index_t v, vertex_index_t w) const {
         std::vector<vertex_index_t> p;
         vertex_index_t s = w;
@@ -324,18 +324,18 @@ public:
         return p;
     }
 
-    // æ˜¯å¦å­˜åœ¨ä»våˆ°wçš„è·¯å¾„
+    // ÊÇ·ñ´æÔÚ´Óvµ½wµÄÂ·¾¶
     bool reachable(vertex_index_t v, vertex_index_t w) const {
         return spt_[v][w] != -1;
     }
 
 protected:
 
-    // è·¯å¾„æ¾å¼›. åˆ¤æ–­sç»è¿‡xå†åˆ°tçš„è·¯å¾„æ˜¯å¦æ¯”å½“å‰såˆ°tçš„è·¯å¾„æ›´å¥½
+    // Â·¾¶ËÉ³Ú. ÅĞ¶Ïs¾­¹ıxÔÙµ½tµÄÂ·¾¶ÊÇ·ñ±Èµ±Ç°sµ½tµÄÂ·¾¶¸üºÃ
     bool relax_(vertex_index_t s, vertex_index_t t, vertex_index_t x) {
-        assert(x != s && x != t); // så¯èƒ½ç­‰äºtï¼Œç”¨äºè®¡ç®—æœ€çŸ­ç¯è·¯
+        assert(x != s && x != t); // s¿ÉÄÜµÈÓÚt£¬ÓÃÓÚ¼ÆËã×î¶Ì»·Â·
         const auto dst = WEIGHTOR{}.acc(dst_[s][x], dst_[x][t]);
-        if (WEIGHTOR{}.comp(dst, dst_[s][t])) { // dstæ¯”dst_[s][t]æ›´ä¼˜
+        if (WEIGHTOR{}.comp(dst, dst_[s][t])) { // dst±Èdst_[s][t]¸üÓÅ
             dst_[s][t] = dst;
             spt_[s][t] = spt_[x][t];
             return true;
@@ -354,11 +354,11 @@ protected:
 
 
 
-// Floydå®ç°å…¨æºæœ€çŸ­è·¯å¾„
-// æ—¶é—´å¤æ‚åº¦O(V^3)ï¼Œé€‚ç”¨äºç¨ å¯†å›¾
-// å¯¹äºç¨€ç–å›¾ï¼Œå¯é€ä¸ªé¡¶ç‚¹ç”¨Dijkstraç®—æ³•è®¡ç®—å•æºæœ€çŸ­è·¯å¾„ï¼Œä»è€Œå¾—åˆ°å…¨æºæœ€çŸ­è·¯å¾„
-// NOTE: è¯¥ç®—æ³•æœªå¯¹æƒå€¼ä½œä»»ä½•å‡è®¾ï¼Œå› æ­¤å³ä½¿å­˜åœ¨è´Ÿæƒå€¼ä¹Ÿæ˜¯æœ‰æ•ˆçš„ã€‚
-// å¦‚æœä¸å­˜åœ¨è´Ÿç¯ï¼Œåˆ™ä¼šè®¡ç®—å‡ºæœ€çŸ­è·¯å¾„ï¼›å¦åˆ™ï¼Œåªèƒ½æ‰¾å‡ºä¸€æ¡ä¸åŒ…æ‹¬è´Ÿç¯çš„æœ€çŸ­è·¯å¾„ã€‚
+// FloydÊµÏÖÈ«Ô´×î¶ÌÂ·¾¶
+// Ê±¼ä¸´ÔÓ¶ÈO(V^3)£¬ÊÊÓÃÓÚ³íÃÜÍ¼
+// ¶ÔÓÚÏ¡ÊèÍ¼£¬¿ÉÖğ¸ö¶¥µãÓÃDijkstraËã·¨¼ÆËãµ¥Ô´×î¶ÌÂ·¾¶£¬´Ó¶øµÃµ½È«Ô´×î¶ÌÂ·¾¶
+// NOTE: ¸ÃËã·¨Î´¶ÔÈ¨Öµ×÷ÈÎºÎ¼ÙÉè£¬Òò´Ë¼´Ê¹´æÔÚ¸ºÈ¨ÖµÒ²ÊÇÓĞĞ§µÄ¡£
+// Èç¹û²»´æÔÚ¸º»·£¬Ôò»á¼ÆËã³ö×î¶ÌÂ·¾¶£»·ñÔò£¬Ö»ÄÜÕÒ³öÒ»Ìõ²»°üÀ¨¸º»·µÄ×î¶ÌÂ·¾¶¡£
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtFsspFloyd : public KtFsspAbstract<GRAPH, WEIGHTOR>
 {
@@ -370,7 +370,7 @@ class KtFsspFloyd : public KtFsspAbstract<GRAPH, WEIGHTOR>
 public:
     KtFsspFloyd(const GRAPH& g) : super_(g) {
 
-        // æŒ‰è¾¹åˆå§‹åŒ–spt_å’Œdst_
+        // °´±ß³õÊ¼»¯spt_ºÍdst_
         KtBfsIter<const GRAPH, true, true> iter(g, 0);
         for (; !iter.isEnd(); ++iter) {
             vertex_index_t v = iter.from(), w = *iter;
@@ -380,10 +380,10 @@ public:
 
         const vertex_index_t V = g.order();
 
-        // åˆ¤å®šè·¯å¾„s->x->tæ˜¯å¦æ¯”è·¯å¾„s->tæ›´ä¼˜
+        // ÅĞ¶¨Â·¾¶s->x->tÊÇ·ñ±ÈÂ·¾¶s->t¸üÓÅ
         for (vertex_index_t x = 0; x < V; x++)
             for (vertex_index_t s = 0; s < V; s++)
-                if (spt_[s][x] != -1 && s != x) // è‹¥s->xä¸é€šï¼Œæˆ–è€…s==xï¼Œåˆ™ç•¥è¿‡
+                if (spt_[s][x] != -1 && s != x) // Èôs->x²»Í¨£¬»òÕßs==x£¬ÔòÂÔ¹ı
                     for (vertex_index_t t = 0; t < V; t++)
                         if(t != x) super_::relax_(s, t, x);
     }
@@ -391,9 +391,9 @@ public:
 
 
 
-// DFSå®ç°å…¨æºæœ€çŸ­è·¯å¾„ï¼Œä»…é€‚ç”¨äºDAG
-// æ—¶é—´å¤æ‚åº¦O(V*E)
-// é€Ÿåº¦æ¯”TSæ–¹æ³•å¿«å¾ˆå¤š
+// DFSÊµÏÖÈ«Ô´×î¶ÌÂ·¾¶£¬½öÊÊÓÃÓÚDAG
+// Ê±¼ä¸´ÔÓ¶ÈO(V*E)
+// ËÙ¶È±ÈTS·½·¨¿ìºÜ¶à
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtFsspDfs : public KtFsspAbstract<GRAPH, WEIGHTOR>
 {

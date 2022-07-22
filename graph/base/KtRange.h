@@ -39,7 +39,7 @@ public:
         return first_ != rhs.first_ || last_ != rhs.last_;
     }
 
-    // ä½œä¸ºå®¹å™¨ä½¿ç”¨
+    // ×÷ÎªÈİÆ÷Ê¹ÓÃ
 
 	iterator begin() { return first_; }
 	iterator end() { return last_; }
@@ -75,7 +75,7 @@ public:
     }
 
 
-    // ä½œä¸ºè¿­ä»£å™¨ä½¿ç”¨
+    // ×÷Îªµü´úÆ÷Ê¹ÓÃ
 
 	iterator& operator++() { return ++first_; }
 
@@ -94,7 +94,7 @@ public:
     }
 
 
-    // å¯¹ä¸€äº›å¸¸ç”¨stdç®—æ³•çš„å°è£…
+    // ¶ÔÒ»Ğ©³£ÓÃstdËã·¨µÄ·â×°
 
     void sort() { std::sort(first_, last_); }
     template<class Compare> void sort(Compare comp) { std::sort(first_, last_, comp); }

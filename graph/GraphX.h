@@ -9,7 +9,7 @@
 #include "core/KtPfsIter.h"
 
 
-// å¯¹ä¸€äº›å¸¸ç”¨è¿­ä»£å™¨çš„å°è£…
+// ¶ÔÒ»Ğ©³£ÓÃµü´úÆ÷µÄ·â×°
 template<typename GRAPH>
 class KtGraphX : public GRAPH
 {
@@ -78,7 +78,7 @@ public:
 };
 
 
-/// ç¨ å¯†æ— å‘å›¾
+/// ³íÃÜÎŞÏòÍ¼
 template<typename EDGE_TYPE, typename VERTEX_TYPE = void>
 using GraphDx = KtGraphX<KtGraph<KtAdjGraphDenseImpl<EDGE_TYPE, VERTEX_TYPE>, false, false, false>>;
 
@@ -87,7 +87,7 @@ using GraphDd = GraphDx<double>;
 using GraphDf = GraphDx<float>;
 
 
-/// ç¨ å¯†æœ‰å‘å›¾
+/// ³íÃÜÓĞÏòÍ¼
 template<typename EDGE_TYPE, typename VERTEX_TYPE = void>
 using DigraphDx = KtGraphX<KtGraph<KtAdjGraphDenseImpl<EDGE_TYPE, VERTEX_TYPE>, true, false, false>>;
 
@@ -96,7 +96,7 @@ using DigraphDd = DigraphDx<double>;
 using DigraphDf = DigraphDx<float>;
 
 
-/// ç¨€ç–æ— å‘å›¾
+/// Ï¡ÊèÎŞÏòÍ¼
 template<typename EDGE_TYPE, typename VERTEX_TYPE = void, bool alwaysSorted = false>
 using GraphSx = KtGraphX<KtGraph<KtAdjGraphSparseImpl<EDGE_TYPE, VERTEX_TYPE>, false, false, alwaysSorted>>;
 
@@ -110,7 +110,7 @@ template<bool alwaysSorted = false>
 using GraphSf = GraphSx<float, void, alwaysSorted>;
 
 
-/// ç¨€ç–æœ‰å‘å›¾
+/// Ï¡ÊèÓĞÏòÍ¼
 template<typename EDGE_TYPE, typename VERTEX_TYPE = void, bool alwaysSorted = false>
 using DigraphSx = KtGraphX<KtGraph<KtAdjGraphSparseImpl<EDGE_TYPE, VERTEX_TYPE>, true, false, alwaysSorted>>;
 
@@ -124,7 +124,7 @@ template<bool alwaysSorted = false>
 using DigraphSf = DigraphSx<float, void, alwaysSorted>;
 
 
-/// å¹³è¡Œæ— å‘å›¾ï¼ˆå…è®¸é‡è¾¹/å¹³è¡Œè¾¹ï¼‰
+/// Æ½ĞĞÎŞÏòÍ¼£¨ÔÊĞíÖØ±ß/Æ½ĞĞ±ß£©
 template<typename EDGE_TYPE, typename VERTEX_TYPE = void, bool alwaysSorted = false>
 using GraphPx = KtGraphX<KtGraph<KtAdjGraphSparseImpl<EDGE_TYPE, VERTEX_TYPE>, false, true, alwaysSorted>>;
 
@@ -138,7 +138,7 @@ template<bool alwaysSorted = false>
 using GraphPf = GraphPx<float, void, alwaysSorted>;
 
 
-/// å¹³è¡Œæœ‰å‘å›¾ï¼ˆå…è®¸é‡è¾¹/å¹³è¡Œè¾¹ï¼‰
+/// Æ½ĞĞÓĞÏòÍ¼£¨ÔÊĞíÖØ±ß/Æ½ĞĞ±ß£©
 template<typename EDGE_TYPE, typename VERTEX_TYPE = void, bool alwaysSorted = false>
 using DigraphPx = KtGraphX<KtGraph<KtAdjGraphSparseImpl<EDGE_TYPE, VERTEX_TYPE>, true, true, alwaysSorted>>;
 
@@ -152,7 +152,7 @@ template<bool alwaysSorted = false>
 using DigraphPf = DigraphPx<float, void, alwaysSorted>;
 
 
-/// æ‰å¹³æ— å‘å›¾ï¼ˆå…è®¸é‡è¾¹/å¹³è¡Œè¾¹ï¼‰
+/// ±âÆ½ÎŞÏòÍ¼£¨ÔÊĞíÖØ±ß/Æ½ĞĞ±ß£©
 template<typename EDGE_TYPE, typename VERTEX_TYPE = void, bool alwaysSorted = false>
 using GraphFx = KtGraphX<KtGraph<KtFlatGraphVectorImpl<EDGE_TYPE, VERTEX_TYPE>, false, true, alwaysSorted>>;
 
@@ -166,7 +166,7 @@ template<bool alwaysSorted = false>
 using GraphFf = GraphFx<float, void, alwaysSorted>;
 
 
-/// æ‰å¹³æœ‰å‘å›¾ï¼ˆå…è®¸é‡è¾¹/å¹³è¡Œè¾¹ï¼‰
+/// ±âÆ½ÓĞÏòÍ¼£¨ÔÊĞíÖØ±ß/Æ½ĞĞ±ß£©
 template<typename EDGE_TYPE, typename VERTEX_TYPE = void, bool alwaysSorted = false>
 using DigraphFx = KtGraphX<KtGraph<KtFlatGraphVectorImpl<EDGE_TYPE, VERTEX_TYPE>, true, true, alwaysSorted>>;
 

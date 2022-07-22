@@ -3,9 +3,9 @@
 #include "KtDfsIter.h"
 
 
-// äºŒåˆ†å›¾åˆ¤å®š
-// è‹¥è¿”å›trueï¼Œè¡¨ç¤ºTHISæ˜¯äºŒåˆ†å›¾ï¼Œreså…ƒç´ å€¼ä¸º1æˆ–è€…2ï¼Œåˆ†åˆ«ä»£è¡¨å¯¹åº”èŠ‚ç‚¹åœ¨ä¸åŒåˆ†å›¾
-// è‹¥è¿”å›falseï¼Œè¡¨ç¤ºTHISéäºŒåˆ†å›¾ï¼Œreså€¼ç­‰äº-1çš„å…ƒç´ ä¸ºå†²çªé¡¶ç‚¹
+// ¶ş·ÖÍ¼ÅĞ¶¨
+// Èô·µ»Øtrue£¬±íÊ¾THISÊÇ¶ş·ÖÍ¼£¬resÔªËØÖµÎª1»òÕß2£¬·Ö±ğ´ú±í¶ÔÓ¦½ÚµãÔÚ²»Í¬·ÖÍ¼
+// Èô·µ»Øfalse£¬±íÊ¾THIS·Ç¶ş·ÖÍ¼£¬resÖµµÈÓÚ-1µÄÔªËØÎª³åÍ»¶¥µã
 template<typename GRAPH>
 class KtBipartite
 {
@@ -13,7 +13,7 @@ class KtBipartite
 
 public:
 
-    // é‡‡å–2-ç€è‰²æ³•å®ç°ï¼Œé€šè¿‡DFSç®—æ³•ï¼Œä¸æ–­å¯¹é‚»èŠ‚ç‚¹è¿›è¡Œåç€è‰²ï¼Œè‹¥æ— å†²çªåˆ™åˆ¤å®šæˆåŠŸã€‚
+    // ²ÉÈ¡2-×ÅÉ«·¨ÊµÏÖ£¬Í¨¹ıDFSËã·¨£¬²»¶Ï¶ÔÁÚ½Úµã½øĞĞ·´×ÅÉ«£¬ÈôÎŞ³åÍ»ÔòÅĞ¶¨³É¹¦¡£
     KtBipartite(const GRAPH& g) : color_(g.order(), 0), bipartite_(true) {
 
         int color = 1;
@@ -23,25 +23,25 @@ public:
         for (; !iter.isEnd(); ++iter) {
             unsigned from = iter.from();
             assert(from != -1 && color_[from] > 0);
-            color = 3 - color_[from]; // flip 1 & 2ï¼Œç€ä¸çˆ¶èŠ‚ç‚¹ä¸åŒçš„é¢œè‰²
+            color = 3 - color_[from]; // flip 1 & 2£¬×ÅÓë¸¸½Úµã²»Í¬µÄÑÕÉ«
 
             unsigned v = *iter;
-            if (color_[v] == 3 - color) { // ç€è‰²å†²çª
+            if (color_[v] == 3 - color) { // ×ÅÉ«³åÍ»
                 color_[v] = -1;
                 bipartite_ = false;
                 break;
             }
 
-            color_[v] = color; // ç€è‰²
+            color_[v] = color; // ×ÅÉ«
         }
     }
 
 
-    // æ˜¯å¦äºŒåˆ†å›¾
+    // ÊÇ·ñ¶ş·ÖÍ¼
     bool ok() const { return bipartite_; }
 
 
-    // è¿”å›é¡¶ç‚¹vçš„ç€è‰²ï¼Œå€¼ä¸º1æˆ–è€…2ï¼Œåˆ†åˆ«ä»£è¡¨å¯¹åº”èŠ‚ç‚¹åœ¨ä¸åŒåˆ†å›¾ï¼Œ-1ä»£è¡¨å†²çªç‚¹
+    // ·µ»Ø¶¥µãvµÄ×ÅÉ«£¬ÖµÎª1»òÕß2£¬·Ö±ğ´ú±í¶ÔÓ¦½ÚµãÔÚ²»Í¬·ÖÍ¼£¬-1´ú±í³åÍ»µã
     int color(unsigned v) const { return color_[v]; }
 
 

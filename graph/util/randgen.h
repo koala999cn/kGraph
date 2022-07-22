@@ -3,14 +3,14 @@
 #include "../core/KtGraph.h"
 
 
-// è¿”å›[x0, x1]åŒºé—´çš„éšæœºæ•°
+// ·µ»Ø[x0, x1]Çø¼äµÄËæ»úÊı
 inline double rand(double x0, double x1)
 {
     return x0 + (x1 - x0) * rand() / RAND_MAX;
 }
 
 
-// ä»¥pçš„æ¦‚ç‡è¿”å›true.
+// ÒÔpµÄ¸ÅÂÊ·µ»Øtrue.
 // 0 <= p <= 1
 inline bool rand_p(double p)
 {
@@ -23,7 +23,7 @@ GRAPH randgen(unsigned V, unsigned E)
 {
     GRAPH g(V);
     double p = static_cast<double>(E) / (V * V);
-    if (!g.isDigraph()) p *= 2; // å¯¹äºæ— å‘å›¾ï¼Œè¾¹çš„ç”Ÿæˆæ¦‚ç‡ç¿»å€
+    if (!g.isDigraph()) p *= 2; // ¶ÔÓÚÎŞÏòÍ¼£¬±ßµÄÉú³É¸ÅÂÊ·­±¶
     for (unsigned i = 0; i < V; i++) {
         unsigned jMax = g.isDigraph() ? V : i + 1;
         for (unsigned j = 0; j < jMax; j++)

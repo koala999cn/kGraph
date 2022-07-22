@@ -15,8 +15,8 @@ void resort_test_(const DAG& g)
     DAG d(g);
     resort(d, ts.relabels());
     KtBfsIter<const DAG, true, true> iter(d, 0);
-    while (!iter.isEnd()) { // Ëø≠‰ª£ÊØèÊù°ÊúâÂêëËæπ
-        if (iter.from() > *iter) // Â∞èÁºñÂè∑ÊåáÂêëÂ§ßÁºñÂè∑
+    while (!iter.isEnd()) { // µ¸¥˙√øÃı”–œÚ±ﬂ
+        if (iter.from() > *iter) // –°±‡∫≈÷∏œÚ¥Û±‡∫≈
             test_failed(d);
         ++iter;
     }

@@ -8,7 +8,7 @@
 #include "test_util.h"
 
 
-// åˆ¤æ–­å›¾gæ˜¯å¦å«æœ‰è´Ÿæƒå€¼
+// ÅĞ¶ÏÍ¼gÊÇ·ñº¬ÓĞ¸ºÈ¨Öµ
 template<typename GRAPH, typename WEIGHTOR>
 bool hasNegWt(const GRAPH& g)
 {
@@ -21,7 +21,7 @@ bool hasNegWt(const GRAPH& g)
 }
 
 
-// è´Ÿç¯æ£€æµ‹
+// ¸º»·¼ì²â
 template<typename GRAPH>
 bool hasNegLoop(const GRAPH& g)
 {
@@ -86,7 +86,7 @@ void shortest_path_test_(const GRAPH& g)
     printf("  > passed\n"); fflush(stdout);
 
 
-    // dfsç®—æ³•å¤ªæ…¢ï¼Œå¼ƒç–—
+    // dfsËã·¨Ì«Âı£¬ÆúÁÆ
     //printf("      floyd vs. dfs");
     //fflush(stdout);
     //for (unsigned i = 0; i < g.order(); i++)
@@ -150,18 +150,18 @@ void shortest_path_test()
     shortest_path_test_(rg);
 
 
-    // æ„é€ æ— ç¯å›¾
+    // ¹¹ÔìÎŞ»·Í¼
     erase_loop(rg);
     printf("   random dag V = %d, E = %d\n", rg.order(), rg.size());
     fflush(stdout);
     shortest_path_test_(rg);
 
-/*  å¯¹DAGè¿›è¡Œæµ‹è¯•è²Œä¼¼æ— æ„ä¹‰ï¼Œè¿˜æ˜¯åº”è¯¥åœ¨æœ‰ç¯å›¾åŸºç¡€ä¸Šæ„å»ºè´Ÿæƒå€¼å›¾
-    TODO: é«˜æ•ˆæ„å»ºæ— è´Ÿç¯çš„å¸¦è´Ÿæƒå€¼å›¾çš„æ–¹æ³•
+/*  ¶ÔDAG½øĞĞ²âÊÔÃ²ËÆÎŞÒâÒå£¬»¹ÊÇÓ¦¸ÃÔÚÓĞ»·Í¼»ù´¡ÉÏ¹¹½¨¸ºÈ¨ÖµÍ¼
+    TODO: ¸ßĞ§¹¹½¨ÎŞ¸º»·µÄ´ø¸ºÈ¨ÖµÍ¼µÄ·½·¨
     KtBfsIter<DigraphDd, true, true> iter(rg, 0);
     unsigned neg_wt(0);
     for (; !iter.isEnd(); ++iter)
-        if (rand_p(0.1)) { // å°†10%çš„è¾¹ç½®ä¸ºè´Ÿæƒå€¼
+        if (rand_p(0.1)) { // ½«10%µÄ±ßÖÃÎª¸ºÈ¨Öµ
             rg.setEdge(iter.from(), *iter, -iter.value());
             ++neg_wt;
         }

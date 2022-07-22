@@ -4,18 +4,18 @@
 #include "KtAdjIter.h"
 
 
-// åŸºäºä¼˜å…ˆé˜Ÿåˆ—çš„å›¾éå†
+// »ùÓÚÓÅÏÈ¶ÓÁĞµÄÍ¼±éÀú
 
 
 
-// PRIORITOR - è®¡ç®—ä¼˜å…ˆåº¦çš„å‡½æ•°å­ï¼Œè¾“å…¥å‚æ•°ä¸ºï¼šfrom, to, value
-// COMP - æ¯”è¾ƒä¼˜å…ˆåº¦çš„å‡½æ•°å­
+// PRIORITOR - ¼ÆËãÓÅÏÈ¶ÈµÄº¯Êı×Ó£¬ÊäÈë²ÎÊıÎª£ºfrom, to, value
+// COMP - ±È½ÏÓÅÏÈ¶ÈµÄº¯Êı×Ó
 template <typename GRAPH, typename PRIORITOR, typename COMP, bool fullGraph = false>
 class KtPfsIter
 {
 public:
     using edge_type = typename GRAPH::edge_type;
-    using prior_type = decltype(std::declval<PRIORITOR>()(0, 0, edge_type(0))); // å¾—åˆ°PRIORITORç®—å­çš„è¿”å›ç±»å‹
+    using prior_type = decltype(std::declval<PRIORITOR>()(0, 0, edge_type(0))); // µÃµ½PRIORITORËã×ÓµÄ·µ»ØÀàĞÍ
     using element_type = std::pair<std::pair<unsigned, unsigned>, prior_type>;
 
     struct Comp {
@@ -49,8 +49,8 @@ public:
                 pq_.emplace(std::pair<unsigned, unsigned>{w, t}, PRIORITOR{}(w, t, iter.edge())); // put it
                 isPushed_[t] = true;
              }
-            else if(!isPopped(t) // isPopped(v0)å§‹ç»ˆä¸ºfalse
-                && (graph_.isDigraph() || t != x.first && t != v0_) // å¿½ç•¥æ— å‘å›¾çš„å›è¾¹
+            else if(!isPopped(t) // isPopped(v0)Ê¼ÖÕÎªfalse
+                && (graph_.isDigraph() || t != x.first && t != v0_) // ºöÂÔÎŞÏòÍ¼µÄ»Ø±ß
                 ) 
                 pq_.emplace(std::pair<unsigned, unsigned>{w, t}, PRIORITOR{}(w, t, iter.edge())); // update it
         }
@@ -63,14 +63,14 @@ public:
         }
     }
 
-    // è¿”å›å½“å‰æ­£åœ¨æ¸¸å†çš„é¡¶ç‚¹
+    // ·µ»Øµ±Ç°ÕıÔÚÓÎÀúµÄ¶¥µã
     unsigned operator*() const {
         assert(!isEnd());
         return pq_.top().first.second;
     }
 
 
-    // ä¸å½“å‰é¡¶ç‚¹ï¼ˆtoé¡¶ç‚¹ï¼‰æ„æˆè¾¹çš„fromé¡¶ç‚¹
+    // Óëµ±Ç°¶¥µã£¨to¶¥µã£©¹¹³É±ßµÄfrom¶¥µã
     unsigned from() const {
         assert(!isEnd());
         return pq_.top().first.first;
@@ -97,7 +97,7 @@ public:
     bool isEnd() const { return pq_.empty(); }
 
 
-    // ä»é¡¶ç‚¹vå¼€å§‹æ¥ç»­è¿›è¡Œå¹¿åº¦ä¼˜å…ˆéå†
+    // ´Ó¶¥µãv¿ªÊ¼½ÓĞø½øĞĞ¹ã¶ÈÓÅÏÈ±éÀú
     void start(unsigned v) {
         assert(isEnd() && !isPushed(v));
         pq_.emplace(std::pair<unsigned, unsigned>{-1, v}, 0);
@@ -114,7 +114,7 @@ private:
     unsigned v0_;
     std::vector<bool> isPushed_;
 
-    pfs_queue pq_; // è¾¹ç¼˜å¸¦
-    std::vector<unsigned> st_; // æ ‘
+    pfs_queue pq_; // ±ßÔµ´ø
+    std::vector<unsigned> st_; // Ê÷
 };
 

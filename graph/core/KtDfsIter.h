@@ -4,14 +4,14 @@
 #include <assert.h>
 
 
-// ç»Ÿä¸€æœ‰å‘å›¾ä¸æ— å‘å›¾çš„æ·±åº¦ä¼˜å…ˆéå†æ¨¡æ¿æ¡†æ¶ï¼Œé€šè¿‡æ¨¡æ¿å‚æ•°å¯æ”¯æŒå¤šç§éå†èŒƒå¼ã€‚
-// æ¨¡æ¿å‚æ•°ï¼š
-//    -- stopAtPoppingï¼Œè‹¥ä¸ºtrueï¼Œåˆ™æ¯ä¸ªé¡¶ç‚¹å‡ºæ ˆæ—¶è¿­ä»£å™¨æš‚åœï¼Œç”¨æˆ·æœ‰æœºä¼šå¤„ç†å‡ºæ ˆé¡¶ç‚¹.
-//    -- fullGraphï¼Œå‚è§KtBfsIter.
-//    -- modeEdgeï¼Œè¿­ä»£æ¨¡å¼ï¼Œfalseä¸ºé¡¶ç‚¹è¿­ä»£æ¨¡å¼ï¼Œtrueä¸ºè¾¹è¿­ä»£æ¨¡å¼
-//    -- stopAtPoppingï¼Œæ˜¯å¦å¤„ç†å‡ºæ ˆæƒ…å†µ
-// è¾¹æ¨¡å¼ä¸‹ï¼Œè‹¥stopAtPoppingä¸ºfalseï¼Œåˆå§‹çŠ¶æ€å³ä¸ºæœ‰æ•ˆè¾¹ï¼Œ æ­¤æ—¶from()è¿”å›èµ·å§‹é¡¶ç‚¹
-// è¾¹æ¨¡å¼ä¸‹ï¼Œè‹¥stopAtPoppingä¸ºtrueï¼Œåˆå§‹çŠ¶æ€ä»è¿”å›èµ·å§‹é¡¶ç‚¹ï¼Œæ­¤æ—¶from()è¿”å›-1ï¼Œ*æ“ä½œç¬¦è¿”å›èµ·å§‹é¡¶ç‚¹.
+// Í³Ò»ÓĞÏòÍ¼ÓëÎŞÏòÍ¼µÄÉî¶ÈÓÅÏÈ±éÀúÄ£°å¿ò¼Ü£¬Í¨¹ıÄ£°å²ÎÊı¿ÉÖ§³Ö¶àÖÖ±éÀú·¶Ê½¡£
+// Ä£°å²ÎÊı£º
+//    -- stopAtPopping£¬ÈôÎªtrue£¬ÔòÃ¿¸ö¶¥µã³öÕ»Ê±µü´úÆ÷ÔİÍ££¬ÓÃ»§ÓĞ»ú»á´¦Àí³öÕ»¶¥µã.
+//    -- fullGraph£¬²Î¼ûKtBfsIter.
+//    -- modeEdge£¬µü´úÄ£Ê½£¬falseÎª¶¥µãµü´úÄ£Ê½£¬trueÎª±ßµü´úÄ£Ê½
+//    -- stopAtPopping£¬ÊÇ·ñ´¦Àí³öÕ»Çé¿ö
+// ±ßÄ£Ê½ÏÂ£¬ÈôstopAtPoppingÎªfalse£¬³õÊ¼×´Ì¬¼´ÎªÓĞĞ§±ß£¬ ´ËÊ±from()·µ»ØÆğÊ¼¶¥µã
+// ±ßÄ£Ê½ÏÂ£¬ÈôstopAtPoppingÎªtrue£¬³õÊ¼×´Ì¬ÈÔ·µ»ØÆğÊ¼¶¥µã£¬´ËÊ±from()·µ»Ø-1£¬*²Ù×÷·û·µ»ØÆğÊ¼¶¥µã.
 template<typename GRAPH, bool fullGraph = false, bool modeEdge = false, bool stopAtPopping = false>
 class KtDfsIter
 {
@@ -23,13 +23,13 @@ public:
     using const_edge_ref = decltype(std::declval<adj_vertex_iter>().edge());
     constexpr static vertex_index_t null_vertex = -1;
 
-    constexpr static bool trace_multi_edges = !GRAPH::isDigraph() && GRAPH::isMultiEdges(); // å¯¹äºæ— å‘å¹³è¡Œå›¾ï¼Œdfsé¡»è¿½è¸ªå¹³è¡Œè¾¹
+    constexpr static bool trace_multi_edges = !GRAPH::isDigraph() && GRAPH::isMultiEdges(); // ¶ÔÓÚÎŞÏòÆ½ĞĞÍ¼£¬dfsĞë×·×ÙÆ½ĞĞ±ß
     using tracing_element_t = std::tuple<vertex_index_t, vertex_index_t, const_edge_ref>;
     using tracing_container_t = std::multiset<tracing_element_t>;
 
 
-    // graph -- å¾…éå†çš„å›¾
-    // startVertex -- éå†çš„èµ·å§‹é¡¶ç‚¹ï¼Œ-1è¡¨ç¤ºåªæ„å»ºè¿­ä»£å™¨ï¼Œéœ€è¦å¦å¤–è°ƒç”¨startæ–¹æ³•å¼€å§‹éå†
+    // graph -- ´ı±éÀúµÄÍ¼
+    // startVertex -- ±éÀúµÄÆğÊ¼¶¥µã£¬-1±íÊ¾Ö»¹¹½¨µü´úÆ÷£¬ĞèÒªÁíÍâµ÷ÓÃstart·½·¨¿ªÊ¼±éÀú
     KtDfsIter(GRAPH& graph, vertex_index_t startVertex)
         : graph_(graph)
         , v_(null_vertex)
@@ -47,7 +47,7 @@ public:
     void operator++() {
         assert(!isEnd());
 
-        if (isPopping()) { // å¤„ç†å‡ºæ ˆé¡¶ç‚¹
+        if (isPopping()) { // ´¦Àí³öÕ»¶¥µã
             assert(popOrd_[v_] == -1);
             popOrd_[v_] = popIdx_++;
             todo_.pop_back();
@@ -69,11 +69,11 @@ public:
         fixStack_();
     }
 
-    // è¿”å›å½“å‰æ­£åœ¨æ¸¸å†çš„é¡¶ç‚¹
+    // ·µ»Øµ±Ç°ÕıÔÚÓÎÀúµÄ¶¥µã
     vertex_index_t operator*() const { return v_; }
 
 
-    // ä¸å½“å‰é¡¶ç‚¹ï¼ˆtoé¡¶ç‚¹ï¼‰æ„æˆè¾¹çš„fromé¡¶ç‚¹
+    // Óëµ±Ç°¶¥µã£¨to¶¥µã£©¹¹³É±ßµÄfrom¶¥µã
     vertex_index_t from() const {
         assert(!isEnd());
         return isPopping() ? grandpa_() :
@@ -81,8 +81,8 @@ public:
     }
 
 
-    // è¿”å›è¾¹(from, to)çš„å€¼
-    // TODO: æš‚ä¸æ”¯æŒä¿®æ”¹æƒå€¼ã€‚è‹¥æ”¯æŒï¼Œé¡»åŒæ­¥æ›´æ–°pedges_
+    // ·µ»Ø±ß(from, to)µÄÖµ
+    // TODO: Ôİ²»Ö§³ÖĞŞ¸ÄÈ¨Öµ¡£ÈôÖ§³Ö£¬ĞëÍ¬²½¸üĞÂpedges_
     const_edge_ref edge() const {
         assert(!isEnd() && from() != null_vertex);
         return todo_.back().edge();
@@ -92,7 +92,7 @@ public:
     bool isEnd() const { return v_ == null_vertex; }
 
 
-    // ä»é¡¶ç‚¹vå¼€å§‹æ¥ç»­è¿›è¡Œå¹¿åº¦ä¼˜å…ˆéå†
+    // ´Ó¶¥µãv¿ªÊ¼½ÓĞø½øĞĞ¹ã¶ÈÓÅÏÈ±éÀú
     void start(vertex_index_t v) {
         assert(isEnd() && pushOrd_[v] == -1);
         todo_.clear();
@@ -106,7 +106,7 @@ public:
     void erase() {
         assert(!isEnd() && from() != null_vertex);
 
-        if (isPopping()) { // å¤„ç†å‡ºæ ˆé¡¶ç‚¹
+        if (isPopping()) { // ´¦Àí³öÕ»¶¥µã
             assert(popOrd_[v_] == -1);
             popOrd_[v_] = popIdx_++;
             todo_.pop_back();
@@ -123,7 +123,7 @@ public:
 
 
     /*
-    BGLä¸­å…³äºæ ‘è¾¹ã€å›è¾¹ã€ä¸‹è¾¹ã€è·¨è¾¹çš„å®šä¹‰ï¼š
+    BGLÖĞ¹ØÓÚÊ÷±ß¡¢»Ø±ß¡¢ÏÂ±ß¡¢¿ç±ßµÄ¶¨Òå£º
     - Tree edges are edges in the search tree(or forest) constructed by running a graph search algorithm over a graph. 
       An edge(u, v) is a tree edge if v was first discovered while exploring edge(u, v).
     - Back edges connect vertices to their ancestors in a search tree. 
@@ -133,19 +133,19 @@ public:
     - Cross edges are edges that do not fall into the above three categories.
     */
 
-    // æ ‘è¾¹ï¼Œè¡¨ç¤ºé€’å½’è°ƒç”¨ï¼ˆå³ç¬¬ä¸€æ¬¡è®¿é—®è¯¥èŠ‚ç‚¹ï¼‰
+    // Ê÷±ß£¬±íÊ¾µİ¹éµ÷ÓÃ£¨¼´µÚÒ»´Î·ÃÎÊ¸Ã½Úµã£©
     bool isTree() const {
         return pushOrd_[v_] == -1;
     }
 
 
-    // å›è¾¹ï¼Œè¡¨ç¤ºå½“å‰èŠ‚ç‚¹æ˜¯å‰åºèŠ‚ç‚¹çš„ç¥–å…ˆ
+    // »Ø±ß£¬±íÊ¾µ±Ç°½ÚµãÊÇÇ°Ğò½ÚµãµÄ×æÏÈ
     bool isBack() const {
         return !isTree() && !isPopping() && popOrd_[v_] == -1;
     }
 
 
-    // ä¸‹è¾¹/å‰è¾¹ï¼Œè¡¨ç¤ºå½“å‰èŠ‚ç‚¹æ˜¯å‰åºèŠ‚ç‚¹çš„å­å­™
+    // ÏÂ±ß/Ç°±ß£¬±íÊ¾µ±Ç°½ÚµãÊÇÇ°Ğò½ÚµãµÄ×ÓËï
     bool isDown() const {
         //return !isTree() && !isBack() && pushOrd_[**this] > pushOrd_[from()];
         assert(pushOrd_[from()] != -1);
@@ -153,25 +153,25 @@ public:
     }
 
 
-    // è·¨è¾¹ï¼Œè¡¨ç¤ºå½“å‰èŠ‚ç‚¹æ—¢ä¸æ˜¯å‰åºèŠ‚ç‚¹çš„ç¥–å…ˆï¼Œä¹Ÿä¸æ˜¯å­å­™
+    // ¿ç±ß£¬±íÊ¾µ±Ç°½Úµã¼È²»ÊÇÇ°Ğò½ÚµãµÄ×æÏÈ£¬Ò²²»ÊÇ×ÓËï
     bool isCross() const {
         //return !isTree() && !isBack() && !isDown();
-        return GRAPH::isDigraph() && popOrd_[v_] != -1; // åªæœ‰æœ‰å‘å›¾æ‰æœ‰è·¨è¾¹
+        return GRAPH::isDigraph() && popOrd_[v_] != -1; // Ö»ÓĞÓĞÏòÍ¼²ÅÓĞ¿ç±ß
     }
 
-    // å½“å‰èŠ‚ç‚¹æ˜¯å¦æ­£åœ¨å…¥æ ˆï¼Œå¯¹åº”äºé€’å½’çš„å…¥å£
+    // µ±Ç°½ÚµãÊÇ·ñÕıÔÚÈëÕ»£¬¶ÔÓ¦ÓÚµİ¹éµÄÈë¿Ú
     bool isPushing() const { return isTree(); }
 
-    // å½“å‰èŠ‚ç‚¹æ˜¯å¦æ­£åœ¨å‡ºæ ˆï¼Œå¯¹åº”äºé€’å½’çš„å‡ºå£
+    // µ±Ç°½ÚµãÊÇ·ñÕıÔÚ³öÕ»£¬¶ÔÓ¦ÓÚµİ¹éµÄ³ö¿Ú
     bool isPopping() const { 
         return stopAtPopping && !isPushing() && todo_.back().isEnd(); 
     }
 
-    // è·å–é¡¶ç‚¹vçš„å…¥æ ˆ/å‡ºæ ˆæ¬¡åºï¼Œç”¨äºäº‹åæ£€æµ‹
+    // »ñÈ¡¶¥µãvµÄÈëÕ»/³öÕ»´ÎĞò£¬ÓÃÓÚÊÂºó¼ì²â
     unsigned pushIndex(vertex_index_t v) const { return pushOrd_[v]; }
     unsigned popIndex(vertex_index_t v) const { return popOrd_[v]; }
 
-    // è·å–å½“å‰çš„å…¥æ ˆ/å‡ºæ ˆåºå·
+    // »ñÈ¡µ±Ç°µÄÈëÕ»/³öÕ»ĞòºÅ
     unsigned pushingIndex() const { return pushIdx_; }
     unsigned poppingIndex() const { return popIdx_; }
 
@@ -185,31 +185,31 @@ public:
 
 private:
 
-    // è¿”å›å½“å‰é¡¶ç‚¹çš„ç¥–çˆ¶é¡¶ç‚¹ï¼Œå³fromä¹‹from
+    // ·µ»Øµ±Ç°¶¥µãµÄ×æ¸¸¶¥µã£¬¼´fromÖ®from
     vertex_index_t grandpa_() const {
         return todo_.size() > 2 ? todo_[todo_.size() - 2].from() : null_vertex;
     }
 
 
-    // æ­¥è¿›æˆ–åˆ é™¤çš„åå¤„ç†
+    // ²½½ø»òÉ¾³ıµÄºó´¦Àí
     void fixStack_();
 
-    // æµ‹è¯•æ˜¯å¦éœ€è¦è·³è¿‡å½“å‰é¡¶ç‚¹/è¾¹
+    // ²âÊÔÊÇ·ñĞèÒªÌø¹ıµ±Ç°¶¥µã/±ß
     bool testSkip_() const;
 
-    // æœé›†graph_ä¸­çš„æ‰€æœ‰å¹³è¡Œè¾¹
+    // ËÑ¼¯graph_ÖĞµÄËùÓĞÆ½ĞĞ±ß
     template<bool dummy = trace_multi_edges, typename = std::enable_if_t<dummy>>
     void collectMultiEdges_();
       
-    // æ ‡è®°å¹³è¡Œè¾¹<from, to, wt>å·²éå†
+    // ±ê¼ÇÆ½ĞĞ±ß<from, to, wt>ÒÑ±éÀú
     template<bool dummy = trace_multi_edges, typename = std::enable_if_t<dummy>>
     void markMultiEdge_();
 
-    // æµ‹è¯•å¹³è¡Œè¾¹<from, to, wt>éå†çŠ¶æ€ï¼Œè¿”å›trueè¡¨ç¤ºå·²éå†
+    // ²âÊÔÆ½ĞĞ±ß<from, to, wt>±éÀú×´Ì¬£¬·µ»Øtrue±íÊ¾ÒÑ±éÀú
     template<bool dummy = trace_multi_edges, typename = std::enable_if_t<dummy>>
     bool testMultiEdge_() const;
 
-    // è¾…åŠ©å‡½æ•°ï¼šå®šä½å½“å‰è¾¹åœ¨graph_ä¸­çš„ä½ç½®
+    // ¸¨Öúº¯Êı£º¶¨Î»µ±Ç°±ßÔÚgraph_ÖĞµÄÎ»ÖÃ
     template<bool dummy = trace_multi_edges, typename = std::enable_if_t<dummy>>
     typename tracing_container_t::const_iterator findMultiEdges_() const {
 
@@ -223,26 +223,26 @@ private:
 private:
     graph_type& graph_;
 
-    // å¾…å¤„ç†çš„é‚»æ¥é¡¶ç‚¹è¿­ä»£å™¨
+    // ´ı´¦ÀíµÄÁÚ½Ó¶¥µãµü´úÆ÷
     std::vector<adj_vertex_iter> todo_;
 
-    vertex_index_t v_; // æ­£åœ¨éå†çš„é¡¶ç‚¹
+    vertex_index_t v_; // ÕıÔÚ±éÀúµÄ¶¥µã
 
-    std::vector<unsigned> pushOrd_, popOrd_; // ç”¨äºè®°å½•å„é¡¶ç‚¹çš„å‹æ ˆ/å‡ºæ ˆé¡ºåº
-    unsigned pushIdx_, popIdx_; // å½“å‰å‹æ ˆ/å‡ºæ ˆåºå·
+    std::vector<unsigned> pushOrd_, popOrd_; // ÓÃÓÚ¼ÇÂ¼¸÷¶¥µãµÄÑ¹Õ»/³öÕ»Ë³Ğò
+    unsigned pushIdx_, popIdx_; // µ±Ç°Ñ¹Õ»/³öÕ»ĞòºÅ
 
-    tracing_container_t pedges_; // å­˜å‚¨graph_æ‰€æœ‰æœªéå†çš„å¹³è¡Œè¾¹
+    tracing_container_t pedges_; // ´æ´¢graph_ËùÓĞÎ´±éÀúµÄÆ½ĞĞ±ß
 };
 
 
 template<typename GRAPH, bool fullGraph, bool modeEdge, bool stopAtPopping>
 void KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::fixStack_()
 {
-    // æ£€æµ‹å½“å‰é¡¶ç‚¹æ˜¯å¦éœ€è¦è·³è¿‡
+    // ¼ì²âµ±Ç°¶¥µãÊÇ·ñĞèÒªÌø¹ı
     while (todo_.size() > 1) {
         auto& iter = todo_.back();
 
-        // ç§»é™¤å·²ç»“æŸçš„è¿­ä»£å™¨
+        // ÒÆ³ıÒÑ½áÊøµÄµü´úÆ÷
         if (iter.isEnd()) {
             if constexpr (stopAtPopping) {
                 v_ = iter.from();
@@ -264,14 +264,14 @@ void KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::fixStack_()
         break;
     }
 
-    // æ›´æ–°v_å’Œæ¥ç»­éå†
+    // ¸üĞÂv_ºÍ½ÓĞø±éÀú
     if (todo_.size() <= 1) {
-        v_ = null_vertex; // è®¾ç½®ç»ˆæ­¢æ ‡è®°
+        v_ = null_vertex; // ÉèÖÃÖÕÖ¹±ê¼Ç
 
         if constexpr (fullGraph) {
             unsigned unvisted = firstUnvisited();
             if (unvisted != null_vertex)
-                start(unvisted); // æ¥ç»­éå†
+                start(unvisted); // ½ÓĞø±éÀú
         }
     }
     else {
@@ -286,16 +286,16 @@ bool KtDfsIter<GRAPH, fullGraph, modeEdge, stopAtPopping>::testSkip_() const
 {
     auto v = *todo_.back();
 
-    if constexpr (!modeEdge) // å¯¹äºé¡¶ç‚¹æ¨¡å¼ï¼Œæ¯ä¸ªé¡¶ç‚¹åªéå†ä¸€æ¬¡
+    if constexpr (!modeEdge) // ¶ÔÓÚ¶¥µãÄ£Ê½£¬Ã¿¸ö¶¥µãÖ»±éÀúÒ»´Î
         return pushOrd_[v] != -1;
 
-    // å¤„ç†æ— å‘å›¾çš„è¾¹è¿­ä»£æ¨¡å¼
+    // ´¦ÀíÎŞÏòÍ¼µÄ±ßµü´úÄ£Ê½
     if constexpr (!GRAPH::isDigraph()) {
 
-        if (popOrd_[v] != -1) // å¯¹äºæ— å‘å›¾ï¼Œè‹¥æŸé¡¶ç‚¹å·²å‡ºæ ˆï¼Œåˆ™ä¸ä¹‹é‚»æ¥çš„è¾¹å¿…ç„¶å·²éå†
+        if (popOrd_[v] != -1) // ¶ÔÓÚÎŞÏòÍ¼£¬ÈôÄ³¶¥µãÒÑ³öÕ»£¬ÔòÓëÖ®ÁÚ½ÓµÄ±ß±ØÈ»ÒÑ±éÀú
             return true;
 
-        if (v == grandpa_()) { // é˜²æ­¢æ— å‘å›¾çš„é¡¶ç‚¹å›æº¯ï¼Œå³é˜²æ­¢å·²éå†çš„æ— å‘è¾¹(v, w)å†æ¬¡é€šè¿‡(w, v)éå†
+        if (v == grandpa_()) { // ·ÀÖ¹ÎŞÏòÍ¼µÄ¶¥µã»ØËİ£¬¼´·ÀÖ¹ÒÑ±éÀúµÄÎŞÏò±ß(v, w)ÔÙ´ÎÍ¨¹ı(w, v)±éÀú
             if constexpr (trace_multi_edges)
                 if (!testMultiEdge_())
                     return false;

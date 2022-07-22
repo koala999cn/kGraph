@@ -4,7 +4,7 @@
 #include "KtRange.h"
 
 
-// ä¸€ä¸ªç®€å•çš„çŸ©é˜µæ¨¡æ¿å®ç°
+// Ò»¸ö¼òµ¥µÄ¾ØÕóÄ£°åÊµÏÖ
 template<typename T>
 class KtMatrix
 {
@@ -39,8 +39,8 @@ public:
 
     void reserve(unsigned rows, unsigned cols) { data_.reserve(rows * cols); }
 
-    unsigned rows() const { return rows_; } // è¡Œæ•°
-    unsigned cols() const { return cols_; } // åˆ—æ•°
+    unsigned rows() const { return rows_; } // ĞĞÊı
+    unsigned cols() const { return cols_; } // ÁĞÊı
 
 
     void insert(unsigned row, unsigned col, const_reference val) {
@@ -48,7 +48,7 @@ public:
     }
 
 
-    // è¿”å›ç¬¬idxè¡Œçš„è¿­ä»£èŒƒå›´
+    // ·µ»ØµÚidxĞĞµÄµü´ú·¶Î§
     auto row(unsigned idx) {
         row_element_iter start = std::next(data_.begin(), idx * cols_);
         return KtRange<row_element_iter>(start, cols_);
@@ -78,26 +78,26 @@ public:
     }
 
 
-    // @val: æ–°å¢è¡Œçš„åˆå§‹å€¼
+    // @val: ĞÂÔöĞĞµÄ³õÊ¼Öµ
     void appendRow(const_reference val) {
         data_.resize(data_.size() + cols_, val);
         ++rows_;
     }
 
 
-    // @val: æ–°å¢åˆ—çš„åˆå§‹å€¼
+    // @val: ĞÂÔöÁĞµÄ³õÊ¼Öµ
     void appendCol(const_reference val) {
         data_.resize(data_.size() + rows_);
         auto src = data_.data() + (rows_ - 1) * cols_;
         auto dst = data_.end() - 1;
-        for (unsigned r = 1; r < rows_; r++) { // é¦–è¡Œä¸ç§»åŠ¨ï¼Œæ‰€ä»¥rä»1èµ·
+        for (unsigned r = 1; r < rows_; r++) { // Ê×ĞĞ²»ÒÆ¶¯£¬ËùÒÔr´Ó1Æğ
             std::copy_backward(src, src + cols_, dst);
-            *dst = val; // æ–°å¢åˆ—èµ‹å€¼
+            *dst = val; // ĞÂÔöÁĞ¸³Öµ
             src -= cols_;
             dst -= cols_ + 1;
         }
 
-        *(src + cols_) = val; // é¦–è¡Œçš„æ–°å¢åˆ—èµ‹å€¼
+        *(src + cols_) = val; // Ê×ĞĞµÄĞÂÔöÁĞ¸³Öµ
 
         ++cols_;
     }

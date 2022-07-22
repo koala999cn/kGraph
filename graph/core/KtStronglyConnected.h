@@ -6,43 +6,43 @@
 
 
 /*
- 对于一个有向图顶点的子集S，如果在S内任取两个顶点u和v，都能找到一条从u到v的路径，那么S是强连通的。
- 如果在强连通的顶点集合S中加入其他任意顶点，它都不再是强连通的，那么S是原图的一个强连通分量（SCC：Strongly Connected Component）。
- 任意有向图都可以分解成若干不相干的SCC，这就是强连通分量分解。
- 把分解后的SCC缩成一个顶点，就得到一个DAG。
+ ����һ������ͼ������Ӽ�S�������S����ȡ��������u��v�������ҵ�һ����u��v��·������ôS��ǿ��ͨ�ġ�
+ �����ǿ��ͨ�Ķ��㼯��S�м����������ⶥ�㣬����������ǿ��ͨ�ģ���ôS��ԭͼ��һ��ǿ��ͨ������SCC��Strongly Connected Component����
+ ��������ͼ�����Էֽ�����ɲ���ɵ�SCC�������ǿ��ͨ�����ֽ⡣
+ �ѷֽ���SCC����һ�����㣬�͵õ�һ��DAG��
 */
 
 class KvStronglyConnected
 {
 public:
 
-    // 返回强连通分量数目
+    // ����ǿ��ͨ������Ŀ
     unsigned count() const {
         return numScc_;
     }
 
-    // 判断节点v和w是否属于同一强连通分量
+    // �жϽڵ�v��w�Ƿ�����ͬһǿ��ͨ����
     bool reachable(unsigned v, unsigned w) const {
         return idScc_[v] == idScc_[w];
     }
 
-    // 返回节点v所在强连通分量的ID
+    // ���ؽڵ�v����ǿ��ͨ������ID
     unsigned operator[](unsigned v) const {
         return idScc_[v];
     }
 
 
 protected:
-    unsigned numScc_; // 强连通分量数目
-    std::vector<unsigned> idScc_; // 强连通分量的id，相同id的顶点属于同一强连通分量
+    unsigned numScc_; // ǿ��ͨ������Ŀ
+    std::vector<unsigned> idScc_; // ǿ��ͨ������id����ͬid�Ķ�������ͬһǿ��ͨ����
 };
 
 
-// 基于Kosaraju算法的SCC分解
-// 算法通过两遍简单的DFS实现：
-//   第一遍：对所有顶点进行后序编号。完成后，越接近图的尾部（搜索树的叶子），顶点的编号越小。
-//   第二遍：先将所有边反向（或进行逆图操作），然后以编号最大的顶点为起点进行DFS，遍历顶点集合即为一个SCC。
-//          之后，只要还有尚未访问的顶点，就从中选取编号最大的不断重复DFS。
+// ����Kosaraju�㷨��SCC�ֽ�
+// �㷨ͨ������򵥵�DFSʵ�֣�
+//   ��һ�飺�����ж�����к����š���ɺ�Խ�ӽ�ͼ��β������������Ҷ�ӣ�������ı��ԽС��
+//   �ڶ��飺�Ƚ����б߷��򣨻������ͼ��������Ȼ���Ա�����Ķ���Ϊ������DFS���������㼯�ϼ�Ϊһ��SCC��
+//          ֮��ֻҪ������δ���ʵĶ��㣬�ʹ���ѡȡ������Ĳ����ظ�DFS��
 template<typename GRAPH>
 class KtStronglyConnectedKos : public KvStronglyConnected
 {
@@ -50,10 +50,10 @@ class KtStronglyConnectedKos : public KvStronglyConnected
 
 public:
     KtStronglyConnectedKos(const GRAPH& g) {
-        // 第一遍DFS
-        KtTopologySortInv<GRAPH> ts(g); // 拓扑排序算法只对DAG有效，所以此处使用基于DFS的逆拓扑排序计算后序编号
+        // ��һ��DFS
+        KtTopologySortInv<GRAPH> ts(g); // ���������㷨ֻ��DAG��Ч�����Դ˴�ʹ�û���DFS��������������������
 
-        // 第二遍DFS
+        // �ڶ���DFS
         auto gR = inverse(g); 
         unsigned V = g.order();
         numScc_ = 0;
@@ -74,18 +74,18 @@ public:
 
             ++numScc_;
 
-            // 搜索尚未访问的最大编号顶点
+            // ������δ���ʵ�����Ŷ���
             while(i != 0 && idScc_[ts[--i]] != -1);
 
-            if(idScc_[ts[i]] != -1) // 所有顶点均已访问
+            if(idScc_[ts[i]] != -1) // ���ж�����ѷ���
                 break;
         }
     }
 };
 
 
-// 基于Tarjan算法的SCC分解
-// 与findBridge算法相似，通过low值回溯以聚合连通分量
+// ����Tarjan�㷨��SCC�ֽ�
+// ��findBridge�㷨���ƣ�ͨ��lowֵ�����Ծۺ���ͨ����
 template<typename GRAPH>
 class KtStronglyConnectedTar : public KvStronglyConnected
 {
@@ -119,7 +119,7 @@ public:
 };
 
 
-// 基于Gabow算法的SCC分解
+// ����Gabow�㷨��SCC�ֽ�
 template<typename GRAPH>
 class KtStronglyConnectedGab : public KvStronglyConnected
 {

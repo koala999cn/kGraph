@@ -14,7 +14,7 @@ void dump(const GRAPH& g, const char* path)
 }
 
 
-// æµ‹è¯•å¤±è´¥æ—¶è°ƒç”¨è¯¥å‡½æ•°æ‰“å°ä¿¡æ¯ã€é€€å‡ºç¨‹åº
+// ²âÊÔÊ§°ÜÊ±µ÷ÓÃ¸Ãº¯Êı´òÓ¡ĞÅÏ¢¡¢ÍË³ö³ÌĞò
 template<typename GRAPH>
 void test_failed(const GRAPH& g, bool detail = false)
 {

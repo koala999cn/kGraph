@@ -14,7 +14,7 @@ bool has_selfloop(const GRAPH& g)
 }
 
 
-// è‡ªç¯<v, v>çš„æ•°é‡
+// ×Ô»·<v, v>µÄÊıÁ¿
 template<typename GRAPH>
 unsigned selfloops(const GRAPH& g, unsigned v)
 {
@@ -38,7 +38,7 @@ std::pair<unsigned, unsigned> selfloops(const GRAPH& g)
 }
 
 
-// åˆ é™¤è‡ªç¯
+// É¾³ı×Ô»·
 template<typename GRAPH>
 void erase_selfloop(GRAPH& g) 
 {
@@ -49,7 +49,7 @@ void erase_selfloop(GRAPH& g)
 }
 
 
-// ä¸€ä¸ªæœ‰å‘å›¾æ˜¯DAGï¼Œå½“ä¸”ä»…å½“åœ¨ä½¿ç”¨DFSæ£€æŸ¥æ¯æ¡è¾¹æ—¶æœªé‡åˆ°ä»»ä½•å›è¾¹
+// Ò»¸öÓĞÏòÍ¼ÊÇDAG£¬µ±ÇÒ½öµ±ÔÚÊ¹ÓÃDFS¼ì²éÃ¿Ìõ±ßÊ±Î´Óöµ½ÈÎºÎ»Ø±ß
 template<typename GRAPH>
 bool has_loop(const GRAPH& g) 
 {
@@ -64,11 +64,11 @@ bool has_loop(const GRAPH& g)
 }
     
 
-// åˆ é™¤ç¯
+// É¾³ı»·
 template<typename GRAPH>
 void erase_loop(GRAPH& g) 
 {
-    // åˆ é™¤å›è¾¹. è‡ªç¯ä¹Ÿæ˜¯å›è¾¹
+    // É¾³ı»Ø±ß. ×Ô»·Ò²ÊÇ»Ø±ß
     KtDfsIter<GRAPH, true, true> iter(g, 0);
     while(!iter.isEnd()) {
         if(iter.isBack())

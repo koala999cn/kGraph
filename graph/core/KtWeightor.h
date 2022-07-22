@@ -3,7 +3,7 @@
 
 #undef max
 
-// ä¸æƒå€¼æœ‰å…³çš„æ“ä½œï¼šåŒ…æ‹¬ä»è¾¹å€¼åˆ°æƒå€¼çš„è½¬æ¢ï¼Œæƒå€¼çš„æ¯”è¾ƒï¼Œæƒå€¼çš„ç´¯åŠ 
+// ÓëÈ¨ÖµÓĞ¹ØµÄ²Ù×÷£º°üÀ¨´Ó±ßÖµµ½È¨ÖµµÄ×ª»»£¬È¨ÖµµÄ±È½Ï£¬È¨ÖµµÄÀÛ¼Ó
 
 template<typename VALUE_TYPE>
 class KtWeightSelf
@@ -37,7 +37,7 @@ public:
 };
 
 
-// @minimumï¼šä¸ºtrueæ—¶åˆ™å°å€¼æ›´ä¼˜ï¼Œå¦åˆ™å¤§å€¼æ›´ä¼˜ã€‚
+// @minimum£ºÎªtrueÊ±ÔòĞ¡Öµ¸üÓÅ£¬·ñÔò´óÖµ¸üÓÅ¡£
 template<class WeightorBase, class Accumlate, bool minimum>
 class KtWeightor : public WeightorBase
 {
@@ -48,12 +48,12 @@ public:
         std::numeric_limits<weight_type>::lowest();
 
 
-    // w1æ˜¯å¦æ¯”w2æ›´ä¼˜ï¼Ÿ
+    // w1ÊÇ·ñ±Èw2¸üÓÅ£¿
     bool comp(const weight_type& w1, const weight_type& w2) const {
         return minimum ? w1 < w2 : w1 > w2;
     }
 
-    // æƒå€¼ç´¯åŠ 
+    // È¨ÖµÀÛ¼Ó
     auto acc(const weight_type& w1, const weight_type& w2) const {
         return Accumlate{}(w1, w2);
     }

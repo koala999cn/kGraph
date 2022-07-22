@@ -5,11 +5,11 @@
 #include <assert.h>
 
 
-// åŸºäºç¨€ç–é˜µçš„é‚»æ¥çŸ©é˜µå›¾å®ç°
+// »ùÓÚÏ¡ÊèÕóµÄÁÚ½Ó¾ØÕóÍ¼ÊµÏÖ
 
 namespace kPrivate
 {
-    // åŸºäºvectorçš„ç¨€ç–çŸ©é˜µ
+    // »ùÓÚvectorµÄÏ¡Êè¾ØÕó
     template<typename EDGE_TYPE>
     using underly_edge_t = edge_has_to_t<EDGE_TYPE>;
 
@@ -60,7 +60,7 @@ public:
 
     KtAdjGraphSparseImpl() = default;
 
-    // é‡ç½®å›¾ä¸ºnvé¡¶ç‚¹.
+    // ÖØÖÃÍ¼Îªnv¶¥µã.
     void reset(unsigned nv) {
         E_ = 0;
         adjMat_.clear(); adjMat_.resize(nv);
@@ -68,14 +68,14 @@ public:
             super_::vertexes_.resize(nv);
     }
 
-    // é¢„ç•™nvä¸ªé¡¶ç‚¹å’Œneæ¡è¾¹çš„å­˜å‚¨.
+    // Ô¤Áônv¸ö¶¥µãºÍneÌõ±ßµÄ´æ´¢.
     void reserve(unsigned nv, unsigned ne) {
         adjMat_.reserve(nv);
         if constexpr (!std::is_void_v<vertex_type>)
             super_::vertexes_.reserve(nv);
     }
 
-    // å¯¹é¡¶ç‚¹vé¢„ç•™neæ¡è¾¹çš„å­˜å‚¨.
+    // ¶Ô¶¥µãvÔ¤ÁôneÌõ±ßµÄ´æ´¢.
     void reserveEdges(unsigned v, unsigned ne) {
         adjMat_[v].reserve(ne);
     }
@@ -114,8 +114,8 @@ public:
     }
 
 
-    // åˆ é™¤é¡¶ç‚¹v
-    // è°ƒç”¨è¯¥å‡½æ•°å‰ï¼Œç¡®ä¿å·²åˆ é™¤vç›¸æ¥çš„æ‰€æœ‰è¾¹
+    // É¾³ı¶¥µãv
+    // µ÷ÓÃ¸Ãº¯ÊıÇ°£¬È·±£ÒÑÉ¾³ıvÏà½ÓµÄËùÓĞ±ß
     void eraseVertex(unsigned v) {
         assert(v < order() && adjMat_[v].empty());
 
@@ -125,7 +125,7 @@ public:
             super_::vertexes_.erase(std::next(super_::vertexes_.begin(), v));
     }
 
-    // åˆ é™¤é¡¶ç‚¹vçš„å‡ºè¾¹e
+    // É¾³ı¶¥µãvµÄ³ö±ße
     template<bool dummy = false>
     edge_iter eraseEdge(unsigned v, edge_iter e) {
         assert(e >= outedges(v).begin() && e < outedges(v).end());
@@ -134,7 +134,7 @@ public:
         return adjMat_[v].erase(e);
     }
 
-    // const_edge_iterç‰ˆæœ¬
+    // const_edge_iter°æ±¾
     template<bool dummy = false>
     edge_iter eraseEdge(unsigned v, const_edge_iter e) {
         assert(e >= outedges(v).cbegin() && e < outedges(v).cend());
@@ -144,7 +144,7 @@ public:
     }
 
 
-    // åˆ é™¤firståˆ°lastä¹‹é—´çš„è¾¹
+    // É¾³ıfirstµ½lastÖ®¼äµÄ±ß
     template<bool dummy = false>
     edge_iter eraseEdges(unsigned v, edge_iter first, edge_iter last) {
         assert(first >= outedges(v).begin() && last <= outedges(v).end());

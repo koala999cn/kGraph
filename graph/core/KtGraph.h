@@ -8,9 +8,9 @@
 #include "KtAdjIter.h"
 
 
-// å®ç°å›¾åŸºæœ¬æ“ä½œçš„å°è£…ï¼Œç»Ÿä¸€å¤„ç†digraph, multiEdges, alwaysSortedç­‰é…ç½®é¡¹ï¼Œä»¥åŠ
-// è¾¹å’Œé¡¶ç‚¹å¯¹è±¡å¯èƒ½å†…ç½®çš„toã€outdegreeç­‰å±æ€§ï¼Œç¡®ä¿åº•å±‚åªéœ€ä¸“æ³¨æ•°æ®ç»“æ„ï¼Œä¸ç”¨å…³å¿ƒ
-// é€‰é¡¹é…ç½®å’Œå†…ç½®å±æ€§çš„æ›´æ–°
+// ÊµÏÖÍ¼»ù±¾²Ù×÷µÄ·â×°£¬Í³Ò»´¦Àídigraph, multiEdges, alwaysSortedµÈÅäÖÃÏî£¬ÒÔ¼°
+// ±ßºÍ¶¥µã¶ÔÏó¿ÉÄÜÄÚÖÃµÄto¡¢outdegreeµÈÊôĞÔ£¬È·±£µ×²ãÖ»Ğè×¨×¢Êı¾İ½á¹¹£¬²»ÓÃ¹ØĞÄ
+// Ñ¡ÏîÅäÖÃºÍÄÚÖÃÊôĞÔµÄ¸üĞÂ
 
 namespace kPrivate
 {
@@ -57,7 +57,7 @@ class KtGraph : public GRAPH_IMPL
 public:
 	using graph_impl = GRAPH_IMPL;
 
-	// å¯¼å…¥ç±»å‹
+	// µ¼ÈëÀàĞÍ
 	using vertex_type = typename graph_impl::vertex_type;
 	using edge_type = typename graph_impl::edge_type;
 
@@ -67,7 +67,7 @@ public:
 	using vertex_index_t = unsigned;
 
 
-	// å¯¼å…¥å‡½æ•°
+	// µ¼Èëº¯Êı
 	using graph_impl::graph_impl;
 	using graph_impl::order;
 	using graph_impl::size;
@@ -81,17 +81,17 @@ public:
 	constexpr static bool hasVertex() { return !std::is_void_v<vertex_type>; }
 
 
-	// ç©ºå›¾
+	// ¿ÕÍ¼
 	bool isEmpty() const { return order() == 0; }
 
-	// å¹³å‡¡å›¾
+	// Æ½·²Í¼
 	bool isTrivial() const { return order() == 1; }
 
-	// é›¶å›¾
+	// ÁãÍ¼
 	bool isNull() const { return size() == 0; }
 
 
-	// é¡¶ç‚¹vçš„å‡ºåº¦ï¼Œå³væœ‰å¤šå°‘æ¡å‡ºè¾¹
+	// ¶¥µãvµÄ³ö¶È£¬¼´vÓĞ¶àÉÙÌõ³ö±ß
 	unsigned outdegree(unsigned v) const { 
 		if constexpr (vertexHasOutDegree_()) {
 			return outdegree_(v);
@@ -112,7 +112,7 @@ public:
 	}
 
 
-	// å…¥åº¦
+	// Èë¶È
 	unsigned indegree(unsigned v) const {
 		if constexpr (!isDigraph()) {
 			return outdegree(v);
@@ -126,7 +126,7 @@ public:
 	}
 
 
-	// åº¦. æ³¨ï¼šå¯¹äºæœ‰å‘å›¾çš„è‡ªç¯ï¼Œåº¦ä¸º2ï¼Œ1ä¸ªå…¥åº¦+1ä¸ªå‡ºåº¦
+	// ¶È. ×¢£º¶ÔÓÚÓĞÏòÍ¼µÄ×Ô»·£¬¶ÈÎª2£¬1¸öÈë¶È+1¸ö³ö¶È
 	unsigned degree(unsigned v) const {
 		auto d = outdegree(v);
 		if constexpr (isDigraph()) 
@@ -148,7 +148,7 @@ public:
 				kPrivate::KpEdgeCompAllInOne<underly_edge_t>{});
 			return KtRange(range.first, range.second);
 		}
-		else { // éœ€è¦è¿›è¡Œå…¨éå†ï¼Œæ”¶é›†<from, to>çš„æ‰€æœ‰multi-edges
+		else { // ĞèÒª½øĞĞÈ«±éÀú£¬ÊÕ¼¯<from, to>µÄËùÓĞmulti-edges
 			
 			static_assert(has_to_v<underly_edge_t>, "edge missing property of 'to'");
 
@@ -172,7 +172,7 @@ public:
 	}
 
 
-	// å¯¹å¤šè¾¹å›¾ï¼Œè¿”å›ç¬¬ä¸€æ¡è¾¹
+	// ¶Ô¶à±ßÍ¼£¬·µ»ØµÚÒ»Ìõ±ß
 	const edge_type& getEdge(unsigned from, unsigned to) const {
 		assert(hasEdge(from, to));
 		auto edges = this->edges(from, to);
@@ -180,7 +180,7 @@ public:
 	}
 
 
-	// ä»…å¯¹å¤šè¾¹å›¾æœ‰æ•ˆ
+	// ½ö¶Ô¶à±ßÍ¼ÓĞĞ§
 	template<bool dummy = multiEdges, typename = std::enable_if_t<dummy>>
 	auto getEdge(unsigned from, unsigned to, const edge_type& edge) const {
 		auto edges = this->edges(from, to);
@@ -194,7 +194,7 @@ public:
 		return edges.end();
 	}
 
-	// ä»…å¯¹å¤šè¾¹å›¾æœ‰æ•ˆ
+	// ½ö¶Ô¶à±ßÍ¼ÓĞĞ§
 	template<bool dummy = multiEdges, typename = std::enable_if_t<dummy>>
 	bool hasEdge(unsigned from, unsigned to, const edge_type& edge) const {
 		return getEdge(from, to, edge) != edges(from, to).end();
@@ -216,7 +216,7 @@ protected:
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-/// ç‰¹åŒ–immutableæ¥å£ï¼šå¯¹åº”äºlevel = 1
+/// ÌØ»¯immutable½Ó¿Ú£º¶ÔÓ¦ÓÚlevel = 1
 
 template<typename GRAPH_IMPL, bool digraph, bool multiEdges, bool alwaysSorted>
 class KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 1>
@@ -226,14 +226,14 @@ public:
 	using graph_level_0 = KtGraph<GRAPH_IMPL, digraph, multiEdges, alwaysSorted, 0>;
 	using typename graph_level_0::edge_type;
 	using typename graph_level_0::underly_edge_t;
-	using graph_level_0::edges;  // å¯¼å…¥constç‰ˆæœ¬çš„edges
+	using graph_level_0::edges;  // µ¼Èëconst°æ±¾µÄedges
 	using graph_level_0::isDigraph;
 	using graph_level_0::isDense;
 	using graph_level_0::isAlwaysSorted;
 	using graph_level_0::isMultiEdges;
 
 
-	// æä¾›ä¸€ä¸ªå¯å†™ç‰ˆæœ¬çš„edgeså®ç°
+	// Ìá¹©Ò»¸ö¿ÉĞ´°æ±¾µÄedgesÊµÏÖ
 	auto edges(unsigned from, unsigned to) {
 		decltype(auto) r = graph_level_0::outedges(from);
 		if constexpr (isDense()) {
@@ -265,7 +265,7 @@ public:
 	}
 
 
-	// ä»…å¯¹å¤šè¾¹å›¾æœ‰æ•ˆ
+	// ½ö¶Ô¶à±ßÍ¼ÓĞĞ§
 	template<bool dummy = !multiEdges, typename = std::enable_if_t<dummy>>
 	void setEdge(unsigned from, unsigned to, const edge_type& edge) {
 		assert(graph_level_0::hasEdge(from, to));
@@ -277,7 +277,7 @@ public:
 	}
 
 
-	// ä»…å¯¹å¤šè¾¹å›¾æœ‰æ•ˆ
+	// ½ö¶Ô¶à±ßÍ¼ÓĞĞ§
 	template<bool dummy = multiEdges, typename = std::enable_if_t<dummy>>
 	void setEdge(unsigned from, unsigned to, const edge_type& curEdge, const edge_type& newEdge) {
 		assert(graph_level_0::hasEdge(from, to, curEdge));
@@ -294,8 +294,8 @@ public:
 
 	using graph_level_0::getEdge;
 
-	// å¯¹äºæœ‰å‘å•è¾¹å›¾æä¾›getEdgeçš„å·¦å€¼æ¥å£ï¼Œæ— å‘å›¾åˆ™ä¸è¡Œ
-	// å› ä¸ºæ— å‘å›¾å®é™…ä¸Šä¿å­˜ç€ä¸¤æ¡è¾¹ï¼Œéœ€è¦ä¿æŒæƒå€¼ä¸€è‡´æ€§
+	// ¶ÔÓÚÓĞÏòµ¥±ßÍ¼Ìá¹©getEdgeµÄ×óÖµ½Ó¿Ú£¬ÎŞÏòÍ¼Ôò²»ĞĞ
+	// ÒòÎªÎŞÏòÍ¼Êµ¼ÊÉÏ±£´æ×ÅÁ½Ìõ±ß£¬ĞèÒª±£³ÖÈ¨ÖµÒ»ÖÂĞÔ
 	template<bool dummy = !multiEdges && digraph, typename = std::enable_if_t<dummy>>
 	edge_type& getEdge(unsigned from, unsigned to) {
 		auto edges = this->edges(from, to);
@@ -306,7 +306,7 @@ public:
 
 protected:
 
-	// ä»…å¯¹å¤šè¾¹å›¾æœ‰æ•ˆ
+	// ½ö¶Ô¶à±ßÍ¼ÓĞĞ§
 	template<bool dummy = multiEdges, typename = std::enable_if_t<dummy>>
 	auto getEdge_(unsigned from, unsigned to, const edge_type& edge) {
 		auto edges = this->edges(from, to);
@@ -323,7 +323,7 @@ protected:
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-/// ç‰¹åŒ–reshapableæ¥å£ï¼šå¯¹åº”äºlevel = 2
+/// ÌØ»¯reshapable½Ó¿Ú£º¶ÔÓ¦ÓÚlevel = 2
 //
 
 template<typename GRAPH_IMPL, bool digraph, bool multiEdges, bool alwaysSorted>
@@ -353,7 +353,7 @@ public:
 	}
 
 
-	// addVertexç›´æ¥ä½¿ç”¨åŸºç±»çš„å®ç°
+	// addVertexÖ±½ÓÊ¹ÓÃ»ùÀàµÄÊµÏÖ
 	using graph_level_1::addVertex;
 
 	void addEdge(unsigned from, unsigned to, const edge_type& edge) {
@@ -365,7 +365,7 @@ public:
 	}
 
 
-	// è‹¥edgeå…·toå±æ€§ï¼Œæä¾›ä¸€ä¸ªç®€åŒ–ç‰ˆçš„addEdgeæ¥å£
+	// Èôedge¾ßtoÊôĞÔ£¬Ìá¹©Ò»¸ö¼ò»¯°æµÄaddEdge½Ó¿Ú
 	template<typename EDGE_TYPE,
 		std::enable_if_t<has_to_v<EDGE_TYPE>, bool> = true>
 	void addEdge(unsigned from, const EDGE_TYPE& edge) {
@@ -373,7 +373,7 @@ public:
 	}
 
 
-	// è‹¥å…è®¸ï¼ˆedge_typeå¯æ•´å‹æ„é€ ï¼‰ï¼Œåˆ™æä¾›ä¸€ä¸ªaddEdgeçš„ç®€åŒ–ç‰ˆ
+	// ÈôÔÊĞí£¨edge_type¿ÉÕûĞÍ¹¹Ôì£©£¬ÔòÌá¹©Ò»¸öaddEdgeµÄ¼ò»¯°æ
 	template<typename EDGE_TYPE = edge_type,
 		std::enable_if_t<std::is_constructible_v<EDGE_TYPE, int>, bool> = true>
 	void addEdge(unsigned from, unsigned to) {
@@ -381,9 +381,9 @@ public:
 	}
 
 
-	using graph_level_1::eraseEdge;  // å¯¼å‡ºåŸºç±»çš„eraseEdgeï¼ŒKtAdjIterè¦ç”¨åˆ°
+	using graph_level_1::eraseEdge;  // µ¼³ö»ùÀàµÄeraseEdge£¬KtAdjIterÒªÓÃµ½
 
-	// åˆ é™¤fromåˆ°toçš„æ‰€æœ‰è¾¹
+	// É¾³ıfromµ½toµÄËùÓĞ±ß
 	void eraseEdge(unsigned from, unsigned to) {
 		eraseEdge_(from, to);
 		if constexpr (!isDigraph()) {
@@ -393,7 +393,7 @@ public:
 	}
 
 
-	// ä»…å¯¹å¤šè¾¹å›¾æœ‰æ•ˆ
+	// ½ö¶Ô¶à±ßÍ¼ÓĞĞ§
 	template<bool dummy = multiEdges, typename = std::enable_if_t<dummy>>
 	void eraseEdge(unsigned v, unsigned w, const edge_type& val) {
 		assert(graph_level_1::hasEdge(v, w, val));
@@ -412,7 +412,7 @@ public:
 	}
 
 
-	// TODO: ä¼˜åŒ–
+	// TODO: ÓÅ»¯
 	void eraseOutEdges(unsigned v) {
 		if constexpr (isDense()) {
 			for (unsigned u = 0; u < order(); u++)
@@ -421,9 +421,9 @@ public:
 		else {
 			decltype(auto) r = graph_level_1::outedges(v);
 
-			std::set<unsigned> us; // å…¼å®¹ç±»ä¼¼flatå›¾çš„è¾¹å­˜å‚¨å¸ƒå±€ï¼Œå…ˆä¿å­˜å„æ¡è¾¹çš„toé¡¶ç‚¹ï¼Œè€Œåå†åˆ é™¤æ— å‘å›¾(to, from)è¾¹
-								   // å¦‚æœå…ˆæ‰§è¡Œåˆ é™¤æ“ä½œï¼Œå¯èƒ½ä¼šå½±å“å·²åœ¨rä¸­çš„è¿­ä»£å™¨
-								   // è€ƒè™‘å¤šè¾¹ï¼Œé€‰æ‹©setå®¹å™¨
+			std::set<unsigned> us; // ¼æÈİÀàËÆflatÍ¼µÄ±ß´æ´¢²¼¾Ö£¬ÏÈ±£´æ¸÷Ìõ±ßµÄto¶¥µã£¬¶øºóÔÙÉ¾³ıÎŞÏòÍ¼(to, from)±ß
+								   // Èç¹ûÏÈÖ´ĞĞÉ¾³ı²Ù×÷£¬¿ÉÄÜ»áÓ°ÏìÒÑÔÚrÖĞµÄµü´úÆ÷
+								   // ¿¼ÂÇ¶à±ß£¬Ñ¡ÔñsetÈİÆ÷
 			if constexpr (!isDigraph()) 
 				for (auto& e : r)
 					us.insert(to_(e));
@@ -451,7 +451,7 @@ public:
 	}
 
 
-	// åˆ é™¤ä¸é¡¶ç‚¹vç›¸æ¥çš„æ‰€æœ‰è¾¹
+	// É¾³ıÓë¶¥µãvÏà½ÓµÄËùÓĞ±ß
 	void eraseEdges(unsigned v) {
 		eraseOutEdges(v);
 		if constexpr (isDigraph())
@@ -463,8 +463,8 @@ public:
 		eraseEdges(v);
 		graph_level_1::eraseVertex(v);
 
-		// è°ƒæ•´å„è¾¹çš„toå€¼
-		// TODO: è€ƒè™‘alwaysSortedä¼˜åŒ–
+		// µ÷Õû¸÷±ßµÄtoÖµ
+		// TODO: ¿¼ÂÇalwaysSortedÓÅ»¯
 		if constexpr (!isDense()) {
 			for (unsigned i = 0; i < order(); i++) {
 				decltype(auto) r = graph_level_1::outedges(i);
@@ -479,7 +479,7 @@ public:
 
 private:
 
-	// @dummy: è‹¥ä¸ºtrueï¼Œåˆ™è¡¨ç¤ºæ·»åŠ çš„æ˜¯æ— å‘å›¾è¾¹çš„åå‘è¾¹
+	// @dummy: ÈôÎªtrue£¬Ôò±íÊ¾Ìí¼ÓµÄÊÇÎŞÏòÍ¼±ßµÄ·´Ïò±ß
 	template<bool dummy = false>
 	void addEdge_(unsigned from, unsigned to, const edge_type& edge) {
 		decltype(auto) r = graph_level_1::outedges(from);
@@ -489,7 +489,7 @@ private:
 		else if constexpr (!isAlwaysSorted()) {
 			static_assert(has_to_v<underly_edge_t>, "edge missing property of 'to'");
 
-			auto iter = graph_level_1::template addEdge<dummy>(from, r.end(), edge); // è‹¥ä¸æ’åºï¼Œæ·»åŠ è¾¹åˆ°å°¾éƒ¨
+			auto iter = graph_level_1::template addEdge<dummy>(from, r.end(), edge); // Èô²»ÅÅĞò£¬Ìí¼Ó±ßµ½Î²²¿
 			to_(*iter) = to;
 		}
 		else {
@@ -522,7 +522,7 @@ private:
 			if constexpr (graph_level_1::vertexHasOutDegree_())
 				outdegree_(from) -= edges.size();
 		}
-		else {// æœªæ’åºçš„å¤šè¾¹ï¼Œä¾æ¬¡æ£€æŸ¥
+		else {// Î´ÅÅĞòµÄ¶à±ß£¬ÒÀ´Î¼ì²é
 			do {
 				auto pos = graph_level_1::template eraseEdge<dummy>(from, edges.begin());
 				auto end = graph_level_1::outedges(from).end();

@@ -2,11 +2,11 @@
 #include "KtDfsIter.h"
 
 
-// KtDfsIterçš„åŠ å¼ºç‰ˆï¼Œæ€»æ˜¯stopAtPoppingï¼Œä¸»è¦æ–°å¢2é¡¹æ–°åŠŸèƒ½æ”¯æŒï¼š
-//   ä¸€æ˜¯æ–°å¢é¡¶ç‚¹çš„æœ€å°å‰åºç¼–å·æ”¯æŒï¼ˆlowå€¼ï¼‰ï¼Œè¡¨ç¤ºè¯¥é¡¶ç‚¹ä¸ºæ ¹çš„å­æ ‘ä¸­ä»»ä½•å›è¾¹æ‰€å¼•ç”¨çš„æœ€å°å‰åºç¼–å·ï¼ˆorderå€¼ï¼‰
-//   äºŒæ˜¯æ–°å¢åˆ¤æ–­å½“å‰é¡¶ç‚¹ä¸å…¶çˆ¶é¡¶ç‚¹æ˜¯å¦ä¸ºæ¡¥çš„æ”¯æŒ
-// lowå€¼å®šä¹‰ï¼š low(v) = min(pushOrder[v], low[w], pushOrder[k])  
-//   å¼ä¸­ï¼šwæ˜¯é¡¶ç‚¹vçš„å­©å­èŠ‚ç‚¹ï¼Œkæ˜¯é¡¶ç‚¹vçš„å›è¾¹ç¥–å…ˆèŠ‚ç‚¹
+// KtDfsIterµÄ¼ÓÇ¿°æ£¬×ÜÊÇstopAtPopping£¬Ö÷ÒªĞÂÔö2ÏîĞÂ¹¦ÄÜÖ§³Ö£º
+//   Ò»ÊÇĞÂÔö¶¥µãµÄ×îĞ¡Ç°Ğò±àºÅÖ§³Ö£¨lowÖµ£©£¬±íÊ¾¸Ã¶¥µãÎª¸ùµÄ×ÓÊ÷ÖĞÈÎºÎ»Ø±ßËùÒıÓÃµÄ×îĞ¡Ç°Ğò±àºÅ£¨orderÖµ£©
+//   ¶şÊÇĞÂÔöÅĞ¶Ïµ±Ç°¶¥µãÓëÆä¸¸¶¥µãÊÇ·ñÎªÇÅµÄÖ§³Ö
+// lowÖµ¶¨Òå£º low(v) = min(pushOrder[v], low[w], pushOrder[k])  
+//   Ê½ÖĞ£ºwÊÇ¶¥µãvµÄº¢×Ó½Úµã£¬kÊÇ¶¥µãvµÄ»Ø±ß×æÏÈ½Úµã
 template<typename GRAPH, bool fullGraph = false>
 class KtDfsIterX : public KtDfsIter<GRAPH, false, true, true>
 {
@@ -28,7 +28,7 @@ public:
     using super_::firstUnvisited;
 
 
-    // é‡å†™çˆ¶ç±»çš„++æ“ä½œç¬¦é‡è½½
+    // ÖØĞ´¸¸ÀàµÄ++²Ù×÷·ûÖØÔØ
     void operator++() { 
         super_::operator++();
 
@@ -37,7 +37,7 @@ public:
             
             if(isPushing()) {
                 assert(pushIndex(w) == -1);
-                low_[w] = pushingIndex(); // åˆå§‹åŒ–low(v) = pushOrder[v]
+                low_[w] = pushingIndex(); // ³õÊ¼»¯low(v) = pushOrder[v]
             }
             else {
                 unsigned v = from();
@@ -59,7 +59,7 @@ public:
     }
 
 
-    // é‡å†™çˆ¶ç±»çš„startæ–¹æ³•ï¼Œä»¥åŒæ­¥æ›´æ–°lowå€¼
+    // ÖØĞ´¸¸ÀàµÄstart·½·¨£¬ÒÔÍ¬²½¸üĞÂlowÖµ
     void start(unsigned v) {
         super_::start(v);
         low_[v] = pushingIndex();
@@ -82,5 +82,5 @@ public:
 
 
 private:
-    std::vector<unsigned> low_; // å­˜å‚¨å„èŠ‚ç‚¹å±•å¼€å­å­™èŠ‚ç‚¹æ‰€è¿æ¥èŠ‚ç‚¹çš„æœ€å°åºå·
+    std::vector<unsigned> low_; // ´æ´¢¸÷½ÚµãÕ¹¿ª×ÓËï½ÚµãËùÁ¬½Ó½ÚµãµÄ×îĞ¡ĞòºÅ
 };

@@ -3,8 +3,8 @@
 #include "../core/graph_traits.h"
 
 
-// åˆ¤æ–­ä¸¤ä¸ªå›¾g1ã€g2çš„æ‹“æ‰‘ç»“æ„æ˜¯å¦ç›¸åŒï¼Œä¸å¯¹é¡¶ç‚¹å¯¹è±¡è¿›è¡Œæ¯”è¾ƒ
-// å‡å®šé¡¶ç‚¹é¡ºåºä¸€è‡´
+// ÅĞ¶ÏÁ½¸öÍ¼g1¡¢g2µÄÍØÆË½á¹¹ÊÇ·ñÏàÍ¬£¬²»¶Ô¶¥µã¶ÔÏó½øĞĞ±È½Ï
+// ¼Ù¶¨¶¥µãË³ĞòÒ»ÖÂ
 template<typename G1, typename G2>
 bool is_topo_same(const G1& g1, const G2& g2)
 {
@@ -45,7 +45,7 @@ bool is_topo_same(const G1& g1, const G2& g2)
 template<typename G1, typename G2>
 bool is_same(const G1& g1, const G2& g2)
 {
-    // å…ˆæ¯”è¾ƒé¡¶ç‚¹å¯¹è±¡
+    // ÏÈ±È½Ï¶¥µã¶ÔÏó
     if constexpr (!std::is_same_v<graph_traits<G1>::vertex_type, graph_traits<G2>::vertex_type>)
         return false;
 
@@ -56,6 +56,6 @@ bool is_same(const G1& g1, const G2& g2)
     }
 
 
-    // å†æ¯”è¾ƒæ‹“æ‰‘ç»“æ„
+    // ÔÙ±È½ÏÍØÆË½á¹¹
     return is_topo_same(g1, g2);
 }

@@ -6,7 +6,7 @@
 #include "../base/union_find_set.h"
 
 
-// æœ€å°ç”Ÿæˆæ ‘ï¼šåŠ æƒå›¾çš„æœ€å°ç”Ÿæˆæ ‘æ˜¯ä¸€é¢—ç”Ÿæˆæ ‘ï¼Œå…¶æƒï¼ˆæ‰€æœ‰è¾¹çš„æƒå€¼ä¹‹å’Œï¼‰ä¸ä¼šå¤§äºå…¶å®ƒä»»ä½•ç”Ÿæˆæ ‘çš„æƒã€‚
+// ×îĞ¡Éú³ÉÊ÷£º¼ÓÈ¨Í¼µÄ×îĞ¡Éú³ÉÊ÷ÊÇÒ»¿ÅÉú³ÉÊ÷£¬ÆäÈ¨£¨ËùÓĞ±ßµÄÈ¨ÖµÖ®ºÍ£©²»»á´óÓÚÆäËüÈÎºÎÉú³ÉÊ÷µÄÈ¨¡£
 
 
 template<typename GRAPH, typename WEIGHTOR>
@@ -24,23 +24,23 @@ public:
     }
 
 
-    // æ˜¯å¦æˆåŠŸç”Ÿæˆmst
+    // ÊÇ·ñ³É¹¦Éú³Émst
     bool ok() const { return mst_.size() == graph_.order() - 1; }
 
 
-    // è·å–mstçš„ç¬¬iæ¡è¾¹ï¼Œi < V - 1
+    // »ñÈ¡mstµÄµÚiÌõ±ß£¬i < V - 1
     auto operator[](unsigned i) const {
         return mst_[i];
     }
 
 
-    // mstçš„ç´¯åŠ æƒå€¼
+    // mstµÄÀÛ¼ÓÈ¨Öµ
     double distance() const {
         return dist_;
     }
 
 
-    // ç”Ÿæˆå¹¶è¿”å›MSTçš„å›¾è¡¨ç¤ºï¼Œå›¾ç±»å‹ä¸ºG
+    // Éú³É²¢·µ»ØMSTµÄÍ¼±íÊ¾£¬Í¼ÀàĞÍÎªG
     template<typename G>
     G toGraph() const {
         G g(mst_.size() + 1);
@@ -71,18 +71,18 @@ protected:
 
 protected:
     const GRAPH& graph_;
-    std::vector<std::pair<unsigned, unsigned>> mst_; // mstçš„V-1æ¡è¾¹
-    double dist_; // mstçš„æƒå€¼ç´¯è®¡
+    std::vector<std::pair<unsigned, unsigned>> mst_; // mstµÄV-1Ìõ±ß
+    double dist_; // mstµÄÈ¨ÖµÀÛ¼Æ
 };
 
 
-// Primæ˜¯æœ€ç®€å•çš„MSTç®—æ³•ï¼Œè€Œä¸”å¯¹äºç¨ å¯†å›¾ä¹Ÿæ˜¯é¦–é€‰æ–¹æ³•ã€‚
-// ç®—æ³•çš„æ ¸å¿ƒæ€æƒ³ï¼šç»´æŠ¤ä¸€ä¸ªå›¾çš„å‰ªåˆ‡ï¼Œå®ƒç”±æ ‘é¡¶ç‚¹ï¼ˆé€‰æ‹©æ”¾å…¥MSTï¼‰å’Œéæ ‘é¡¶ç‚¹ï¼ˆå°šæœªé€‰æ‹©æ”¾å…¥MSTï¼‰ç»„æˆï¼Œ
-// é€šè¿‡åœ¨MSTä¸­æ”¾ç½®ä»»æ„ä¸€ä¸ªé¡¶ç‚¹ï¼Œä»¥æ­¤ä½œä¸ºå¼€å§‹ï¼Œå†åœ¨MSTä¸­æ”¾å…¥ä¸€æ¡æœ€å°äº¤å‰è¾¹ï¼ˆå®ƒå°†éæ ‘é¡¶ç‚¹è°ƒæ•´ä¸ºæ ‘é¡¶ç‚¹ï¼‰ï¼Œ
-// å¹¶é‡å¤æ­¤æ“ä½œV-1æ¬¡ï¼Œä»è€Œå°†æ‰€æœ‰é¡¶ç‚¹éƒ½æ”¾åœ¨æ ‘ä¸Šã€‚
-// Primç®—æ³•çš„è¿è¡Œæ—¶é—´ä¸V^2æˆæ­£æ¯”ï¼Œå› æ­¤å¯¹äºç¨ å¯†å›¾æ˜¯çº¿æ€§çš„ã€‚
-// @WEIGHTORï¼šä»valueåˆ°weightçš„è½¬æ¢å­
-// @minimumï¼šä¸ºtrueåˆ™å–æœ€å°æƒå€¼ï¼Œå¦åˆ™å–æœ€å¤§æƒå€¼
+// PrimÊÇ×î¼òµ¥µÄMSTËã·¨£¬¶øÇÒ¶ÔÓÚ³íÃÜÍ¼Ò²ÊÇÊ×Ñ¡·½·¨¡£
+// Ëã·¨µÄºËĞÄË¼Ïë£ºÎ¬»¤Ò»¸öÍ¼µÄ¼ôÇĞ£¬ËüÓÉÊ÷¶¥µã£¨Ñ¡Ôñ·ÅÈëMST£©ºÍ·ÇÊ÷¶¥µã£¨ÉĞÎ´Ñ¡Ôñ·ÅÈëMST£©×é³É£¬
+// Í¨¹ıÔÚMSTÖĞ·ÅÖÃÈÎÒâÒ»¸ö¶¥µã£¬ÒÔ´Ë×÷Îª¿ªÊ¼£¬ÔÙÔÚMSTÖĞ·ÅÈëÒ»Ìõ×îĞ¡½»²æ±ß£¨Ëü½«·ÇÊ÷¶¥µãµ÷ÕûÎªÊ÷¶¥µã£©£¬
+// ²¢ÖØ¸´´Ë²Ù×÷V-1´Î£¬´Ó¶ø½«ËùÓĞ¶¥µã¶¼·ÅÔÚÊ÷ÉÏ¡£
+// PrimËã·¨µÄÔËĞĞÊ±¼äÓëV^2³ÉÕı±È£¬Òò´Ë¶ÔÓÚ³íÃÜÍ¼ÊÇÏßĞÔµÄ¡£
+// @WEIGHTOR£º´Óvalueµ½weightµÄ×ª»»×Ó
+// @minimum£ºÎªtrueÔòÈ¡×îĞ¡È¨Öµ£¬·ñÔòÈ¡×î´óÈ¨Öµ
 template<typename GRAPH, class WEIGHTOR = default_wtor<GRAPH>>
 class KtMstPrim : public KtMst<GRAPH, WEIGHTOR>
 {
@@ -97,22 +97,22 @@ public:
         unsigned min = -1;
         unsigned V = g.order();
         assert(mst_.size() == 0);
-        std::vector<bool> non_mst(V, true); // å…ƒç´ iæ ‡è®°é¡¶ç‚¹iæ˜¯å¦ä¸åœ¨mstæ ‘ä¸­
-        std::vector<unsigned> fr(V, -1); // fr[i]å­˜å‚¨ä¸é¡¶ç‚¹iè¿æ¥çš„æœ€å°æƒå€¼è¾¹çš„é¡¶ç‚¹
-        std::vector<weight_type> wt(V, WEIGHTOR{}.worst_weight); // wt[i]å­˜å‚¨ä¸é¡¶ç‚¹iè¿æ¥çš„è¾¹çš„æœ€å°æƒå€¼
+        std::vector<bool> non_mst(V, true); // ÔªËØi±ê¼Ç¶¥µãiÊÇ·ñ²»ÔÚmstÊ÷ÖĞ
+        std::vector<unsigned> fr(V, -1); // fr[i]´æ´¢Óë¶¥µãiÁ¬½ÓµÄ×îĞ¡È¨Öµ±ßµÄ¶¥µã
+        std::vector<weight_type> wt(V, WEIGHTOR{}.worst_weight); // wt[i]´æ´¢Óë¶¥µãiÁ¬½ÓµÄ±ßµÄ×îĞ¡È¨Öµ
 
-        for(unsigned v = 0; min != 0; v = min) { // vè¡¨ç¤ºæ–°åŠ å…¥msté¡¶ç‚¹é›†çš„é¡¶ç‚¹
-            min = 0; // ç”¨æ¥å­˜å‚¨æ­¤è½®æœç´¢ä¸­ï¼Œä¸msté¡¶ç‚¹é›†ç›¸è¿çš„æœ€å°æƒå€¼äº¤å‰è¾¹é¡¶ç‚¹
+        for(unsigned v = 0; min != 0; v = min) { // v±íÊ¾ĞÂ¼ÓÈëmst¶¥µã¼¯µÄ¶¥µã
+            min = 0; // ÓÃÀ´´æ´¢´ËÂÖËÑË÷ÖĞ£¬Óëmst¶¥µã¼¯ÏàÁ¬µÄ×îĞ¡È¨Öµ½»²æ±ß¶¥µã
             for(unsigned w = 1; w < g.order(); w++) {
-                if(non_mst[w]) { // éå†ä¸åœ¨msté¡¶ç‚¹é›†ä¸­çš„é¡¶ç‚¹ï¼Œæ‰¾åˆ°æœ€å°äº¤å‰è¾¹
-                    if(g.hasEdge(v, w)) { // åªéœ€åˆ¤æ–­æ–°åŠ å…¥msté¡¶ç‚¹vä¸wçš„æƒå€¼æ˜¯å¦æ›´å°
+                if(non_mst[w]) { // ±éÀú²»ÔÚmst¶¥µã¼¯ÖĞµÄ¶¥µã£¬ÕÒµ½×îĞ¡½»²æ±ß
+                    if(g.hasEdge(v, w)) { // Ö»ĞèÅĞ¶ÏĞÂ¼ÓÈëmst¶¥µãvÓëwµÄÈ¨ÖµÊÇ·ñ¸üĞ¡
                         auto e = g.getEdge(v, w);
                         double p = wtor(e);
                         if(wtor.comp(p, wt[w]))
                             wt[w] = p, fr[w] = v;
                     }
 
-                    if(wtor.comp(wt[w], wt[min])) min = w; // å‘ç°ä¸€æ¡æ›´å°çš„æƒå€¼è¾¹ï¼Œè®°å½•å®ƒ
+                    if(wtor.comp(wt[w], wt[min])) min = w; // ·¢ÏÖÒ»Ìõ¸üĞ¡µÄÈ¨Öµ±ß£¬¼ÇÂ¼Ëü
                 }
             }
 
@@ -126,12 +126,12 @@ public:
 };
 
 
-// Kruskaléå†è¾¹æ¥ç”ŸæˆMSTï¼š
-//   1. é¦–å…ˆå°†Vä¸ªé¡¶ç‚¹çœ‹ä½œVé¢—å•é¡¶ç‚¹æ ‘;
-//   2. é€‰æ‹©æƒå€¼æœ€å°çš„è¾¹ï¼Œåˆå¹¶ä¸¤é¢—æ ‘ï¼›
-//   3. è‹¥æ„æˆç¯ï¼Œåˆ™èˆå¼ƒæ”¹æ¡è¾¹;
-//   4. é‡å¤2ï¼Œç›´è‡³æ‰¾åˆ°ç»„æˆMSTçš„V-1æ¡è¾¹
-// ç®—æ³•æ—¶é—´å¤æ‚åº¦E*lgEï¼Œå…¶ä¸­æ’åºå¼€é”€å ä¸»å¯¼åœ°ä½
+// Kruskal±éÀú±ßÀ´Éú³ÉMST£º
+//   1. Ê×ÏÈ½«V¸ö¶¥µã¿´×÷V¿Åµ¥¶¥µãÊ÷;
+//   2. Ñ¡ÔñÈ¨Öµ×îĞ¡µÄ±ß£¬ºÏ²¢Á½¿ÅÊ÷£»
+//   3. Èô¹¹³É»·£¬ÔòÉáÆú¸ÄÌõ±ß;
+//   4. ÖØ¸´2£¬Ö±ÖÁÕÒµ½×é³ÉMSTµÄV-1Ìõ±ß
+// Ëã·¨Ê±¼ä¸´ÔÓ¶ÈE*lgE£¬ÆäÖĞÅÅĞò¿ªÏúÕ¼Ö÷µ¼µØÎ»
 template<typename GRAPH, typename WEIGHTOR = default_wtor<GRAPH>>
 class KtMstKruskal : public KtMst<GRAPH, WEIGHTOR>
 {
@@ -143,7 +143,7 @@ public:
     KtMstKruskal(const GRAPH& g) : super_{g} {
         auto all_edges = super_::edges(g);
 
-        // é™åºæ’åºï¼Œæƒå€¼æœ€å°çš„è¾¹åœ¨å°¾éƒ¨ï¼Œæ–¹ä¾¿å‡ºæ ˆ
+        // ½µĞòÅÅĞò£¬È¨Öµ×îĞ¡µÄ±ßÔÚÎ²²¿£¬·½±ã³öÕ»
         std::sort(std::begin(all_edges), std::end(all_edges),
             [](const auto& x1, const auto& x2) { return WEIGHTOR{}.comp(x2.wt, x1.wt); });
 
@@ -155,7 +155,7 @@ public:
         for(unsigned i = 0; i < E && mst_.size() < V - 1; i++) {
             const auto& e = all_edges.back();
             unsigned v = e.from, w = e.to;
-            if(uf.unite(v, w)) { // è‹¥åˆå¹¶æˆåŠŸï¼Œåˆ™ä¸€å®šæ— ç¯
+            if(uf.unite(v, w)) { // ÈôºÏ²¢³É¹¦£¬ÔòÒ»¶¨ÎŞ»·
                 mst_.push_back({ e.from, e.to });
                 dist_ = WEIGHTOR{}.acc(dist_, e.wt);
             }
@@ -166,9 +166,9 @@ public:
 
 
 
-// Boruvkaä¸Kruskalç®—æ³•ç±»ä¼¼ï¼Œéƒ½æ˜¯ä»æ£®æ—å¼€å§‹æ„å»ºmstã€‚
-// ä¸åŒç‚¹åœ¨äºKruskalæ¯æ¬¡å¢åŠ 1æ¡æœ€å°è·¨è¾¹ï¼Œè€ŒBoruvkaæ¯æ¬¡å¢åŠ 1æ‰¹ã€‚
-// ç®—æ³•æ—¶é—´å¤æ‚åº¦E*lgV
+// BoruvkaÓëKruskalËã·¨ÀàËÆ£¬¶¼ÊÇ´ÓÉ­ÁÖ¿ªÊ¼¹¹½¨mst¡£
+// ²»Í¬µãÔÚÓÚKruskalÃ¿´ÎÔö¼Ó1Ìõ×îĞ¡¿ç±ß£¬¶øBoruvkaÃ¿´ÎÔö¼Ó1Åú¡£
+// Ëã·¨Ê±¼ä¸´ÔÓ¶ÈE*lgV
 template<typename GRAPH, typename WEIGHTOR = default_wtor<GRAPH>>
 class KtMstBoruvka : public KtMst<GRAPH, WEIGHTOR>
 {
@@ -183,27 +183,27 @@ public:
 
         const unsigned V = g.order();
         auto edges = super_::edges(g);
-        unsigned N; // æœ‰æ•ˆè¾¹æ•°é‡
+        unsigned N; // ÓĞĞ§±ßÊıÁ¿
         std::vector<const typename super_::KpEdge_*> b;
         union_find_set uf(V);
 
-        // ä»å•é¡¶ç‚¹å­æ ‘å¼€å§‹
+        // ´Óµ¥¶¥µã×ÓÊ÷¿ªÊ¼
         for(unsigned E = unsigned(edges.size()); E != 0 && mst_.size() < V - 1; E = N) { 
             b.assign(V, nullptr);
             N = 0;
 
-            // æœç´¢è¿æ¥æ¯ä¸¤é¢—å­æ ‘çš„æœ€å°è·¨è¾¹ï¼Œå­˜å‚¨åˆ°æ•°ç»„bä¸­ã€‚
+            // ËÑË÷Á¬½ÓÃ¿Á½¿Å×ÓÊ÷µÄ×îĞ¡¿ç±ß£¬´æ´¢µ½Êı×ébÖĞ¡£
             for(unsigned h = 0; h < E; h++) { 
                 const auto& e = edges[h];
                 unsigned i = uf.find(e.from), j = uf.find(e.to);
                 if(i == j) continue;
-                edges[N] = e; // å¤åˆ¶æœ‰æ•ˆè¾¹ï¼Œç­‰åŒäºåˆ é™¤æ— æ•ˆè¾¹
+                edges[N] = e; // ¸´ÖÆÓĞĞ§±ß£¬µÈÍ¬ÓÚÉ¾³ıÎŞĞ§±ß
                 if (b[i] == nullptr || WEIGHTOR{}.comp(e.wt, b[i]->wt)) b[i] = &edges[N];
                 if (b[j] == nullptr || WEIGHTOR{}.comp(e.wt, b[j]->wt)) b[j] = &edges[N];
                 ++N;
             }
 
-            // å°†å­˜å‚¨åœ¨bä¸­çš„æœ€å°è·¨è¾¹ï¼ŒæŒ‰ç…§æŸ¥å¹¶é›†çš„æ¨¡å¼æ·»åŠ åˆ°mstã€‚
+            // ½«´æ´¢ÔÚbÖĞµÄ×îĞ¡¿ç±ß£¬°´ÕÕ²é²¢¼¯µÄÄ£Ê½Ìí¼Óµ½mst¡£
             for(unsigned h = 0; h < V; h++)
                 if(b[h] != nullptr && uf.unite(b[h]->from, b[h]->to)) {
                     mst_.push_back(std::pair<unsigned, unsigned>(b[h]->from, b[h]->to));

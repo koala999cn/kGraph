@@ -1,7 +1,7 @@
 #pragma once
 #include "KtBfsIter.h"
 
-// æ— å‘å›¾çš„è¿é€šåˆ†é‡
+// ÎŞÏòÍ¼µÄÁ¬Í¨·ÖÁ¿
 
 template<typename GRAPH>
 class KtConnected
@@ -25,21 +25,21 @@ public:
     }
 
 
-    // è¿”å›è¿é€šåˆ†é‡æ•°é‡
+    // ·µ»ØÁ¬Í¨·ÖÁ¿ÊıÁ¿
     auto count() const { return count_; }
 
-    // é¡¶ç‚¹vå’Œé¡¶ç‚¹wæ˜¯å¦è¿é€š
+    // ¶¥µãvºÍ¶¥µãwÊÇ·ñÁ¬Í¨
     bool reachable(unsigned v, unsigned w) const {
         return cc_[v] == cc_[w];;
     }
 
-    // è¿”å›èŠ‚ç‚¹væ‰€åœ¨è¿é€šåˆ†é‡çš„id, 0 <= id < count().
+    // ·µ»Ø½ÚµãvËùÔÚÁ¬Í¨·ÖÁ¿µÄid, 0 <= id < count().
     unsigned operator[](unsigned v) const {
         return cc_[v];
     }
 
 
 private:
-    unsigned count_; // è¿é€šåˆ†é‡çš„æ•°é‡
-    std::vector<unsigned> cc_; // cc_[i]è¡¨ç¤ºé¡¶ç‚¹iå¯¹åº”çš„è¿é€šåˆ†é‡åºå·
+    unsigned count_; // Á¬Í¨·ÖÁ¿µÄÊıÁ¿
+    std::vector<unsigned> cc_; // cc_[i]±íÊ¾¶¥µãi¶ÔÓ¦µÄÁ¬Í¨·ÖÁ¿ĞòºÅ
 };

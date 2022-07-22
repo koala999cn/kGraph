@@ -6,9 +6,9 @@
 #include "KtStronglyConnected.h"
 
 
-// è®¡ç®—å›¾çš„é—­åŒ…çš„åŸºç±»
-// @useSpare: æ˜¯å¦ä½¿ç”¨ç¨€ç–å›¾ä¿å­˜é—­åŒ…ç»“æœ
-// TODO: é—­åŒ…ç»“æœä¸åŒ…å«è·¯å¾„ä¿¡æ¯å’Œæƒå€¼ä¿¡æ¯
+// ¼ÆËãÍ¼µÄ±Õ°üµÄ»ùÀà
+// @useSpare: ÊÇ·ñÊ¹ÓÃÏ¡ÊèÍ¼±£´æ±Õ°ü½á¹û
+// TODO: ±Õ°ü½á¹û²»°üº¬Â·¾¶ĞÅÏ¢ºÍÈ¨ÖµĞÅÏ¢
 template<typename GRAPH, bool useSpare>
 class KtTcAbstract
 {
@@ -32,7 +32,7 @@ public:
     }
 
 
-    // åˆ¤æ–­é—­åŒ…å›¾ä¸­væ˜¯å¦å¯è¾¾w
+    // ÅĞ¶Ï±Õ°üÍ¼ÖĞvÊÇ·ñ¿É´ïw
     bool reachable(vertex_index_t v, vertex_index_t w) const {
         return clsg_.hasEdge(v, w);
     }
@@ -51,13 +51,13 @@ protected:
     }
 
 private:
-    closure_graph_t clsg_; // é—­åŒ…å›¾
+    closure_graph_t clsg_; // ±Õ°üÍ¼
 };
 
 
 /*
-  åŸºäºWarshallç®—æ³•çš„é—­åŒ…å®ç°.
-  Warshallç®—æ³•å°†åŸºäºå¸ƒå°”çŸ©é˜µçš„ä¼ é€’é—­åŒ…å®ç°æ—¶é—´å¤æ‚åº¦ä»V ^ 3 * log2Vé™ä½ä¸ºV ^ 3
+  »ùÓÚWarshallËã·¨µÄ±Õ°üÊµÏÖ.
+  WarshallËã·¨½«»ùÓÚ²¼¶û¾ØÕóµÄ´«µİ±Õ°üÊµÏÖÊ±¼ä¸´ÔÓ¶È´ÓV ^ 3 * log2V½µµÍÎªV ^ 3
  */
 
 template<typename GRAPH, bool useSpare = false>
@@ -73,10 +73,10 @@ public:
         auto V = g.order();
         for (unsigned v = 0; v < V; v++) 
             for (unsigned w = 0; w < V; w++)
-                if (v == w || g.hasEdge(v, w)) // ç”¨è°“è¯åˆå§‹åŒ–ï¼Œå¹¶ç¡®ä¿è‡ªç¯
+                if (v == w || g.hasEdge(v, w)) // ÓÃÎ½´Ê³õÊ¼»¯£¬²¢È·±£×Ô»·
                     set_(v, w);
 
-        // Warshallç®—æ³•
+        // WarshallËã·¨
         for (unsigned i = 0; i < V; i++)
             for (unsigned s = 0; s < V; s++)
                 if (reachable(s, i)) {
@@ -89,8 +89,8 @@ public:
 
 
 /*
-  åŸºäºDFSçš„é—­åŒ…å®ç°.
-  å®ƒä»¥Gçš„å„ä¸ªé¡¶ç‚¹ä½œä¸ºå¼€å§‹å®Œæˆä¸€ä¸ªå•ç‹¬çš„DFSï¼Œè®¡ç®—å…¶å¯è¾¾çš„é¡¶ç‚¹é›†ï¼Œä»¥æ­¤è®¡ç®—ä¼ é€’é—­åŒ…ã€‚
+  »ùÓÚDFSµÄ±Õ°üÊµÏÖ.
+  ËüÒÔGµÄ¸÷¸ö¶¥µã×÷Îª¿ªÊ¼Íê³ÉÒ»¸öµ¥¶ÀµÄDFS£¬¼ÆËãÆä¿É´ïµÄ¶¥µã¼¯£¬ÒÔ´Ë¼ÆËã´«µİ±Õ°ü¡£
  */
 
 template<typename GRAPH, bool useSpare = false>
@@ -119,11 +119,11 @@ public:
 
 
 /*
-  DAGçš„ä¼ é€’é—­åŒ…ï¼ŒåŸºäºDFSç®—æ³•å®ç°ã€‚
-  ç›¸æ¯”KtClosureDfsï¼Œä¸»è¦åˆ©ç”¨DAGçš„ç‰¹æ€§è¿›è¡Œä¼˜åŒ–.
-    1.æ²¡æœ‰å›è¾¹
-    2.ä¸‹è¾¹å¯ä»¥å¿½ç•¥ï¼Œå³ä¸ç”¨é€’å½’å±•å¼€ï¼Œä¹Ÿä¸ç”¨å›æº¯ä¼ é€’é—­åŒ…
-    3.è·¨è¾¹ä¸ç”¨é€’å½’å±•å¼€ï¼Œç›´æ¥å›æº¯å³å¯
+  DAGµÄ´«µİ±Õ°ü£¬»ùÓÚDFSËã·¨ÊµÏÖ¡£
+  Ïà±ÈKtClosureDfs£¬Ö÷ÒªÀûÓÃDAGµÄÌØĞÔ½øĞĞÓÅ»¯.
+    1.Ã»ÓĞ»Ø±ß
+    2.ÏÂ±ß¿ÉÒÔºöÂÔ£¬¼´²»ÓÃµİ¹éÕ¹¿ª£¬Ò²²»ÓÃ»ØËİ´«µİ±Õ°ü
+    3.¿ç±ß²»ÓÃµİ¹éÕ¹¿ª£¬Ö±½Ó»ØËİ¼´¿É
  */
 
 template<typename GRAPH, bool useSpare = false>
@@ -151,7 +151,7 @@ public:
             if (!iter.isPopping())
                 set_(p, v);
 
-            assert(!iter.isBack()); // DAGæ²¡æœ‰å›è¾¹
+            assert(!iter.isBack()); // DAGÃ»ÓĞ»Ø±ß
 
             if (iter.isCross() || iter.isPopping()) {
                 auto iter = super_::adjIter_(v);
@@ -164,7 +164,7 @@ public:
 
 
 /*
- åŸºäºå¼ºåˆ†é‡çš„ä¼ é€’é—­åŒ…å®ç°.
+ »ùÓÚÇ¿·ÖÁ¿µÄ´«µİ±Õ°üÊµÏÖ.
  */
 
 template<typename GRAPH, bool useSpare = false>
@@ -174,20 +174,20 @@ public:
     using vertex_index_t = typename GRAPH::vertex_index_t;
 
     KtTcScc(const GRAPH& g) : scc_(g) {
-        // ä»¥æ¯ä¸ªå¼ºè¿é€šåˆ†é‡ä¸ºä¸€ä¸ªé¡¶ç‚¹æ„å»ºDAG
+        // ÒÔÃ¿¸öÇ¿Á¬Í¨·ÖÁ¿ÎªÒ»¸ö¶¥µã¹¹½¨DAG
         DigraphDx<bool> K(scc_.count());
         for (unsigned v = 0; v < g.order(); v++) {
             auto iter = KtAdjIter(g, v);
             while (!iter.isEnd()) {
                 auto x = scc_[v];
                 auto y = scc_[*iter];
-                if (x != y && !K.hasEdge(x, y)) // æ¶ˆé™¤è‡ªç¯
+                if (x != y && !K.hasEdge(x, y)) // Ïû³ı×Ô»·
                     K.addEdge(x, y);
                 ++iter;
             }
         }
 
-        // ä½¿ç”¨åŸºäºDAGçš„ä¼ é€’é—­åŒ…ä¼˜åŒ–ç®—æ³•
+        // Ê¹ÓÃ»ùÓÚDAGµÄ´«µİ±Õ°üÓÅ»¯Ëã·¨
         dagCls_ = new KtTcDag<DigraphDx<bool>>(K);
     }
 
