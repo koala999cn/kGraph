@@ -14,3 +14,8 @@
 
 /test/graph/graph_dump.txt
 /extend/hmm/Debug
+/test/graph/x64/Debug
+/test/wfst/x64/Debug
+/x64/Debug
+/graph/x64/Debug
+/extend/wfst/x64/Debug

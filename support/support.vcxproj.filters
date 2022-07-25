@@ -15,36 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KcGaussPdf.cpp">
+    <ClCompile Include="kaldi\KuBasicIO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="KgHmm.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="KcGroupModel.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="KcMixModel.cpp">
+    <ClCompile Include="kaldi\KuGmm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KcGaussPdf.h">
+    <ClInclude Include="kaldi\KuBasicIO.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="KvProbModel.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="KgHmm.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="KcGroupModel.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="KcMixModel.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="KtuMath.h">
+    <ClInclude Include="kaldi\KuGmm.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

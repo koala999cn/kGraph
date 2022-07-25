@@ -19,24 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="KcGaussPdf.cpp" />
-    <ClCompile Include="KgHmm.cpp" />
-    <ClCompile Include="KcGroupModel.cpp" />
-    <ClCompile Include="KcMixModel.cpp" />
+    <ClCompile Include="kaldi\KuBasicIO.cpp" />
+    <ClCompile Include="kaldi\KuGmm.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="KcGaussPdf.h" />
-    <ClInclude Include="KgHmm.h" />
-    <ClInclude Include="KcGroupModel.h" />
-    <ClInclude Include="KcMixModel.h" />
-    <ClInclude Include="KtuMath.h" />
-    <ClInclude Include="KvProbModel.h" />
+    <ClInclude Include="kaldi\KuBasicIO.h" />
+    <ClInclude Include="kaldi\KuGmm.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{175b8528-bc0a-4ed2-bdd5-67fd2c6e2e21}</ProjectGuid>
-    <RootNamespace>hmm</RootNamespace>
+    <ProjectGuid>{9f27e17f-e101-4007-bf11-3438b34f2f5d}</ProjectGuid>
+    <RootNamespace>support</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -87,25 +81,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <TargetName>kHmmd</TargetName>
+    <TargetName>kgsupd</TargetName>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <TargetName>kHmm</TargetName>
+    <TargetName>kgsup</TargetName>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <TargetName>kHmm_$(Platform)d</TargetName>
+    <TargetName>kgsup_x64d</TargetName>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\</OutDir>
-    <TargetName>kHmm_$(Platform)</TargetName>
+    <TargetName>kgsup_x64</TargetName>
     <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -3,7 +3,7 @@
 #include <set>
 #include <map>
 #include <assert.h>
-#include "stlex.h"
+#include "../common/stlex.h"
 #include "util/inverse.h"
 #include "core/KtAdjIter.h"
 #include "KtWfstHolder.h"
@@ -129,7 +129,7 @@ public:
 				}
 
 		/// ππ‘Ïwfst_
-		wfst().reset(P_.size());
+		wfst().reset(static_cast<unsigned>(P_.size()));
 
 		// E' <- E' + { (B(p[e]), i[e], o[e], w[e], B(n[e])) }
 		auto eiter = infst_.transIter();

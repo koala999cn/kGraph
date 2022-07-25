@@ -13,7 +13,7 @@ public:
 	// 返回观察值obs的输出概率(log值)
 	double prob(const double* obs) const override;
 
-	unsigned dim() const override { return mean_.size(); }
+	unsigned dim() const override { return static_cast<unsigned>(mean_.size()); }
 
 	bool isDiagnal() const { return mean_.size() == invCov_.size(); }
 
