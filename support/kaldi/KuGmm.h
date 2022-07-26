@@ -1,5 +1,5 @@
 #pragma once
-#include "istreamx.h"
+#include "../common/istreamx.h"
 #include <vector>
 #include <memory>
 
@@ -17,5 +17,7 @@ public:
 
 	// 读取kaldi的gmm模型序列
 	static std::vector<std::shared_ptr<kGmm>> loadList(stdx::istreamx& strm);
+
+	static std::vector<std::shared_ptr<kGmm>> loadList(const char* filePath);
 
 };

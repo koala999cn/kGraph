@@ -37,7 +37,7 @@ void dfs_test_(const GRAPH& g)
     for (; !dfs2.isEnd(); ++dfs2)
         e.push_back({ dfs2.from(), *dfs2 });
     if (e.size() != g.size()) {
-        printf("  expected %d but got %d edges", g.size(), e.size());
+        printf("  expected %d but got %d edges", int(g.size()), int(e.size()));
         test_failed(g);
     }
     for (auto i : e) {

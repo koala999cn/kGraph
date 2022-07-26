@@ -21,6 +21,9 @@
     <ClCompile Include="kaldi\KuGmm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\KuEndian.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kaldi\KuBasicIO.h">

@@ -1,12 +1,10 @@
 #pragma once
-#include "istreamx.h"
-#include "stlex.h"
+#include "../common/istreamx.h"
+#include "../common/stlex.h"
 #include <vector>
 #include <string>
 #include <assert.h>
 
-class KgModelSet;
-class KcGmm;
 
 class KuBasicIO
 {
@@ -164,6 +162,8 @@ bool KuBasicIO::readFloatMatrix(stdx::istreamx& strm, std::vector<std::vector<T>
 template<typename T>
 bool KuBasicIO::readTable(stdx::istreamx& strm, std::string& key, std::vector<std::vector<T>>& table)
 {
+	assert(!strm.binary()); // 因为要读取key字符串，必须先设置非bin模式
+
 	strm >> key;
 	if (!strm) 
 		return false;

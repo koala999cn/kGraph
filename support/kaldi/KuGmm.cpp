@@ -1,5 +1,6 @@
 #include "KuGmm.h"
 #include <assert.h>
+#include <fstream>
 #include "KuBasicIO.h"
 #include "KtuMath.h"
 #include "../extend/hmm/KcMixModel.h"
@@ -112,4 +113,19 @@ std::vector<std::shared_ptr<kGmm>> KuGmm::loadList(stdx::istreamx& strm)
     }
 
     return ms;
+}
+
+
+std::vector<std::shared_ptr<kGmm>> KuGmm::loadList(const char* filePath)
+{
+    std::ifstream ifs(filePath, std::ios_base::binary);
+    if (!ifs)
+        return { 0 };
+
+    auto bin = KuBasicIO::binaryTest(ifs);
+    if (!bin)
+        return { 0 }; // 暂不支持text模式
+
+    stdx::istreamx strm(ifs, bin);
+    return loadList(strm);
 }
