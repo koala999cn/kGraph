@@ -2,11 +2,11 @@
 #include <unordered_map>
 #include <map>
 #include <assert.h>
-#include "GraphX.h"
-#include "core/KtBfsIter.h"
-#include "core/KtAdjIter.h"
+#include "../graph/GraphX.h"
+#include "../graph/core/KtBfsIter.h"
+#include "../graph/core/KtAdjIter.h"
+#include "../graph/core/vertex_traits.h"
 #include "trans_traits.h"
-#include "core/vertex_traits.h"
 
 
 // 基本定义和实现算法参考Mehryar Mohri的系列论文
@@ -79,22 +79,22 @@ public:
 	constexpr static const auto eps = traits_type::eps;
 	constexpr static state_index_t null_state = -1;
 
-	// 导入构造
 	using super_::super_;
+	using super_::order;
 
 	// 状态是否具有权值属性？
 	constexpr static bool hasStateWeight() {
 		return has_weight_v<vertex_type>;
 	}
 
-	auto transIter() { return edgeIter(); }
-	auto transIter() const { return edgeIter(); }
+	auto transIter() { return super_::edgeIter(); }
+	auto transIter() const { return super_::edgeIter(); }
 
 
-	state_index_t addState() { return addVertex(); }
+	state_index_t addState() { return super_::addVertex(); }
 
 	void eraseState(state_index_t s) {
-		eraseVertex(s);
+		super_::eraseVertex(s);
 
 		// 更新初始/终止状态序号
 		updateStateIdx_(initials_, s);
@@ -382,7 +382,7 @@ public:
 				}
 			};
 
-			std::map<KpTrans, adj_iter> trans;
+			std::map<KpTrans, super_::adj_iter> trans;
 			auto iter = adjIter(s);	
 			while (!iter.isEnd()) {
 				auto& edge = iter.edge();

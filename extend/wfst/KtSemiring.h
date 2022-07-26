@@ -2,7 +2,7 @@
 #include <cmath>
 #include <algorithm>
 #include <limits>
-#include "base/KtHolder.h"
+#include "../graph/base/KtHolder.h"
 
 
 // 半环的模板抽象类
@@ -14,6 +14,7 @@ public:
 	using super_ = KtHolder<T>;
 	using super_::super_;
 	using typename super_::value_type;
+	using super_::inside;
 
 	value_type value() const { return inside(); }
 
@@ -92,6 +93,7 @@ class KtLogSemiring : public KtSemiring<T>
 public:
 	using super_ = KtSemiring<T>;
 	using super_::super_;
+	using super_::value;
 
 	static const KtLogSemiring& zero() {
 		static const KtLogSemiring z(std::numeric_limits<T>::infinity());
@@ -129,8 +131,9 @@ template<typename T>
 class KtNegLogSemiring : public KtSemiring<T>
 {
 public:
-	using KtSemiring<T>::KtSemiring;
-
+	using super_ = KtSemiring<T>;
+	using super_::super_;
+	using super_::value;
 
 	static const KtNegLogSemiring& zero() {
 		static const KtNegLogSemiring z(-std::numeric_limits<T>::infinity());
@@ -171,8 +174,9 @@ template<typename T, bool doMax = false>
 class KtTropicalSemiring : public KtSemiring<T>
 {
 public:
-	using KtSemiring<T>::KtSemiring;
-
+	using super_ = KtSemiring<T>;
+	using super_::super_;
+	using super_::value;
 
 	static const KtTropicalSemiring& zero() {
 		static const KtTropicalSemiring z(doMax ? -std::numeric_limits<T>::infinity() :

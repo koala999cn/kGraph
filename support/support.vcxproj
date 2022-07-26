@@ -22,10 +22,13 @@
     <ClCompile Include="..\common\KuEndian.cpp" />
     <ClCompile Include="kaldi\KuBasicIO.cpp" />
     <ClCompile Include="kaldi\KuGmm.cpp" />
+    <ClCompile Include="openfst\KuFstIO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kaldi\KuBasicIO.h" />
     <ClInclude Include="kaldi\KuGmm.h" />
+    <ClInclude Include="openfst\KtFlatGraphMmapImpl.h" />
+    <ClInclude Include="openfst\KuFstIO.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

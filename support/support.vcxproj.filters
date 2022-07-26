@@ -24,12 +24,21 @@
     <ClCompile Include="..\common\KuEndian.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="openfst\KuFstIO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kaldi\KuBasicIO.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="kaldi\KuGmm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="openfst\KtFlatGraphMmapImpl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="openfst\KuFstIO.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
