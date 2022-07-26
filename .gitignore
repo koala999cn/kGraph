@@ -5,6 +5,7 @@
 /.vs
 /TODO
 /Debug
+/Release
 *.code-workspace
 *.vsd
 *.opensdf
@@ -12,10 +13,14 @@
 *.user
 *.vsd
 
+/x64
+/graph/x64
+/extend/hmm/x64
+/extend/wfst/x64
 /test/graph/graph_dump.txt
-/extend/hmm/Debug
-/test/graph/x64/Debug
-/test/wfst/x64/Debug
-/x64/Debug
-/graph/x64/Debug
-/extend/wfst/x64/Debug
+/test/graph/x64
+/test/wfst/x64
+/test/hmm/x64
+
+
+
