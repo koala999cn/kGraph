@@ -1,7 +1,7 @@
-#include "KuBasicIO.h"
+#include "KuKaldiIO.h"
 
 
-bool KuBasicIO::binaryTest(std::istream& strm) {
+bool KuKaldiIO::binaryTest(std::istream& strm) {
 	if (strm.peek() == 0) { // 以'\0''B'开头表示binary模式
 		strm.get();
 		if (strm.peek() == 'B') {

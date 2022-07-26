@@ -1,7 +1,7 @@
-#include "KuGmm.h"
+#include "KuKaldiGmm.h"
 #include <assert.h>
 #include <fstream>
-#include "KuBasicIO.h"
+#include "KuKaldiIO.h"
 #include "KtuMath.h"
 #include "../extend/hmm/KcMixModel.h"
 #include "../extend/hmm/KcGaussPdf.h"
@@ -22,7 +22,7 @@ namespace kPrivate
 }
 
 
-bool KuGmm::loadSingle(stdx::istreamx& strm, kGmm& gmm)
+bool KuKaldiGmm::loadSingle(stdx::istreamx& strm, kGmm& gmm)
 {
     std::string tok;
     strm >> tok;
@@ -32,26 +32,26 @@ bool KuGmm::loadSingle(stdx::istreamx& strm, kGmm& gmm)
     strm >> tok;
     std::vector<float> gconsts;
     if (tok == "<GCONSTS>") {  // The gconsts are optional.
-        KuBasicIO::readFloatVector(strm, gconsts); // ignore it
+        KuKaldiIO::readFloatVector(strm, gconsts); // ignore it
         strm >> tok;
     }
 
     if (tok != "<WEIGHTS>")
         return false;
     std::vector<double> weights;
-    KuBasicIO::readFloatVector(strm, weights);
+    KuKaldiIO::readFloatVector(strm, weights);
 
     strm >> tok;
     if (tok != "<MEANS_INVVARS>")
         return false;
     std::vector<std::vector<double>> means_invvars;
-    KuBasicIO::readFloatMatrix(strm, means_invvars);
+    KuKaldiIO::readFloatMatrix(strm, means_invvars);
 
     strm >> tok;
     if (tok != "<INV_VARS>")
         return false;
     std::vector<std::vector<double>> inv_vars;
-    KuBasicIO::readFloatMatrix(strm, inv_vars);
+    KuKaldiIO::readFloatMatrix(strm, inv_vars);
 
     strm >> tok;
     if (tok != "</DiagGMM>")
@@ -86,7 +86,7 @@ bool KuGmm::loadSingle(stdx::istreamx& strm, kGmm& gmm)
 }
 
 
-std::vector<std::shared_ptr<kGmm>> KuGmm::loadList(stdx::istreamx& strm)
+std::vector<std::shared_ptr<kGmm>> KuKaldiGmm::loadList(stdx::istreamx& strm)
 {
     std::vector<std::shared_ptr<kGmm>> ms;
     std::int32_t numPdfs, dim;
@@ -96,13 +96,13 @@ std::vector<std::shared_ptr<kGmm>> KuGmm::loadList(stdx::istreamx& strm)
     if (tok != "<DIMENSION>")
         return decltype(ms)();
 
-    KuBasicIO::readBasicType(strm, dim);
+    KuKaldiIO::readBasicType(strm, dim);
 
     strm >> tok;
     if (tok != "<NUMPDFS>")
         return decltype(ms)();
 
-    KuBasicIO::readBasicType(strm, numPdfs);
+    KuKaldiIO::readBasicType(strm, numPdfs);
     assert(numPdfs > 0);
 
     ms.resize(numPdfs);
@@ -117,13 +117,13 @@ std::vector<std::shared_ptr<kGmm>> KuGmm::loadList(stdx::istreamx& strm)
 }
 
 
-std::vector<std::shared_ptr<kGmm>> KuGmm::loadList(const char* filePath)
+std::vector<std::shared_ptr<kGmm>> KuKaldiGmm::loadList(const char* filePath)
 {
     std::ifstream ifs(filePath, std::ios_base::binary);
     if (!ifs)
         return { 0 };
 
-    auto bin = KuBasicIO::binaryTest(ifs);
+    auto bin = KuKaldiIO::binaryTest(ifs);
     if (!bin)
         return { 0 }; // 暂不支持text模式
 

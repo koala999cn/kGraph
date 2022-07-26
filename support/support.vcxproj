@@ -20,13 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\KuEndian.cpp" />
-    <ClCompile Include="kaldi\KuBasicIO.cpp" />
-    <ClCompile Include="kaldi\KuGmm.cpp" />
+    <ClCompile Include="kaldi\KuKaldiIO.cpp" />
+    <ClCompile Include="kaldi\KuKaldiGmm.cpp" />
     <ClCompile Include="openfst\KuFstIO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="kaldi\KuBasicIO.h" />
-    <ClInclude Include="kaldi\KuGmm.h" />
+    <ClInclude Include="kaldi\KuKaldiIO.h" />
+    <ClInclude Include="kaldi\KuKaldiGmm.h" />
     <ClInclude Include="openfst\KtFlatGraphMmapImpl.h" />
     <ClInclude Include="openfst\KuFstIO.h" />
   </ItemGroup>

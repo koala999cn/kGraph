@@ -8,7 +8,7 @@ using kGmm = KcMixModel;
 
 // 提供kalid-gmm的读取支持
 
-class KuGmm
+class KuKaldiGmm
 {
 public:
 

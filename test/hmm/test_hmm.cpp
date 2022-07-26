@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <fstream>
-#include "../support/kaldi/KuBasicIO.h"
-#include "../support/kaldi/KuGmm.h"
+#include "../support/kaldi/KuKaldiIO.h"
+#include "../support/kaldi/KuKaldiGmm.h"
 #include "../common/istreamx.h"
 #include "../hmm/KcMixModel.h"
 
 
 void test_hmm()
 {
-	auto gmmlist = KuGmm::loadList("../data/gmmlist.mdl");
+	auto gmmlist = KuKaldiGmm::loadList("../data/gmmlist.mdl");
 	if (gmmlist.empty()) {
 		printf("failed to load 'data/gmmlist.mdl'");
 		abort();
@@ -28,7 +28,7 @@ void test_hmm()
 
 	// 此处istreamx的bin标志设为false，因为文件以key字符串开头，
 	// 读取key之后，readTable将根据后续内容自动设置istreamx的bin标记
-	if (!KuBasicIO::readTable(stdx::istreamx(ark, false), key, table)) {
+	if (!KuKaldiIO::readTable(stdx::istreamx(ark, false), key, table)) {
 		printf("failed to read table from 'data/feature.39.ark'");
 		abort();
 	}
@@ -52,7 +52,7 @@ void test_hmm()
 		abort();
 	}
 
-	if (!KuBasicIO::readTable(stdx::istreamx(loglikes, false), key, answer)) {
+	if (!KuKaldiIO::readTable(stdx::istreamx(loglikes, false), key, answer)) {
 		printf("failed");
 		abort();
 	}

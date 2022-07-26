@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="kaldi\KuBasicIO.cpp">
+    <ClCompile Include="kaldi\KuKaldiIO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="kaldi\KuGmm.cpp">
+    <ClCompile Include="kaldi\KuKaldiGmm.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\common\KuEndian.cpp">
@@ -29,10 +29,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="kaldi\KuBasicIO.h">
+    <ClInclude Include="kaldi\KuKaldiIO.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="kaldi\KuGmm.h">
+    <ClInclude Include="kaldi\KuKaldiGmm.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="openfst\KtFlatGraphMmapImpl.h">

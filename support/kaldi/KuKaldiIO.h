@@ -6,7 +6,7 @@
 #include <assert.h>
 
 
-class KuBasicIO
+class KuKaldiIO
 {
 public:
 
@@ -35,12 +35,12 @@ public:
 
 
 private:
-	KuBasicIO() = delete;
+	KuKaldiIO() = delete;
 };
 
 
 template<typename T>
-bool KuBasicIO::readBasicType(stdx::istreamx &strm, T& val)
+bool KuKaldiIO::readBasicType(stdx::istreamx &strm, T& val)
 {
 	if (strm.binary()) {
 		int tsize = strm->get();
@@ -64,7 +64,7 @@ bool KuBasicIO::readBasicType(stdx::istreamx &strm, T& val)
 
 
 template<typename T>
-bool KuBasicIO::readIntVector(stdx::istreamx& strm, std::vector<T>& vec)
+bool KuKaldiIO::readIntVector(stdx::istreamx& strm, std::vector<T>& vec)
 {
 	static_assert(std::is_integral_v<T>, "T must be integral type");
 	int tsize = strm->get();
@@ -73,7 +73,7 @@ bool KuBasicIO::readIntVector(stdx::istreamx& strm, std::vector<T>& vec)
 
 
 template<typename T>
-bool KuBasicIO::readFloatVector(stdx::istreamx &strm, std::vector<T>& vec)
+bool KuKaldiIO::readFloatVector(stdx::istreamx &strm, std::vector<T>& vec)
 {
 	static_assert(std::is_floating_point_v<T>, "T must be floating type");
 
@@ -113,7 +113,7 @@ bool KuBasicIO::readFloatVector(stdx::istreamx &strm, std::vector<T>& vec)
 
 
 template<typename T>
-bool KuBasicIO::readFloatMatrix(stdx::istreamx& strm, std::vector<std::vector<T>>& mat)
+bool KuKaldiIO::readFloatMatrix(stdx::istreamx& strm, std::vector<std::vector<T>>& mat)
 {
 	static_assert(std::is_floating_point_v<T>, "T must be floating type");
 
@@ -160,7 +160,7 @@ bool KuBasicIO::readFloatMatrix(stdx::istreamx& strm, std::vector<std::vector<T>
 
 
 template<typename T>
-bool KuBasicIO::readTable(stdx::istreamx& strm, std::string& key, std::vector<std::vector<T>>& table)
+bool KuKaldiIO::readTable(stdx::istreamx& strm, std::string& key, std::vector<std::vector<T>>& table)
 {
 	assert(!strm.binary()); // 因为要读取key字符串，必须先设置非bin模式
 
