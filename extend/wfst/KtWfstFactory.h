@@ -57,7 +57,7 @@ public:
 	// convert state_type instance to state_index_t
 	state_index_t index(const state_type& s) const {
 		auto pos = std::find(Q_.begin(), Q_.end(), s);
-		return std::distance(Q_.begin(), pos);
+		return static_cast<state_index_t>(std::distance(Q_.begin(), pos));
 	}
 
 

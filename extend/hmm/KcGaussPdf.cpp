@@ -106,7 +106,7 @@ std::vector<double> KcGaussPdf::covar() const
 
 	if (isDiagnal()) {
 		cov.resize(invCov_.size());
-		KtuMath<double>::recip(invCov_.data(), cov.data(), cov.size());
+		KtuMath<double>::recip(invCov_.data(), cov.data(), static_cast<unsigned>(cov.size()));
 	}
 	else {
 		using MatrixRxd = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;

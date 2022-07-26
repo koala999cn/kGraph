@@ -18,7 +18,9 @@ public:
 	// 输入概率(log值)
 	double prob(const double* obs) const override;
 
-	unsigned numMix() const { return models_.size(); }
+	unsigned numMix() const { 
+		return static_cast<unsigned>(models_.size()); 
+	}
 
 
 	// 获取第idx个混合分量

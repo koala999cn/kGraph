@@ -99,7 +99,7 @@ private:
     void inStack_(vertex_index_t v) {
         auto r = graph_.outedges(v);
         auto edgeidx = graph_.edgeIndex(v);
-        todo_.push_back({ v,  edgeidx, edgeidx + r.size() });
+        todo_.push_back({ v,  edgeidx, static_cast<vertex_index_t>(edgeidx + r.size()) });
     }
 
     void fixStack_() {

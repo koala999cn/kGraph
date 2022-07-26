@@ -37,7 +37,7 @@ void KcMixModel::setWeights(const double w[/*numMix*/], bool wlog)
 	weights_.assign(w, w + weights_.size());
 	if (!wlog) {
 		assert(KtuMath<double>::almostEqualRel(KtuMath<double>::sum(w, numMix()), 1));
-		KtuMath<double>::applyLog(weights_.data(), weights_.size());
+		KtuMath<double>::applyLog(weights_.data(), static_cast<unsigned>(weights_.size()));
 	}
 }
 

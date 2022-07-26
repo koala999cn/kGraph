@@ -15,7 +15,9 @@ public:
 
 
 	// 分组数目
-	unsigned numGroups() const { return subDims_.size(); }
+	unsigned numGroups() const { 
+		return static_cast<unsigned>(subDims_.size()); 
+	}
 
 	// 输入特征的总维度
 	unsigned dim() const { return totalDim_; }

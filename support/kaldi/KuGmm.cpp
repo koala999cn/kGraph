@@ -16,7 +16,7 @@ namespace kPrivate
 
         auto N = means_invvar.size();
         std::vector<double> mean(N);
-        KtuMath<double>::mul(means_invvar.data(), var.data(), mean.data(), N);
+        KtuMath<double>::mul(means_invvar.data(), var.data(), mean.data(), static_cast<unsigned>(N));
         return mean;
     }
 }
@@ -61,7 +61,7 @@ bool KuGmm::loadSingle(stdx::istreamx& strm, kGmm& gmm)
         weights.size() != means_invvars.size())
         return false;
 
-    gmm.resize(weights.size());
+    gmm.resize(static_cast<unsigned>(weights.size()));
     gmm.setWeights(weights.data());
     auto dim = static_cast<unsigned>(inv_vars[0].size());
     for (unsigned i = 0; i < gmm.numMix(); i++) {
@@ -75,7 +75,8 @@ bool KuGmm::loadSingle(stdx::istreamx& strm, kGmm& gmm)
         // gconst verify
         if (!gconsts.empty()) {
             assert(KtuMath<double>::almostEqual(-2 * (gconsts[i] - gmm.weight(i)) - gauss->gconst(),
-                KtuMath<double>::dot(means_invvars[i].data(), mean.data(), mean.size()), 0.0001));
+                KtuMath<double>::dot(means_invvars[i].data(), mean.data(), 
+                    static_cast<unsigned>(mean.size())), 0.0001));
         }
 
         gmm.modelAt(i) = gauss;

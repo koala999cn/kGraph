@@ -110,10 +110,11 @@ MmapWfst* KuFstIO::readMmap(const std::string& path)
 
 	/// now everything is ok, ready to read mmap
 	auto mmap = std::make_unique<MmapWfst>();
-	if (!mmap->map(path, hdr.numstates, hdr.numarcs, off)) // 先读vertex，再读arc
+	if (!mmap->map(path, static_cast<unsigned>(hdr.numstates), 
+		static_cast<unsigned>(hdr.numarcs), off)) // 先读vertex，再读arc
 		return nullptr;
 
-	mmap->setInitial(hdr.start);
+	mmap->setInitial(static_cast<unsigned>(hdr.start));
 
 	// TODO: setFinal
 

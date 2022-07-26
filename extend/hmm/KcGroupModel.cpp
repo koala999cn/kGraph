@@ -18,7 +18,7 @@ KcGroupModel::KcGroupModel(unsigned numGroups, const unsigned* subDims)
 
 
 KcGroupModel::KcGroupModel(const std::vector<unsigned>& subDims)
-	: KcGroupModel(subDims.size(), subDims.data())
+	: KcGroupModel(static_cast<unsigned>(subDims.size()), subDims.data())
 {
 
 }
