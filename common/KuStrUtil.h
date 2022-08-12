@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <sstream>
 
 
 class KuStrUtil
@@ -22,11 +23,6 @@ public:
 	// 小写转换
 	static void toLower(char* str);
 	static void toLower(std::string& str);
-
-
-	// 是否为浮点数
-	static bool isFloat(char* str);
-    static bool isFloat(const std::string& str) { return isFloat(str.c_str()); }
 
 
 	// str是否以with开头
@@ -161,13 +157,13 @@ public:
 	}
 
 	template<typename CHAR = char>
-	int toInt(const CHAR* str) { return toValue<int, CHAR>(str); }
+	static int toInt(const CHAR* str) { return toValue<int, CHAR>(str); }
 
 	template<typename CHAR = char>
-	float toFloat(const CHAR* str) { return toValue<float, CHAR>(str); }
+	static float toFloat(const CHAR* str) { return toValue<float, CHAR>(str); }
 
 	template<typename CHAR = char>
-	double toDouble(const CHAR* str) { return toValue<double, CHAR>(str); }
+	static double toDouble(const CHAR* str) { return toValue<double, CHAR>(str); }
 
 
 	// 对矢量和矩阵的格式化，可用于调试输出
@@ -272,7 +268,6 @@ public:
 
 
 private:
-	KuStrUtil() {}
-	~KuStrUtil() {}
+	KuStrUtil() = delete;
 };
 
