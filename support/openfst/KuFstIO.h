@@ -14,8 +14,6 @@
 #include "KgSymbolTable.h"
 
 
-
-
 namespace kPrivate
 {
 	template<typename WEIGHT_TYPE>

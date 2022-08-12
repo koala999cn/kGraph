@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\KuEndian.cpp" />
+    <ClCompile Include="..\common\KuLex.cpp" />
     <ClCompile Include="kaldi\KuKaldiIO.cpp" />
     <ClCompile Include="kaldi\KuKaldiGmm.cpp" />
     <ClCompile Include="openfst\KuFstIO.cpp" />

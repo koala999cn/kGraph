@@ -27,6 +27,9 @@
     <ClCompile Include="openfst\KuFstIO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\common\KuLex.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kaldi\KuKaldiIO.h">
