@@ -5,6 +5,7 @@
 #include <string>
 #include <assert.h>
 
+class KgSymbolTable;
 
 class KuKaldiIO
 {
@@ -33,6 +34,7 @@ public:
 	template<typename T>
 	static bool readTable(stdx::istreamx& strm, std::string& key, std::vector<std::vector<T>>& table);
 
+	static KgSymbolTable* loadSymbolTable(const char* path);
 
 private:
 	KuKaldiIO() = delete;

@@ -21,13 +21,19 @@
   <ItemGroup>
     <ClCompile Include="..\common\KuEndian.cpp" />
     <ClCompile Include="..\common\KuLex.cpp" />
+    <ClCompile Include="..\common\KuStrUtil.cpp" />
+    <ClCompile Include="kaldi\KgHmmTopo.cpp" />
+    <ClCompile Include="kaldi\KgTransitionModel.cpp" />
     <ClCompile Include="kaldi\KuKaldiIO.cpp" />
     <ClCompile Include="kaldi\KuKaldiGmm.cpp" />
     <ClCompile Include="openfst\KuFstIO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="kaldi\KgHmmTopo.h" />
+    <ClInclude Include="kaldi\KgTransitionModel.h" />
     <ClInclude Include="kaldi\KuKaldiIO.h" />
     <ClInclude Include="kaldi\KuKaldiGmm.h" />
+    <ClInclude Include="openfst\KgSymbolTable.h" />
     <ClInclude Include="openfst\KtFlatGraphMmapImpl.h" />
     <ClInclude Include="openfst\KuFstIO.h" />
   </ItemGroup>

@@ -76,7 +76,7 @@ bool KuKaldiGmm::loadSingle(stdx::istreamx& strm, kGmm& gmm)
         if (!gconsts.empty()) {
             assert(KtuMath<double>::almostEqual(-2 * (gconsts[i] - gmm.weight(i)) - gauss->gconst(),
                 KtuMath<double>::dot(means_invvars[i].data(), mean.data(), 
-                    static_cast<unsigned>(mean.size())), 0.0001));
+                    static_cast<unsigned>(mean.size())), 0.001));
         }
 
         gmm.modelAt(i) = gauss;

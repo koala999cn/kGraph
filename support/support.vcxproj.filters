@@ -30,6 +30,15 @@
     <ClCompile Include="..\common\KuLex.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="kaldi\KgHmmTopo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="kaldi\KgTransitionModel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\KuStrUtil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kaldi\KuKaldiIO.h">
@@ -42,6 +51,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="openfst\KuFstIO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="kaldi\KgHmmTopo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="kaldi\KgTransitionModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="openfst\KgSymbolTable.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
