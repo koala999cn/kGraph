@@ -4,6 +4,7 @@
 #include <deque>
 #include <memory>
 #include <algorithm>
+#include <functional>
 #include <assert.h>
 
 
@@ -58,12 +59,15 @@ public:
 	double beam() const { return beam_; }
 	void setBeam(double beam) { beam_ = beam; }
 
+	template<typename FEAT_TYPE>
+	using pdf = std::function<double(const FEAT_TYPE&, int modelId)>;
+
 	// @AC_MODEL: 声学模型，相当于Acoustic matching transducer,
 	//            主要根据特征和模型id计算得分，score = AC_MODEL(X[i], modelId)
 	//            此处modelId为alpha_type类型，表示WFST的输入字符  
 	// 返回true表示找到一条具终止状态的最优路径
-	template<typename FEAT_TYPE, typename AC_MODEL>
-	bool search(const FEAT_TYPE X[], frame_index_t T, AC_MODEL ac);
+	template<typename FEAT_TYPE>
+	bool search(const FEAT_TYPE X[], frame_index_t T, pdf<FEAT_TYPE> ac);
 
 	std::deque<alpha_type> bestPath() const;
 
@@ -82,8 +86,8 @@ private:
     // 处理atl，依次前推各状态的eps转移，更新atl
 	void transEps_(frame_index_t t, bool finalTrans = false);
 
-	template<typename FEAT_TYPE, typename AC_MODEL>
-	void transInput_(const FEAT_TYPE& x, frame_index_t t, AC_MODEL ac);
+	template<typename FEAT_TYPE>
+	void transInput_(const FEAT_TYPE& x, frame_index_t t, pdf<FEAT_TYPE> ac);
 
 	void prune_();
 	
@@ -166,8 +170,8 @@ private:
 };
 
 
-template<typename WFST> template<typename FEAT_TYPE, typename AC_MODEL>
-bool KtViterbiBeam<WFST>::search(const FEAT_TYPE X[], frame_index_t T, AC_MODEL ac)
+template<typename WFST> template<typename FEAT_TYPE>
+bool KtViterbiBeam<WFST>::search(const FEAT_TYPE X[], frame_index_t T, pdf<FEAT_TYPE> ac)
 {
 	initialize_();
 
@@ -298,8 +302,8 @@ void KtViterbiBeam<WFST>::transEps_(frame_index_t t, bool finalTrans)
  * 34 end for
  * 35 return <A', S'>
  */
-template<typename WFST> template<typename FEAT_TYPE, typename AC_MODEL>
-void KtViterbiBeam<WFST>::transInput_(const FEAT_TYPE& x, frame_index_t t, AC_MODEL ac)
+template<typename WFST> template<typename FEAT_TYPE>
+void KtViterbiBeam<WFST>::transInput_(const FEAT_TYPE& x, frame_index_t t, pdf<FEAT_TYPE> ac)
 {
 	assert(atl0_.empty());
 
