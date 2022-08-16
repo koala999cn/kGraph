@@ -25,7 +25,7 @@
     <ClCompile Include="epsilon_removal_test.cpp" />
     <ClCompile Include="minimization_test.cpp" />
     <ClCompile Include="synchronize_test.cpp" />
-    <ClCompile Include="test_fst.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="weight_pushing_test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

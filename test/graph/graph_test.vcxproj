@@ -161,7 +161,7 @@
     <ClCompile Include="shortest_path_test.cpp" />
     <ClCompile Include="layout_test.cpp" />
     <ClCompile Include="strongly_connected_test.cpp" />
-    <ClCompile Include="test_all.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="test_util.cpp" />
     <ClCompile Include="topology_sort_test.cpp" />
     <ClCompile Include="transitive_closure_test.cpp" />
