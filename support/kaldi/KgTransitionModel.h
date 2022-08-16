@@ -24,7 +24,7 @@ public:
 	bool isSelfLoop(int trans_id) const;  
 
 	/// Returns the total number of transition-ids (note, these are one-based).
-	auto numTransitions() const { return trans2state_.size() - 1; }
+	auto numTrans() const { return trans2state_.size() - 1; }
 
 	/// Returns the total number of transition-states (note, these are one-based).
 	auto numStates() const { return tuples_.size(); }
@@ -36,15 +36,15 @@ public:
 	auto numPdfs() const { return num_pdfs_; }
 
 	// Transition-parameter-getting functions:
-	float getTransitionProb(int trans_id) const;
-	float getTransitionLogProb(int trans_id) const;
+	float getTransProb(int trans_id) const;
+	float getTransLogProb(int trans_id) const;
 
-	int pairToTransitionId(int trans_state, int trans_index) const;
+	int pairToTransId(int trans_state, int trans_index) const;
 
 	// returns the self-loop transition-id, or zero if this state doesn't have a self-loop.
 	int selfLoopOf(int trans_state) const;  
 
-	int transitionId2State(int trans_id) const {
+	int transId2State(int trans_id) const {
 		return trans2state_[trans_id];
 	}
 

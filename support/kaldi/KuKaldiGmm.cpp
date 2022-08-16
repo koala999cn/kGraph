@@ -22,7 +22,7 @@ namespace kPrivate
 }
 
 
-bool KuKaldiGmm::loadSingle(stdx::istreamx& strm, kGmm& gmm)
+bool KuKaldiGmm::loadGmm(stdx::istreamx& strm, kGmm& gmm)
 {
     std::string tok;
     strm >> tok;
@@ -86,7 +86,7 @@ bool KuKaldiGmm::loadSingle(stdx::istreamx& strm, kGmm& gmm)
 }
 
 
-std::vector<std::shared_ptr<kGmm>> KuKaldiGmm::loadList(stdx::istreamx& strm)
+std::vector<std::shared_ptr<kGmm>> KuKaldiGmm::loadGmms(stdx::istreamx& strm)
 {
     std::vector<std::shared_ptr<kGmm>> ms;
     std::int32_t numPdfs, dim;
@@ -108,7 +108,7 @@ std::vector<std::shared_ptr<kGmm>> KuKaldiGmm::loadList(stdx::istreamx& strm)
     ms.resize(numPdfs);
     for (std::int32_t i = 0; i < numPdfs; i++) {
         auto gmm = std::make_shared<kGmm>();
-        if (!loadSingle(strm, *gmm) || gmm->dim() != dim)
+        if (!loadGmm(strm, *gmm) || gmm->dim() != dim)
             return decltype(ms)();
         ms[i] = gmm;
     }
@@ -117,7 +117,7 @@ std::vector<std::shared_ptr<kGmm>> KuKaldiGmm::loadList(stdx::istreamx& strm)
 }
 
 
-std::vector<std::shared_ptr<kGmm>> KuKaldiGmm::loadList(const char* filePath)
+std::vector<std::shared_ptr<kGmm>> KuKaldiGmm::loadGmms(const char* filePath)
 {
     std::ifstream ifs(filePath, std::ios_base::binary);
     if (!ifs)
@@ -128,5 +128,5 @@ std::vector<std::shared_ptr<kGmm>> KuKaldiGmm::loadList(const char* filePath)
         return { 0 }; // 暂不支持text模式
 
     stdx::istreamx strm(ifs, bin);
-    return loadList(strm);
+    return loadGmms(strm);
 }

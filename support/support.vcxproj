@@ -23,6 +23,7 @@
     <ClCompile Include="..\common\KuLex.cpp" />
     <ClCompile Include="..\common\KuStrUtil.cpp" />
     <ClCompile Include="kaldi\KgHmmTopo.cpp" />
+    <ClCompile Include="kaldi\KgKaldiModels.cpp" />
     <ClCompile Include="kaldi\KgTransitionModel.cpp" />
     <ClCompile Include="kaldi\KuKaldiIO.cpp" />
     <ClCompile Include="kaldi\KuKaldiGmm.cpp" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kaldi\KgHmmTopo.h" />
+    <ClInclude Include="kaldi\KgKaldiModels.h" />
     <ClInclude Include="kaldi\KgTransitionModel.h" />
     <ClInclude Include="kaldi\KuKaldiIO.h" />
     <ClInclude Include="kaldi\KuKaldiGmm.h" />

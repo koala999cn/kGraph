@@ -39,6 +39,9 @@
     <ClCompile Include="..\common\KuStrUtil.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="kaldi\KgKaldiModels.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kaldi\KuKaldiIO.h">
@@ -60,6 +63,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="openfst\KgSymbolTable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="kaldi\KgKaldiModels.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

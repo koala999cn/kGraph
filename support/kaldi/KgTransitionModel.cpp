@@ -113,7 +113,7 @@ bool KgTransitionModel::isSelfLoop(int trans_id) const
 }
 
 
-int KgTransitionModel::pairToTransitionId(int trans_state, int trans_index) const
+int KgTransitionModel::pairToTransId(int trans_state, int trans_index) const
 {
 	assert(static_cast<size_t>(trans_state) <= tuples_.size());
 	assert(trans_index < state2trans_[trans_state + 1] - state2trans_[trans_state]);
@@ -121,13 +121,13 @@ int KgTransitionModel::pairToTransitionId(int trans_state, int trans_index) cons
 }
 
 
-float KgTransitionModel::getTransitionProb(int trans_id) const
+float KgTransitionModel::getTransProb(int trans_id) const
 {
 	return exp(log_probs_[trans_id]);
 }
 
 
-float KgTransitionModel::getTransitionLogProb(int trans_id) const
+float KgTransitionModel::getTransLogProb(int trans_id) const
 {
 	return log_probs_[trans_id];
 }
@@ -145,7 +145,7 @@ int KgTransitionModel::selfLoopOf(int trans_state) const
 	auto iter = KtAdjIter(*entry, hmm_state);
 	for (; !iter.isEnd(); ++iter, ++trans_index) {
 		if(iter.to() == hmm_state)
-			return pairToTransitionId(trans_state, trans_index);
+			return pairToTransId(trans_state, trans_index);
 	}
 
 	return 0;  // invalid transition id.
@@ -212,7 +212,7 @@ void KgTransitionModel::computeDerivedOfProbs()
 			non_self_loop_log_probs_[tstate] = 0;  // log(1.0)
 		}
 		else {
-			float self_loop_prob = exp(getTransitionLogProb(tid)),
+			float self_loop_prob = exp(getTransLogProb(tid)),
 				non_self_loop_prob = 1.0f - self_loop_prob;
 			if (non_self_loop_prob <= 0) 
 				non_self_loop_prob = 1.0e-10f;  // just so we can continue...

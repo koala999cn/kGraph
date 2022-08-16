@@ -13,11 +13,11 @@ class KuKaldiGmm
 public:
 
 	// 读取kaldi的单个gmm模型
-	static bool loadSingle(stdx::istreamx& strm, kGmm& gmm);
+	static bool loadGmm(stdx::istreamx& strm, kGmm& gmm);
 
 	// 读取kaldi的gmm模型序列
-	static std::vector<std::shared_ptr<kGmm>> loadList(stdx::istreamx& strm);
+	static std::vector<std::shared_ptr<kGmm>> loadGmms(stdx::istreamx& strm);
 
-	static std::vector<std::shared_ptr<kGmm>> loadList(const char* filePath);
+	static std::vector<std::shared_ptr<kGmm>> loadGmms(const char* filePath);
 
 };
