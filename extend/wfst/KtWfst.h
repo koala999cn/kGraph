@@ -81,6 +81,7 @@ public:
 
 	using super_::super_;
 	using super_::order;
+	using super_::vertexAt;
 
 	// 状态是否具有权值属性？
 	constexpr static bool hasStateWeight() {

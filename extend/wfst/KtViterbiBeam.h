@@ -59,12 +59,11 @@ public:
 	double beam() const { return beam_; }
 	void setBeam(double beam) { beam_ = beam; }
 
+	// @pdf: 声学模型，相当于Acoustic matching transducer,
+	//       主要根据特征和模型id计算得分，score = AC_MODEL(X[i], transId)
 	template<typename FEAT_TYPE>
-	using pdf = std::function<double(const FEAT_TYPE&, int modelId)>;
+	using pdf = std::function<double(unsigned transId, const FEAT_TYPE& xi)>;
 
-	// @AC_MODEL: 声学模型，相当于Acoustic matching transducer,
-	//            主要根据特征和模型id计算得分，score = AC_MODEL(X[i], modelId)
-	//            此处modelId为alpha_type类型，表示WFST的输入字符  
 	// 返回true表示找到一条具终止状态的最优路径
 	template<typename FEAT_TYPE>
 	bool search(const FEAT_TYPE X[], frame_index_t T, pdf<FEAT_TYPE> ac);
