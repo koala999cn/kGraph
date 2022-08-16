@@ -24,7 +24,7 @@ KgKaldiModels::KgKaldiModels(const std::string& path)
 	if (!wfst_) return;
 
 	std::string words = path + "/words.txt";
-	st_.reset(KuKaldiIO::loadSymbolTable(words.c_str()));
+	st_.reset(KuKaldiIO::loadWordIdPair(words.c_str()));
 	if (!st_) return;
 }
 
@@ -38,9 +38,9 @@ KgKaldiModels::operator bool() const
 double KgKaldiModels::prob(unsigned transId, const double* feat)
 {
 	assert(transId > 0 && transId <= tm_.numTrans());
-	auto stateId = tm_.transId2State(transId);
-	assert(stateId > 0 && stateId <= pdfs_.size());
-	return pdfs_[stateId - 1]->prob(feat) * 0.1; // TODO: 0.1为ac_scale，调整为可配置
+	auto pdfId = tm_.transId2Pdf(transId);
+	assert(pdfId >= 0 && pdfId < pdfs_.size());
+	return pdfs_[pdfId]->prob(feat) * 0.1; // TODO: 0.1为ac_scale，调整为可配置
 }
 
 

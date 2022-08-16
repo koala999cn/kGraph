@@ -31,10 +31,12 @@ public:
 	template<typename T>
 	static bool readFloatMatrix(stdx::istreamx& strm, std::vector<std::vector<T>>& mat);
 
+	// 读取kaldi生成的特征文件
 	template<typename T>
 	static bool readTable(stdx::istreamx& strm, std::string& key, std::vector<std::vector<T>>& table);
 
-	static KgSymbolTable* loadSymbolTable(const char* path);
+	// 读取kaldi的words.txt文件
+	static KgSymbolTable* loadWordIdPair(const char* path);
 
 private:
 	KuKaldiIO() = delete;

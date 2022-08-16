@@ -48,6 +48,10 @@ public:
 		return trans2state_[trans_id];
 	}
 
+	int transId2Pdf(int trans_id) const {
+		return trans2pdf_[trans_id];
+	}
+
 private:
 	void computeDerived();  // called from constructor and Read function: computes state2trans_ and trans2state_.
 	void computeDerivedOfProbs();  // computes quantities derived from log-probs (currently just

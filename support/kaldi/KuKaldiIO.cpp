@@ -18,7 +18,7 @@ bool KuKaldiIO::binaryTest(std::istream& strm) {
 }
 
 
-KgSymbolTable* KuKaldiIO::loadSymbolTable(const char* path)
+KgSymbolTable* KuKaldiIO::loadWordIdPair(const char* path)
 {
 	std::ifstream ifs(path);
 	if (!ifs)
