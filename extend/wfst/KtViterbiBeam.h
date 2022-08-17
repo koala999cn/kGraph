@@ -71,7 +71,10 @@ public:
 	std::deque<alpha_type> bestPath() const;
 
 	double totalWeight() const {
-		return best_ ? best_->weight_ : std::numeric_limits<double>::infinity();
+		if (best_)
+			return best_->weight_;
+
+		return std::numeric_limits<double>::infinity();
 	}
 
 private:
