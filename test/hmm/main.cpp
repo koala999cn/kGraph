@@ -10,29 +10,29 @@
 
 void test_hmm()
 {
-	auto gmmlist = KuKaldiGmm::loadList("../data/gmmlist.mdl");
+	auto gmmlist = KuKaldiGmm::loadGmms("../test/data/gmmlist.mdl");
 	if (gmmlist.empty()) {
-		printf("failed to load 'data/gmmlist.mdl'");
+		printf("failed to load 'test/data/gmmlist.mdl'");
 		abort();
 	}
-	printf("loaded %d gmms from 'data/gmmlist.mdl'\n", int(gmmlist.size()));
+	printf("loaded %d gmms from 'test/data/gmmlist.mdl'\n", int(gmmlist.size()));
 
 
 	std::string key;
 	std::vector<std::vector<double>> table;
-	std::ifstream ark("../data/feature.39.ark", std::ios_base::binary);
+	std::ifstream ark("../test/data/feature.39.ark", std::ios_base::binary);
 	if (!ark) {
-		printf("failed to open 'data/feature.39.ark'");
+		printf("failed to open 'test/data/feature.39.ark'");
 		abort();
 	}
 
 	// 此处istreamx的bin标志设为false，因为文件以key字符串开头，
 	// 读取key之后，readTable将根据后续内容自动设置istreamx的bin标记
 	if (!KuKaldiIO::readTable(stdx::istreamx(ark, false), key, table)) {
-		printf("failed to read table from 'data/feature.39.ark'");
+		printf("failed to read table from 'test/data/feature.39.ark'");
 		abort();
 	}
-	printf("loaded %d features<dim = %d> from 'data/feature.39.ark'\n", 
+	printf("loaded %d features<dim = %d> from 'test/data/feature.39.ark'\n", 
 		int(table.size()), int(table[0].size()));
 
 	printf("calculating output probability of features...  ");
@@ -46,9 +46,9 @@ void test_hmm()
 
 	// 加载比照数据
 	std::vector<std::vector<double>> answer;
-	std::ifstream loglikes("../data/loglikes.ark", std::ios_base::binary);
+	std::ifstream loglikes("../test/data/loglikes.ark", std::ios_base::binary);
 	if (!loglikes) {
-		printf("failed to open 'data/loglikes.ark'");
+		printf("failed to open 'test/data/loglikes.ark'");
 		abort();
 	}
 
