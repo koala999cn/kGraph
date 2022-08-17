@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kAsr", "demo\kAsr\kAsr.vcxp
 		{3FB56DDA-6C67-49A3-B88B-029722002532} = {3FB56DDA-6C67-49A3-B88B-029722002532}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "support_test", "test\support\support_test.vcxproj", "{227016DA-2F08-4EB3-A823-D13D3549BCFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -101,6 +103,14 @@ Global
 		{16632C65-B01E-4120-B876-747A7B1998CC}.Release|x64.Build.0 = Release|x64
 		{16632C65-B01E-4120-B876-747A7B1998CC}.Release|x86.ActiveCfg = Release|Win32
 		{16632C65-B01E-4120-B876-747A7B1998CC}.Release|x86.Build.0 = Release|Win32
+		{227016DA-2F08-4EB3-A823-D13D3549BCFE}.Debug|x64.ActiveCfg = Debug|x64
+		{227016DA-2F08-4EB3-A823-D13D3549BCFE}.Debug|x64.Build.0 = Debug|x64
+		{227016DA-2F08-4EB3-A823-D13D3549BCFE}.Debug|x86.ActiveCfg = Debug|Win32
+		{227016DA-2F08-4EB3-A823-D13D3549BCFE}.Debug|x86.Build.0 = Debug|Win32
+		{227016DA-2F08-4EB3-A823-D13D3549BCFE}.Release|x64.ActiveCfg = Release|x64
+		{227016DA-2F08-4EB3-A823-D13D3549BCFE}.Release|x64.Build.0 = Release|x64
+		{227016DA-2F08-4EB3-A823-D13D3549BCFE}.Release|x86.ActiveCfg = Release|Win32
+		{227016DA-2F08-4EB3-A823-D13D3549BCFE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
