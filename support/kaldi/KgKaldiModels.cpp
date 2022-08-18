@@ -52,10 +52,10 @@ std::string KgKaldiModels::dump(const char* prefix) const
 		<< ", transitions: " << tm_.numTrans() << "\n";
 
 
-	ostr << prefix << "states = " << wfst_->order()
-		<< ", arcs = " << wfst_->size() << "\n";
+	ostr << prefix << "states: " << wfst_->order()
+		<< ", arcs: " << wfst_->size() << "\n";
 
-	ostr << prefix << "symbols = " << st_->size() << "\n";
+	ostr << prefix << "symbols: " << st_->size() << "\n";
 
 	return ostr.str();
 }
