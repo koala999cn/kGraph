@@ -1,6 +1,7 @@
 #pragma once
 #include "../common/istreamx.h"
 #include "../common/stlex.h"
+#include "../common/KuStrUtil.h"
 #include <vector>
 #include <string>
 #include <assert.h>
@@ -32,11 +33,24 @@ public:
 	static bool readFloatMatrix(stdx::istreamx& strm, std::vector<std::vector<T>>& mat);
 
 	// 读取kaldi生成的特征文件
+	// 该方法会自动判断bin/txt模式
 	template<typename T>
-	static bool readTable(stdx::istreamx& strm, std::string& key, std::vector<std::vector<T>>& table);
+	static bool readTable(std::istream& strm, std::string& key, std::vector<std::vector<T>>& table);
 
 	// 读取kaldi的words.txt文件
 	static KgSymbolTable* loadWordIdPair(const char* path);
+
+	static bool writeBinFlag(std::ostream& strm);
+
+	template<typename T>
+	static bool writeTable(std::ostream& strm, const std::string& key, const std::vector<std::vector<T>>& table, bool bin);
+
+	template<typename T>
+	static bool writeFloatMatrix(std::ostream& strm, const std::vector<std::vector<T>>& mat, bool bin);
+
+	template<typename T>
+	static bool writeBasicType(std::ostream& strm, const T& val, bool bin);
+
 
 private:
 	KuKaldiIO() = delete;
@@ -164,23 +178,68 @@ bool KuKaldiIO::readFloatMatrix(stdx::istreamx& strm, std::vector<std::vector<T>
 
 
 template<typename T>
-bool KuKaldiIO::readTable(stdx::istreamx& strm, std::string& key, std::vector<std::vector<T>>& table)
+bool KuKaldiIO::readTable(std::istream& strm, std::string& key, std::vector<std::vector<T>>& table)
 {
-	assert(!strm.binary()); // 因为要读取key字符串，必须先设置非bin模式
-
 	strm >> key;
 	if (!strm) 
 		return false;
 
-	int c = strm->peek();
+	int c = strm.peek();
 	if (c != ' ' && c != '\t' && c != '\n')
 		return false;
 
-	if (c != '\n') strm->get();  // Consume the space or tab.
+	if (c != '\n') strm.get();  // Consume the space or tab.
 
-	if (binaryTest(strm))
-		strm.setBinary(true);
-
-	return readFloatMatrix(strm, table);
+	stdx::istreamx isx(strm, binaryTest(strm));
+	return readFloatMatrix(isx, table);
 }
 
+
+template<typename T>
+bool KuKaldiIO::writeTable(std::ostream& strm, const std::string& key, const std::vector<std::vector<T>>& table, bool bin)
+{
+	strm << key << ' ';
+	if (bin)
+		writeBinFlag(strm);
+
+	return writeFloatMatrix(strm, table, bin);
+}
+
+
+template<typename T>
+bool KuKaldiIO::writeFloatMatrix(std::ostream& strm, const std::vector<std::vector<T>>& mat, bool bin)
+{
+	if (bin) {
+		if constexpr (std::is_same_v<T, float>)
+			strm.put('F');
+		else
+			strm.put('D');
+		strm.put('M'); strm.put(' ');
+
+		std::int32_t rows = mat.size(), cols = mat.empty() ? 0 : mat[0].size();
+		writeBasicType(strm, rows, bin), writeBasicType(strm, cols, bin);
+
+		for(auto& row : mat)
+		    strm.write((const char*)row.data(), row.size() * sizeof(T));
+	}
+	else {
+		strm << "[\n" << KuStrUtil::dump(mat, ' ') << ' ]';
+	}
+
+	return strm.good();
+}
+
+
+template<typename T>
+bool KuKaldiIO::writeBasicType(std::ostream& strm, const T& val, bool bin)
+{
+	if (bin) {
+		strm.put(sizeof(val));
+		strm.write((const char*)&val, sizeof(val));
+	}
+	else {
+		strm << val;
+	}
+
+	return strm.good();
+}

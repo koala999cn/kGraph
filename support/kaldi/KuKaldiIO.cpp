@@ -18,6 +18,14 @@ bool KuKaldiIO::binaryTest(std::istream& strm) {
 }
 
 
+bool KuKaldiIO::writeBinFlag(std::ostream& strm)
+{
+	strm.put('\0');
+	strm.put('B');
+	return strm.good();
+}
+
+
 KgSymbolTable* KuKaldiIO::loadWordIdPair(const char* path)
 {
 	std::ifstream ifs(path);
@@ -33,3 +41,4 @@ KgSymbolTable* KuKaldiIO::loadWordIdPair(const char* path)
 	}
 	return st;
 }
+
