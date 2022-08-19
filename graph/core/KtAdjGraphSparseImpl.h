@@ -100,7 +100,7 @@ public:
     unsigned addVertex(T&& v) {
         adjMat_.push_back(kPrivate::row_type<edge_type>());
         super_::vertexes_.push_back(std::move(v));
-        return super_::vertexes_.size();
+        return static_cast<unsigned>(super_::vertexes_.size());
     }
 
 

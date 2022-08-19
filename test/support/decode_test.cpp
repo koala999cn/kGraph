@@ -29,7 +29,7 @@ void decode_test()
 	auto pdf = [&models](unsigned transId, const std::vector<double>& feat) {
 		return models.prob(transId, feat.data()); };
 
-	while (!viterbi.search<std::vector<double>>(table.data(), table.size(), pdf)
+	while (!viterbi.search<std::vector<double>>(table.data(), unsigned(table.size()), pdf)
 		&& maxIter-- > 0) {
 		viterbi.setBeam(2 * viterbi.beam());
 	}
@@ -38,7 +38,7 @@ void decode_test()
 
 		printf("\n");
 		printf("  Overall log-likelihood per frame is %f over %d frames.\n",
-			viterbi.totalWeight() / table.size(), table.size());
+			viterbi.totalWeight() / table.size(), int(table.size()));
 
 		auto path = viterbi.bestPath();
 		auto words = models.getWords(path.cbegin(), path.cend());

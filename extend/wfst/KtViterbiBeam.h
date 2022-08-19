@@ -57,7 +57,7 @@ public:
 	}
 
 	double beam() const { return beam_; }
-	void setBeam(double beam) { beam_ = beam; }
+	void setBeam(double beam) { beam_ = decltype(beam_)(beam); }
 
 	// @pdf: 声学模型，相当于Acoustic matching transducer,
 	//       主要根据特征和模型id计算得分，score = AC_MODEL(X[i], transId)
@@ -318,7 +318,8 @@ void KtViterbiBeam<WFST>::transInput_(const FEAT_TYPE& x, frame_index_t t, pdf<F
 			auto& trans = iter.edge();
 			auto isym = traits_type::isym(trans);
 			if (isym != WFST::eps) { // for each e in E(s, eps)	
-				auto tok = std::make_shared<KpToken>(t, transId(trans), -ac(isym, x), cur.second);
+				auto tok = std::make_shared<KpToken>(t, transId(trans), 
+					static_cast<typename weight_type::value_type>(-ac(isym, x)), cur.second);
 				if (cur.second->trans_ == transId(trans)) { // 如果转移相同，使用原token的t值和prev值
 					tok->t_ = cur.second->t_;
 					tok->prev_ = cur.second->prev_;
