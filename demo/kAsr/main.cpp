@@ -15,24 +15,32 @@ int main()
 		std::cout << "  failed to load models from path './data/'\n";
 		return 1;
 	}
-	std::cout << models.dump("  ");
+	std::cout << models.dump("   ");
 
 	auto viterbi = KtViterbiBeam(models.wfst());
 
-	auto voice_notify = []() {
-		std::cout << '-';
+	auto voice_notify = [](
+		KcVoicePicker::KeVoiceEvent e, const KcVoicePicker::KpEventData& data) {
+
+			if (e == KcVoicePicker::KeVoiceEvent::k_voice_frame)
+				std::cout << '-';
+
+			if (e == KcVoicePicker::KeVoiceEvent::k_voice_picked)
+				std::cout << ">\n";
+			
+			return true;
 	};
 
 	auto decode = [&viterbi, &models](const std::vector<std::vector<double>>& feats) {
 
-		std::cout << "\n" << ">> picked " << feats.size() << " frames, now decoding...\n";
+		std::cout << ">> picked utterance of " << feats.size() << " frames, now decoding...\n";
 
-		int numIter(0); // 最多重试5次
+		int numIter(1); // 最多重试5次
 		auto pdf = [&models](unsigned transId, const std::vector<double>& feat) {
 			return models.prob(transId, feat.data()); };
 
 		while (!viterbi.search<std::vector<double>>(feats.data(), feats.size(), pdf)
-			&& ++numIter < 5) {
+			&& ++numIter <= 5) {
 			viterbi.setBeam(2 * viterbi.beam());
 		}
 
@@ -43,7 +51,7 @@ int main()
 		}
 		else {			
 			std::cout << "   hitted at " << numIter << " retries.";
-			std::cout << " Overall log-likelihood per frame is "
+			std::cout << " log-like per frame is "
 				<< viterbi.totalWeight() / feats.size() << "\n";
 
 			std::cout << "   result: ";
@@ -55,7 +63,8 @@ int main()
 	};
 
 	KgAsrFrontFrame front("front-end.json");
-	if (!front.run(decode, voice_notify)) {
+	front.setVoiceHandler(voice_notify);
+	if (!front.run(decode)) {
 		std::cout << "  failed to run front-end\n";
 		return 1;
 	}
