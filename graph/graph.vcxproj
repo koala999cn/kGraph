@@ -144,7 +144,6 @@
   <ItemGroup>
     <ClInclude Include="base\KtCondRange.h" />
     <ClInclude Include="base\KtHolder.h" />
-    <ClInclude Include="base\KtHolder2.h" />
     <ClInclude Include="base\KtMatrix.h" />
     <ClInclude Include="base\KtRange.h" />
     <ClInclude Include="base\traits_helper.h" />

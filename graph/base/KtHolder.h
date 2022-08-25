@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <tuple>
 
 
 // 对类型T的封装类
@@ -129,9 +130,38 @@ namespace kPrivate
 	private:
 		value_type val_;
 	};
+
 }
 
 
-// TODO: 使用trivial copyable
+// 单个内置元素
 template<typename T>
-using KtHolder = kPrivate::KtHolderImpl_<T, std::is_trivial_v<T>>;
+using KtHolder = kPrivate::KtHolderImpl_<T, std::is_trivial_v<T>>; // TODO: 使用trivial copyable
+
+
+// 支持多个内置元素
+template<typename... T>
+class KtTupleHolder : public KtHolder<std::tuple<T...>>
+{
+public:
+	using super_ = KtHolder<std::tuple<T...>>;
+
+	// 拓展构造函数
+	using super_::super_;
+	KtTupleHolder(T&&... t) : super_(std::make_tuple(std::forward<T>(t)...)) {}
+
+
+	constexpr static auto tupleSize() {
+		return std::tuple_size_v<std::tuple<T...>>;
+	}
+
+
+	// 拓展inside成员方法
+	using super_::inside;
+
+	template<int I>
+	auto& inside() { return std::get<I>(super_::inside()); }
+
+	template<int I>
+	auto& inside() const { return std::get<I>(super_::inside()); }
+};

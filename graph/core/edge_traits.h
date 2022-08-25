@@ -1,5 +1,5 @@
 #pragma once
-#include "../base/KtHolder2.h"
+#include "../base/KtHolder.h"
 #include "../base/traits_helper.h"
 
 
@@ -22,7 +22,22 @@ struct edge_traits
 namespace kPrivate
 {
 	template<typename EDGE_TYPE>
-	using KtEdgeWrapper_ = KtHolder2<unsigned, EDGE_TYPE>;
+	class KtEdgeWrapper_ : public KtTupleHolder<unsigned, EDGE_TYPE>
+	{
+	public:
+		using super_ = KtTupleHolder<unsigned, EDGE_TYPE>;
+		using super_::super_;
+
+		KtEdgeWrapper_(const EDGE_TYPE& edge) : super_(-1, edge) {}
+
+		KtEdgeWrapper_& operator=(const EDGE_TYPE& edge) {
+			inside<1>() = edge;
+			return *this;
+		}
+
+		operator const EDGE_TYPE& () const { return inside<1>(); }
+		operator EDGE_TYPE& () { return inside<1>(); }
+	};
 
 	HAS_STATIC_MEMBER(to)
 };
@@ -34,11 +49,11 @@ struct edge_traits<kPrivate::KtEdgeWrapper_<EDGE_TYPE>>
 {
 	using edge_type = kPrivate::KtEdgeWrapper_<EDGE_TYPE>;
 
-	static_assert(!std::is_trivial_v<EDGE_TYPE> || std::is_trivial_v <edge_type>,
-		"constructing trivial edge wrapper error");
+	//static_assert(!std::is_trivial_v<EDGE_TYPE> || std::is_trivial_v<edge_type>,
+	//	"constructing trivial edge wrapper error");
 
-	static decltype(auto) to(const edge_type& wrap_edge) { return wrap_edge.outside(); }
-	static decltype(auto) to(edge_type& wrap_edge) { return wrap_edge.outside(); }
+	static decltype(auto) to(const edge_type& wrap_edge) { return wrap_edge.inside<0>(); }
+	static decltype(auto) to(edge_type& wrap_edge) { return wrap_edge.inside<0>(); }
 };
 
 
@@ -48,7 +63,7 @@ struct edge_traits<const kPrivate::KtEdgeWrapper_<EDGE_TYPE>>
 {
 	using edge_type = const kPrivate::KtEdgeWrapper_<EDGE_TYPE>;
 
-	static decltype(auto) to(edge_type& wrap_edge) { return wrap_edge.outside(); }
+	static decltype(auto) to(edge_type& wrap_edge) { return wrap_edge.inside<0>(); }
 };
 
 
