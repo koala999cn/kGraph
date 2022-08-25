@@ -265,7 +265,7 @@ public:
 	}
 
 
-	// 仅对多边图有效
+	// 仅对单边图有效
 	template<bool dummy = !multiEdges, typename = std::enable_if_t<dummy>>
 	void setEdge(unsigned from, unsigned to, const edge_type& edge) {
 		assert(graph_level_0::hasEdge(from, to));

@@ -22,7 +22,6 @@ extern void euler_test();
 
 int main(int argc, char const *argv[])
 {
-    euler_test(); printf("\n");
     layout_test(); printf("\n");
     adj_iter_test(); printf("\n");
     bfs_test(); printf("\n");
@@ -31,6 +30,7 @@ int main(int argc, char const *argv[])
     bipartite_test(); printf("\n");
     bridge_test(); printf("\n");
     cutpoints_test(); printf("\n");
+    euler_test(); printf("\n");
     transitive_closure_test(); printf("\n");
     topology_sort_test(); printf("\n");
     strongly_connected_test(); printf("\n");
