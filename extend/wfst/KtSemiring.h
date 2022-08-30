@@ -2,7 +2,7 @@
 #include <cmath>
 #include <algorithm>
 #include <limits>
-#include "../graph/base/KtHolder.h"
+#include "../../graph/base/KtHolder.h"
 
 
 // 半环的模板抽象类
@@ -202,3 +202,43 @@ public:
 	KtTropicalSemiring leftDiv(const KtTropicalSemiring& s) const { return value() - s.value(); }
 };
 
+
+template<typename T, typename U>
+class KtPairSemiring : public KtTupleHolder<T, U>
+{
+public:
+	using super_ = KtTupleHolder<T, U>;
+	using super_::super_;
+	using typename super_::value_type;
+	using super_::inside;
+
+	const value_type& value() const { return inside(); }
+
+	T& value0() { return std::get<0>(inside()); }
+	const T& value0() const { return std::get<0>(inside()); }
+
+	U& value1() { return std::get<1>(inside()); }
+	const U& value1() const { return std::get<1>(inside()); }
+
+	static const KtPairSemiring& zero() {
+		static const KtPairSemiring z(T::zero(), U::zero());
+		return z;
+	}
+
+	static const KtPairSemiring& one() {
+		static const KtPairSemiring o(T::one(), U::one());
+		return o;
+	}
+
+	KtPairSemiring operator+(const KtPairSemiring& rhs) const {
+		return { value0() + rhs.value0(), value1() + rhs.value1() };
+	}
+
+	KtPairSemiring operator*(const KtPairSemiring& rhs) const {
+		return { value0() * rhs.value0(), value1() * rhs.value1() };
+	}
+
+	KtPairSemiring operator/(const KtPairSemiring& rhs) const {
+		return { value0() / rhs.value0(), value1() / rhs.value1() };
+	}
+};
