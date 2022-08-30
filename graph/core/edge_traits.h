@@ -27,16 +27,17 @@ namespace kPrivate
 	public:
 		using super_ = KtTupleHolder<unsigned, EDGE_TYPE>;
 		using super_::super_;
+		using super_::inside;
 
 		KtEdgeWrapper_(const EDGE_TYPE& edge) : super_(-1, edge) {}
 
 		KtEdgeWrapper_& operator=(const EDGE_TYPE& edge) {
-			inside<1>() = edge;
+			std::get<1>(inside()) = edge;
 			return *this;
 		}
 
-		operator const EDGE_TYPE& () const { return inside<1>(); }
-		operator EDGE_TYPE& () { return inside<1>(); }
+		operator const EDGE_TYPE& () const { return std::get<1>(inside()); }
+		operator EDGE_TYPE& () { return std::get<1>(inside()); }
 	};
 
 	HAS_STATIC_MEMBER(to)

@@ -17,6 +17,19 @@ namespace kPrivate
 		ALPHA_TYPE osym; // Êä³ö·ûºÅ
 		SEMIRING wt; // È¨ÖØ
 
+		KpStdTrans_() = default;
+		KpStdTrans_(const KpStdTrans_&) = default;
+		KpStdTrans_(KpStdTrans_&&) = default;
+		KpStdTrans_(ALPHA_TYPE isym_, ALPHA_TYPE osym_, SEMIRING wt_) {
+			isym = isym_, osym = osym_;
+			wt = wt_;
+		}
+
+		KpStdTrans_& operator=(const KpStdTrans_& rhs) {
+			isym = rhs.isym, osym = rhs.osym;
+			wt = rhs.wt;
+			return *this;
+		}
 
 		bool operator == (const KpStdTrans_& rhs) const {
 			return isym == rhs.isym && osym == rhs.osym && wt == rhs.wt;

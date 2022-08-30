@@ -40,6 +40,8 @@ public:
 	// 读取kaldi的words.txt文件
 	static KgSymbolTable* loadWordIdPair(const char* path);
 
+	// TODO: there's mistake, test all writing methods
+
 	static bool writeBinFlag(std::ostream& strm);
 
 	template<typename T>

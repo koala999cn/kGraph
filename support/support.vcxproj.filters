@@ -68,5 +68,8 @@
     <ClInclude Include="kaldi\KgKaldiModels.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="kaldi\KuKaldiLat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -13,6 +13,8 @@
 class KgKaldiModels
 {
 public:
+	using WFST = MmapWfst<KtLogSemiring<float>>;
+
 	// path目录下须有如下文件:
 	//    final.mdl - hmm声学模型
 	//    HCLG.fst - wfst解码网络
@@ -25,7 +27,7 @@ public:
 	// ok???
 	operator bool() const;
 
-	const MmapWfst& wfst() const { return *wfst_; }
+	const WFST& wfst() const { return *wfst_; }
 
 	std::string dump(const char* prefix) const;
 
@@ -42,6 +44,6 @@ public:
 private:
 	KgTransitionModel tm_;
 	std::vector<std::shared_ptr<kGmm>> pdfs_;
-	std::unique_ptr<MmapWfst> wfst_;
+	std::unique_ptr<WFST> wfst_;
 	std::unique_ptr<KgSymbolTable> st_;
 };

@@ -20,7 +20,7 @@ KgKaldiModels::KgKaldiModels(const std::string& path)
 		return;
 
 	std::string hclg = path + "/HCLG.fst";
-	wfst_.reset(KuFstIO::readMmap(hclg));
+	wfst_.reset(KuFstIO::readMmap<KtLogSemiring<float>>(hclg));
 	if (!wfst_) return;
 
 	std::string words = path + "/words.txt";

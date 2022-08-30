@@ -2,10 +2,10 @@
 #include <unordered_map>
 #include <map>
 #include <assert.h>
-#include "../graph/GraphX.h"
-#include "../graph/core/KtBfsIter.h"
-#include "../graph/core/KtAdjIter.h"
-#include "../graph/core/vertex_traits.h"
+#include "../../graph/GraphX.h"
+#include "../../graph/core/KtBfsIter.h"
+#include "../../graph/core/KtAdjIter.h"
+#include "../../graph/core/vertex_traits.h"
 #include "trans_traits.h"
 
 
@@ -81,7 +81,6 @@ public:
 
 	using super_::super_;
 	using super_::order;
-	using super_::vertexAt;
 
 	// 状态是否具有权值属性？
 	constexpr static bool hasStateWeight() {
@@ -111,12 +110,12 @@ public:
 
 		if (merge) {
 			// 查找是否存在<isym, osym>的转移，若存在则需要合并，否则新增
-			auto iter = adjIter(s1);
+			auto iter = KtAdjIter<graph_type>(*this, s1);
 			for (; !iter.isEnd(); ++iter) {
 				if (*iter == s2) {
 					auto& trans = iter.edge();
 					if (traits_type::isym(trans) == isym && traits_type::osym(trans) == osym) { // 合并
-						iter.reedge(traits_type::construct(isym,  osym, traits_type::weight(trans) + wt));
+						iter.reedge(traits_type::construct(isym, osym, traits_type::weight(trans) + wt));
 						return;
 					}
 				}
@@ -124,26 +123,26 @@ public:
 		}
 
 		// 新增
-		addEdge(s1, s2, traits_type::construct(isym, osym, wt));
+		super_::addEdge(s1, s2, traits_type::construct(isym, osym, wt));
 	}
 
 	void addTrans(state_index_t s1, state_index_t s2, const trans_type& trans) {
-		addEdge(s1, s2, trans);
+		super_::addEdge(s1, s2, trans);
 	}
 
 
 	// 删除s1到s2的转移
 	void eraseTrans(state_index_t s1, state_index_t s2) {
-		eraseEdge(s1, s2);
+		super_::eraseEdge(s1, s2);
 	}
 
 
 	bool hasTrans(state_index_t s1, state_index_t s2) const {
-		return hasEdge(s1, s2);
+		return super_::hasEdge(s1, s2);
 	}
 
 	bool hasTrans(state_index_t s1, state_index_t s2, const trans_type& trans) const {
-		return hasEdge(s1, s2, trans);
+		return super_::hasEdge(s1, s2, trans);
 	}
 
 
@@ -219,12 +218,12 @@ public:
 
 	template<typename T = vertex_type, typename = std::enable_if_t<has_weight_v<T>>>
 	decltype(auto) stateWeight(state_index_t f) const {
-		return vertex_traits<T>::weight(vertexAt(f));
+		return vertex_traits<T>::weight(super_::vertexAt(f));
 	}
 
 	template<typename T = vertex_type, typename = std::enable_if_t<has_weight_v<T>>>
 	decltype(auto) stateWeight(state_index_t f) {
-		return vertex_traits<T>::weight(vertexAt(f));
+		return vertex_traits<T>::weight(super_::vertexAt(f));
 	}
 
 	// 状态f是否为终止状态

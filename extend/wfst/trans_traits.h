@@ -12,7 +12,7 @@ struct trans_traits
 
 	//  根据输入、输出和权重构造转移对象
 	static trans_type construct(const alpha_type& isym, const alpha_type& osym, const weight_type& wt) {
-		return { isym, osym, wt };
+		return trans_type(isym, osym, wt);
 	};
 
 	static const weight_type& weight(const trans_type& trans) {

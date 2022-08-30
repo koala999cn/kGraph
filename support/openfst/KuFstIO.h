@@ -3,13 +3,14 @@
 #include <vector>
 #include <sstream>
 #include <cstdint>
-#include "../common/KuStrUtil.h"
-#include "../common/KuLex.h"
-#include "../common/istreamx.h"
-#include "../graph/core/edge_traits.h"
-#include "../graph/core/vertex_traits.h"
-#include "../extend/wfst/KtWfst.h"
-#include "../extend/wfst/KtSemiring.h"
+#include <functional>
+#include "../../common/KuStrUtil.h"
+#include "../../common/KuLex.h"
+#include "../../common/istreamx.h"
+#include "../../graph/core/edge_traits.h"
+#include "../../graph/core/vertex_traits.h"
+#include "../../extend/wfst/KtWfst.h"
+#include "../../extend/wfst/KtSemiring.h"
 #include "KtFlatGraphMmapImpl.h"
 #include "KgSymbolTable.h"
 
@@ -32,9 +33,10 @@ namespace kPrivate
 	using KpStdLogArc = KpStdArc<KtLogSemiring<VALUE_TYPE>>;
 
 
+	template<typename WEIGHT_TYPE>
 	struct KpConstState
 	{
-		float weight;              // Final weight.
+		WEIGHT_TYPE weight;        // Final weight.
 		std::uint32_t pos;         // Start of state's arcs in *arcs_.
 		std::uint32_t narcs;       // Number of arcs (per state).
 		std::uint32_t niepsilons;  // Number of input epsilons.
@@ -43,10 +45,10 @@ namespace kPrivate
 }
 
 
-template<>
-struct vertex_traits<kPrivate::KpConstState>
+template<typename WEIGHT_TYPE>
+struct vertex_traits<kPrivate::KpConstState<WEIGHT_TYPE>>
 {
-	using vertex_type = kPrivate::KpConstState;
+	using vertex_type = kPrivate::KpConstState<WEIGHT_TYPE>;
 
 	static std::uint32_t edgeindex(const vertex_type& v) { return v.pos; }
 	static std::uint32_t& edgeindex(vertex_type& v) { return v.pos; }
@@ -54,14 +56,14 @@ struct vertex_traits<kPrivate::KpConstState>
 	static std::uint32_t outdegree(const vertex_type& v) { return v.narcs; }
 	static std::uint32_t& outdegree(vertex_type& v) { return v.narcs; }
 
-	static float weight(const vertex_type& v) { return v.weight; }
-	static float& weight(vertex_type& v) { return v.weight; }
+	static WEIGHT_TYPE weight(const vertex_type& v) { return v.weight; }
+	static WEIGHT_TYPE& weight(vertex_type& v) { return v.weight; }
 };
 
-template<>
-struct vertex_traits<const kPrivate::KpConstState>
+template<typename WEIGHT_TYPE>
+struct vertex_traits<const kPrivate::KpConstState<WEIGHT_TYPE>>
 {
-	using vertex_type = const kPrivate::KpConstState;
+	using vertex_type = const kPrivate::KpConstState<WEIGHT_TYPE>;
 
 	static std::uint32_t edgeindex(const vertex_type& v) { return v.pos; }
 
@@ -109,38 +111,73 @@ struct edge_traits<kPrivate::KpStdArc<WEIGHT_TYPE>>
 template<typename EDGE_TYPE, typename VERTEX_TYPE>
 using DigraphMx = KtGraphX<KtGraph<KtFlatGraphMmapImpl<EDGE_TYPE, VERTEX_TYPE>, true, true, false>>;
 
-using MmapWfst = KtWfst<kPrivate::KpStdTropArc<>, edge_traits<kPrivate::KpStdTropArc<>>,
-	DigraphMx<kPrivate::KpStdTropArc<>, kPrivate::KpConstState>>;
+template<typename WT>
+using MmapWfst = KtWfst<kPrivate::KpStdArc<WT>, edge_traits<kPrivate::KpStdArc<WT>>,
+	DigraphMx<kPrivate::KpStdArc<WT>, kPrivate::KpConstState<WT>>>;
 
 
 class KuFstIO
 {
 public:
 
+	struct KpFstHeader
+	{
+	public:
+		KpFstHeader() : version(0), flags(0), properties(0), start(-1),
+			numstates(0), numarcs(0) {}
+
+		std::string fsttype;       // E.g. "vector".
+		std::string arctype;       // E.g. "standard".
+		std::int32_t version;      // Type version number.
+		std::int32_t flags;        // File format bits.
+		std::uint64_t properties;  // FST property bits.
+		std::int64_t start;        // Start state.
+		std::int64_t numstates;    // # of states.
+		std::int64_t numarcs;      // # of arcs.
+
+		enum { k_has_isymbols = 0x01, k_has_osymbols = 0x02 };
+	};
+
 	// read fst as binary
 	template<typename WFST>
 	static bool read(std::istream& strm, WFST& fst, KgSymbolTable* isym = nullptr, KgSymbolTable* osym = nullptr);
 
+	template<typename WFST>
+	static bool read(stdx::istreamx& strm, const KpFstHeader& hdr, WFST& fst, KgSymbolTable* isym = nullptr, KgSymbolTable* osym = nullptr);
+
 	// read fst as text
-	template <class WFST>
-	static bool readText(std::istream& strm, WFST& fst);
+	// @AS_ACCEPTOR: 若为真，则转移边没有olabel属性(olabel = ilabel)
+	template <typename WFST, bool AS_ACCEPTOR = false>
+	static bool readText(std::istream& strm, WFST& fst, 
+		std::function<bool(const std::string&, typename WFST::weight_type&)> str2wt);
+
+	// readText辅助版，提供一个缺省的str2wt
+	template <typename WFST, bool AS_ACCEPTOR = false, 
+		typename = std::enable_if_t<std::is_assignable_v<typename WFST::weight_type, double>>>
+	static bool readText(std::istream& strm, WFST& fst) {
+		return readText(strm, fst, [](const std::string& str, typename WFST::weight_type& wt) {
+			auto d = KuLex::parseFloat(str);
+			wt = d.second;
+			return d.first;
+			});
+	}
 
 	// read fst as mmap
 	// wfst须是flat模式，
-	static MmapWfst* readMmap(const std::string& path);
+	template <typename WEIGHT_TYPE>
+	static MmapWfst<WEIGHT_TYPE>* readMmap(const std::string& path);
 
 
 	// Checks for FST magic number in stream, to indicate caller function that the
 	// stream content is an FST header.
 	static bool isFstHeader(std::istream& strm);
 
+	static bool readHeader(stdx::istreamx& strm, KpFstHeader& hdr);
 
 private:
 
-	struct KpFstHeader;
-	static bool readHeader_(stdx::istreamx& strm, KpFstHeader& hdr);
-
-	static bool readConstState_(stdx::istreamx& strm, kPrivate::KpConstState& cs);
+	template<typename WEIGHT_TYPE>
+	static bool readConstState_(stdx::istreamx& strm, kPrivate::KpConstState<WEIGHT_TYPE>& cs);
 
 	template<typename WEIGHT_TYPE>
 	static bool readStdArc_(stdx::istreamx& strm, kPrivate::KpStdArc<WEIGHT_TYPE>& sa);
@@ -165,31 +202,13 @@ private:
 	static constexpr std::int32_t kSymbolTableMagicNumber = 2125658996;
 
 
-	struct KpFstHeader 
-	{
-	public:
-		KpFstHeader() : version(0), flags(0), properties(0), start(-1),
-			numstates(0), numarcs(0) {}
-
-		std::string fsttype;       // E.g. "vector".
-		std::string arctype;       // E.g. "standard".
-		std::int32_t version;      // Type version number.
-		std::int32_t flags;        // File format bits.
-		std::uint64_t properties;  // FST property bits.
-		std::int64_t start;        // Start state.
-		std::int64_t numstates;    // # of states.
-		std::int64_t numarcs;      // # of arcs.
-
-		enum { k_has_isymbols = 0x01, k_has_osymbols = 0x02 };
-	};
-
-
 	KuFstIO() = delete;
 };
 
 
-template <class WFST>
-bool KuFstIO::readText(std::istream &is, WFST& fst)
+template <class WFST, bool AS_ACCEPTOR>
+bool KuFstIO::readText(std::istream &is, WFST& fst,
+	std::function<bool(const std::string&, typename WFST::weight_type&)> str2wt)
 {
 	//std::ostringstream err;
 
@@ -205,7 +224,8 @@ bool KuFstIO::readText(std::istream &is, WFST& fst)
 		auto tokens = KuStrUtil::split(line, separator, true);
 		if (tokens.size() == 0) break; // Empty line is a signal to stop
 
-		if (tokens.size() > 5) {
+		constexpr auto maxTokens = AS_ACCEPTOR ? 4 : 5;
+		if (tokens.size() > maxTokens) {
 			//err << "Bad line in FST: " << line;
 			break;
 		}
@@ -229,36 +249,50 @@ bool KuFstIO::readText(std::istream &is, WFST& fst)
 
 		case 2:
 		{
-			// TODO: StrToWeight
-			auto w = KuLex::parseFloat(tokens[1]);
-			if (!w.first) ok = false;
-			else fst.setFinal(d, w.second);
+			typename WFST::weight_type wt;
+			ok = str2wt(tokens[1], wt);
+			if (ok) fst.setFinal(d, wt);
 			break;
 		}
 
-		case 4:
+		case 3: 
+			if constexpr (!AS_ACCEPTOR) {
+				// 3 columns only ok for acceptor.
+				ok = false;
+				break;
+			}
+			// else fall-through
+
 		case 5:
+			if constexpr (AS_ACCEPTOR) {
+				// 5 columns only ok for non-acceptor.
+				ok = false;
+				break;
+			}
+			// else fall-through
+
+		case 4:
 		{
 			auto nextstate = KuLex::parseInt64(tokens[1]);
 			auto ilabel = KuLex::parseInt64(tokens[2]);
-			auto olabel = KuLex::parseInt64(tokens[3]);
-			auto w = typename WFST::weight_type::one();
-
-			ok = nextstate.first && ilabel.first && olabel.first;
-			if (ok && tokens.size() == 5) {
-				auto wt = KuLex::parseFloat(tokens[4]);
-				ok = wt.first;
-				w = wt.second;
+			typename WFST::alpha_type olabel;
+			ok = nextstate.first && ilabel.first;
+			if (!AS_ACCEPTOR && ok) {
+				auto o = KuLex::parseInt64(tokens[3]);
+				ok = o.first;
+				olabel = o.second;
 			}
+			
+			auto wt = typename WFST::weight_type::one();
+			if (ok && tokens.size() == maxTokens)
+				ok = str2wt(tokens.back(), wt);
 	
-			if (ok) {
-				fst.addTrans(d, nextstate.second, ilabel.second, olabel.second, w);
-			}
+			if (ok) 
+				fst.addTrans(d, nextstate.second, ilabel.second, olabel, wt);
 
 			break;
 		}
 	
-		case 3: // 3 columns not ok for Lattice format; it's not an acceptor.
 		default:
 			ok = false;
 		}
@@ -284,7 +318,7 @@ bool KuFstIO::read(std::istream& strm_, WFST& fst, KgSymbolTable* isym, KgSymbol
 	/// read header
 
 	KpFstHeader hdr;
-	if (!readHeader_(strm, hdr))
+	if (!readHeader(strm, hdr))
 		return false;
 
 	if (hdr.version < kMinFileVersion)
@@ -296,6 +330,13 @@ bool KuFstIO::read(std::istream& strm_, WFST& fst, KgSymbolTable* isym, KgSymbol
 	if (hdr.arctype != "standard")  // TODO: 只支持读取标准型arc
 		return false;
 
+	return read(strm, hdr, fst, isym, osym);
+}
+
+
+template<typename WFST>
+bool KuFstIO::read(stdx::istreamx& strm, const KpFstHeader& hdr, WFST& fst, KgSymbolTable* isym, KgSymbolTable* osym)
+{
 	/// read optional symbol-table
 
 	if (hdr.flags & KpFstHeader::k_has_isymbols) {
@@ -323,16 +364,62 @@ bool KuFstIO::read(std::istream& strm_, WFST& fst, KgSymbolTable* isym, KgSymbol
 }
 
 
+template <typename WEIGHT_TYPE>
+MmapWfst<WEIGHT_TYPE>* KuFstIO::readMmap(const std::string& path)
+{
+	std::ifstream ifs(path, std::ios_base::binary);
+	if (!ifs) return nullptr;
+
+	stdx::istreamx strm(ifs, true);
+	strm.setLittleEndian();
+
+	/// read header
+
+	KpFstHeader hdr;
+	if (!readHeader(strm, hdr))
+		return nullptr;
+
+	if (hdr.version < kMinFileVersion || hdr.fsttype != "const" || hdr.arctype != "standard")
+		return nullptr;
+
+	/// read optional symbol-table
+
+	if (hdr.flags & KpFstHeader::k_has_isymbols) {
+		if (!readSymbolTable_(strm, nullptr))
+			return nullptr;
+	}
+
+	if (hdr.flags & KpFstHeader::k_has_osymbols) {
+		if (!readSymbolTable_(strm, nullptr))
+			return nullptr;
+	}
+
+	auto off = ifs.tellg();
+	ifs.close();
+
+	/// now everything is ok, ready to read mmap
+	auto mmap = std::make_unique<MmapWfst<WEIGHT_TYPE>>();
+	if (!mmap->map(path, static_cast<unsigned>(hdr.numstates),
+		static_cast<unsigned>(hdr.numarcs), off)) // 先读vertex，再读arc
+		return nullptr;
+
+	mmap->setInitial(static_cast<unsigned>(hdr.start));
+
+	// TODO: setFinal
+
+	return mmap.release();
+}
+
 template<typename WFST>
 bool KuFstIO::readVector_(stdx::istreamx& strm, WFST& fst, std::int64_t numStates)
 {
 	using traits_type = typename WFST::traits_type;
 
 	for (std::int64_t s = 0; s < numStates; s++) {
-		float finalWt;
+		typename WFST::weight_type finalWt;
 		strm >> finalWt; // final weight of current state
 		if (!strm) return false;
-		if (WFST::weight_type::zero() != WFST::weight_type(finalWt))
+		if (WFST::weight_type::zero() != finalWt)
 			fst.setFinal(s, finalWt); // TODO: 是这个意思吗
 
 		std::int64_t narcs;
@@ -346,7 +433,7 @@ bool KuFstIO::readVector_(stdx::istreamx& strm, WFST& fst, std::int64_t numState
 				return false;
 
 			fst.addTrans(s, arc.nextstate, arc.ilabel, arc.olabel, 
-				WFST::weight_type(arc.weight.value()));
+				WFST::weight_type(arc.weight));
 		}
 	}
 
@@ -357,22 +444,25 @@ bool KuFstIO::readVector_(stdx::istreamx& strm, WFST& fst, std::int64_t numState
 template<typename WFST>
 bool KuFstIO::readConst_(stdx::istreamx& strm, WFST& fst, std::int64_t numStates, std::int64_t numArcs)
 {
+	using kConstState = kPrivate::KpConstState<WFST::weight_type>;
+
 	auto stateInitPos = strm->tellg();
 	auto arcInitPos = stateInitPos;
-	arcInitPos  += numStates * sizeof(kPrivate::KpConstState);
+	arcInitPos  += numStates * sizeof(kConstState);
 
 	for (std::int64_t s = 0; s < numStates; s++) {
-		strm->seekg(stateInitPos + std::streamoff(s * sizeof(kPrivate::KpConstState)));
-		kPrivate::KpConstState cs;
+		
+		strm->seekg(stateInitPos + std::streamoff(s * sizeof(kConstState)));
+		kConstState cs;
 		if (!readConstState_(strm, cs))
 			return false;
 
-		if(WFST::weight_type::zero() != WFST::weight_type(cs.weight))
+		if(WFST::weight_type::zero() != cs.weight)
 			fst.setFinal(s, cs.weight); // TODO: 
 
-		strm->seekg(arcInitPos + std::streamoff(cs.pos * sizeof(kPrivate::KpStdLogArc<float>)));
+		strm->seekg(arcInitPos + std::streamoff(cs.pos * sizeof(kPrivate::KpStdArc<WFST::weight_type>)));
 		for (std::uint32_t i = 0; i < cs.narcs; i++) {
-			kPrivate::KpStdLogArc<float> arc;
+			kPrivate::KpStdArc<WFST::weight_type> arc;
 			if (!readStdArc_(strm, arc))
 				return false;
 
@@ -389,9 +479,22 @@ template<typename WEIGHT_TYPE>
 bool KuFstIO::readStdArc_(stdx::istreamx& strm, kPrivate::KpStdArc<WEIGHT_TYPE>& arc)
 {
 	strm >> arc.ilabel
-		>> arc.olabel
-		>> arc.weight
-		>> arc.nextstate;
+		 >> arc.olabel
+		 >> arc.weight
+		 >> arc.nextstate;
+
+	return strm;
+}
+
+
+template<typename WEIGHT_TYPE>
+bool KuFstIO::readConstState_(stdx::istreamx& strm, kPrivate::KpConstState<WEIGHT_TYPE>& cs)
+{
+	strm >> cs.weight
+		 >> cs.pos
+		 >> cs.narcs
+		 >> cs.niepsilons
+		 >> cs.noepsilons;
 
 	return strm;
 }

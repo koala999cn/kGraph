@@ -12,7 +12,7 @@ bool KuFstIO::isFstHeader(std::istream& strm)
 }
 
 
-bool KuFstIO::readHeader_(stdx::istreamx& strm, KpFstHeader& hdr)
+bool KuFstIO::readHeader(stdx::istreamx& strm, KpFstHeader& hdr)
 {
 	std::int32_t magic_number = 0;
 	strm >> magic_number;
@@ -28,18 +28,6 @@ bool KuFstIO::readHeader_(stdx::istreamx& strm, KpFstHeader& hdr)
 	     >> hdr.start
 	     >> hdr.numstates
 	     >> hdr.numarcs;
-
-	return strm;
-}
-
-
-bool KuFstIO::readConstState_(stdx::istreamx& strm, kPrivate::KpConstState& cs)
-{
-	strm >> cs.weight
-	 	 >> cs.pos
-		 >> cs.narcs
-		 >> cs.niepsilons
-		 >> cs.noepsilons;
 
 	return strm;
 }
@@ -73,50 +61,4 @@ bool KuFstIO::readSymbolTable_(stdx::istreamx& strm, KgSymbolTable* table)
 	}
 
 	return true;
-}
-
-
-MmapWfst* KuFstIO::readMmap(const std::string& path)
-{
-	std::ifstream ifs(path, std::ios_base::binary);
-	if (!ifs) return nullptr;
-
-	stdx::istreamx strm(ifs, true);
-	strm.setLittleEndian();
-
-	/// read header
-
-	KpFstHeader hdr;
-	if (!readHeader_(strm, hdr))
-		return nullptr;
-
-	if (hdr.version < kMinFileVersion || hdr.fsttype != "const" || hdr.arctype != "standard") 
-		return nullptr;
-
-	/// read optional symbol-table
-
-	if (hdr.flags & KpFstHeader::k_has_isymbols) {
-		if (!readSymbolTable_(strm, nullptr))
-			return nullptr;
-	}
-
-	if (hdr.flags & KpFstHeader::k_has_osymbols) {
-		if (!readSymbolTable_(strm, nullptr))
-			return nullptr;
-	}
-
-	auto off = ifs.tellg();
-	ifs.close();
-
-	/// now everything is ok, ready to read mmap
-	auto mmap = std::make_unique<MmapWfst>();
-	if (!mmap->map(path, static_cast<unsigned>(hdr.numstates), 
-		static_cast<unsigned>(hdr.numarcs), off)) // ÏÈ¶Ávertex£¬ÔÙ¶Áarc
-		return nullptr;
-
-	mmap->setInitial(static_cast<unsigned>(hdr.start));
-
-	// TODO: setFinal
-
-	return mmap.release();
 }
