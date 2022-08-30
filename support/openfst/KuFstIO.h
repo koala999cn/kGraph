@@ -265,9 +265,11 @@ bool KuFstIO::readText(std::istream &is, WFST& fst,
 
 		case 5:
 			if constexpr (AS_ACCEPTOR) {
-				// 5 columns only ok for non-acceptor.
-				ok = false;
-				break;
+				if (tokens.size() == 5) { // case 3 »á fall-through
+					// 5 columns only ok for non-acceptor.
+					ok = false;
+					break;
+				}
 			}
 			// else fall-through
 
