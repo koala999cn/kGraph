@@ -1,5 +1,5 @@
 #pragma once
-#include "bimap.h"
+#include "../../common/bimap.h"
 
 
 class KgSymbolTable

@@ -1,7 +1,7 @@
 #pragma once
-#include "../graph/core/vertex_traits.h"
-#include "../graph/core/edge_traits.h"
-#include "../graph/core/KtFlatGraphBase.h"
+#include "../../graph/core/vertex_traits.h"
+#include "../../graph/core/edge_traits.h"
+#include "../../graph/core/KtFlatGraphBase.h"
 #include "mio/mio.hpp"
 #include <fcntl.h>
 
