@@ -1,6 +1,7 @@
 #pragma once
 #include <istream>
 #include <vector>
+#include <assert.h>
 #include "KmEndianed.h"
 #include "../graph/base/KtHolder.h"
 
@@ -33,38 +34,29 @@ namespace stdx
 			return *this;
 		}
 
-		template<class T>
-		typename std::enable_if_t<std::is_scalar<T>::value, istreamx&>
-		read(KtHolder<T>& val) {
-			if (!bin_)
-				strm_ >> val.inside();
-			else if (strm_.read(reinterpret_cast<char*>(&val.inside()), sizeof(T)))
-				matchEndian(val.inside());
-
-			return *this;
+		template<typename T>
+		istreamx& read(KtHolder<T>& val) {
+			return read(val.inside());
 		}
 
-
-		istreamx& read(std::string& val) {
-			if (!bin_) strm_ >> std::ws;
-			strm_ >> val;
-
-			if (!isspace(strm_.peek()))
-				strm_.setf(std::istream::failbit);
-			else if(bin_)
-				strm_.get(); // consume the space
-
-			return *this;
+		template<typename T, typename U>
+		istreamx& read(std::pair<T, U>& val) {
+			return read(val.first), read(val.second);
 		}
 
-		template<class T, typename SIZE_TYPE = std::uint32_t>
+		template<typename... T>
+		istreamx& read(std::tuple<T...>& val) {
+			return readTuple_(val);
+		}
+
+		template<typename T, typename SIZE_TYPE = std::uint32_t>
 		typename std::enable_if_t<std::is_scalar<T>::value, istreamx&>
 		read(std::vector<T>& val) {
 			if (bin_) {
 				SIZE_TYPE c;
 				if (read(c)) {
 					val.resize(c);
-					return read(&val[0], c);
+					if (c > 0) read(&val[0], c);
 				}
 			}
 			else {
@@ -102,14 +94,27 @@ namespace stdx
 			return *this;
 		}
 
+		istreamx& read(std::string& val) {
+			if (!bin_) strm_ >> std::ws;
+			strm_ >> val;
+
+			if (!isspace(strm_.peek()))
+				strm_.setf(std::istream::failbit);
+			else if (bin_)
+				strm_.get(); // consume the space
+
+			return *this;
+		}
 
 		template<typename T>
 		typename std::enable_if_t<std::is_scalar<T>::value, T>
 		peek() {
+			// assert(strm_.openmode & std::ios_base::binary);
 			T val{};
 			auto pos = strm_.tellg();
 			read(val);
 			strm_.seekg(pos);
+			assert(strm_.tellg() == pos);
 			return val;
 		}
 
@@ -137,6 +142,19 @@ namespace stdx
 		void setBinary(bool b) { bin_ = b; }
 
 	private:
+
+		template<typename TUPLE_TYPE, int INDEX = std::tuple_size_v<TUPLE_TYPE>>
+		istreamx& readTuple_(TUPLE_TYPE& val) {
+			if constexpr (INDEX == 1) {
+				return read(std::get<0>(val));
+			}
+			else {
+				readTuple_<TUPLE_TYPE, INDEX - 1>(val);
+				return read(std::get<INDEX - 1>(val));
+			}
+		}
+
+	private:
 		std::istream& strm_;
 		bool bin_; // 是否二进制读写模式
 	};
@@ -144,6 +162,6 @@ namespace stdx
 
 	template<typename T>
 	istreamx& operator >>(istreamx& strm, T& val) { 
-		return strm.read(val), strm;
+		return strm.read(val);
 	}
 }
