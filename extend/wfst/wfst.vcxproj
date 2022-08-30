@@ -38,6 +38,7 @@
     <ClInclude Include="KtWfstHolder.h" />
     <ClInclude Include="trans_traits.h" />
     <ClInclude Include="WfstX.h" />
+    <ClInclude Include="wfst_copy.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{195D35B0-B3CF-4320-9823-5BAB491A0E2B}</ProjectGuid>

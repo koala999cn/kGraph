@@ -5,9 +5,10 @@
 
 int main()
 {
-    kLattice lat;
 
-    auto b = KuKaldiLat::load("../test/data/lat.1", lat);
+    auto latlist = KuKaldiLat::load<kLatticed>("../test/data/nbest.txt");
+    assert(latlist.size() == 10);
+    auto acs = latlist.front().second->acousticCostsPerFrame();
 
     return 0;
 }

@@ -2,10 +2,10 @@
 #include <fstream>
 #include "../../common/istreamx.h"
 #include "../../common/KuStrUtil.h"
+#include "../../extend/lattice/KtLattice.h"
+#include "../../extend/wfst/wfst_copy.h"
 #include "../openfst/KuFstIO.h"
-#include "../extend/lattice/KtLattice.h"
-#include "../../graph/util/copy.h"
-#include "KuKaldiLat.h"
+
 
 // 提供kalid-lat的读取支持
 
@@ -58,22 +58,21 @@ namespace kPrivate
 	template<typename LAT1, typename LAT2>
 	void convertLat_(const LAT1& src, LAT2& dst) 
 	{
-		using trans1_t = typename LAT1::trans_type;
-		using trans2_t = typename LAT2::trans_type;
+		using weight1_t = typename LAT1::weight_type;
+		using weight2_t = typename LAT2::weight_type;
 
 		struct WTOR_ {
-			trans2_t operator()(const trans1_t& trans) {
-				using wt2_type = typename trans2_t::weight_type;
-				wt2_type wt2; // TODO: 实现接受类型转换的构造函数，以便可以直接wt2_type wt2(wt1)
-				wt2 = trans_traits<trans1_t>::weight(trans);
-				return trans_traits<trans2_t>::construct(
-					trans_traits<trans1_t>::isym(trans), 
-					trans_traits<trans1_t>::osym(trans),
-					wt2);
+			weight2_t operator()(const weight1_t& wt1) {
+				weight2_t wt2; 
+				if constexpr (LAT1::isCompact() && !LAT2::isCompact())
+					wt2 = wt1.weight();
+				else
+					wt2 = wt1;
+				return wt2;
 			}
 		};
 
-		copy<LAT1, LAT2, WTOR_>(src, dst);
+		wfst_copy<LAT1, LAT2, WTOR_>(src, dst);
 	}
 
 	// 读取kalid-lat的辅助函数(bin模式)，从strm中读取LAT2类型，转换为LAT1类型
@@ -201,7 +200,7 @@ bool KuKaldiLat::readText_(stdx::istreamx& strm, LAT& lat)
 	}
 	else {
 		// 构造compact类型的lattice
-		using COMPACT_T = KtLattice<KtCompactLatWeight<weight_type>, int>;
+		using COMPACT_T = KtLattice<KtCompactLatWeight<weight_type, int>>;
 		return kPrivate::readTxt_<LAT, COMPACT_T>(strm, lat);
 	}
 }

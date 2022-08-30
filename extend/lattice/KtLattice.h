@@ -1,6 +1,9 @@
 #pragma once
-#include "../wfst/WfstX.h"
 #include "KtLatWeight.h"
+#include "../wfst/WfstX.h"
+#include "../wfst/trans_traits.h"
+#include "../../graph/core/KtAdjIter.h"
+
 
 
 // Lattice是一个无环WFSA，结点可以是hmm状态、hmm（音素）、词，
@@ -22,10 +25,75 @@ template<typename WEIGHT_TYPE>
 class KtLattice : public StdWfst<WEIGHT_TYPE>
 {
 public:
+	using super_ = StdWfst<WEIGHT_TYPE>;
+	using super_::super_;
+
+    using trans_traits_ = trans_traits<typename super_::trans_type>;
+
+	constexpr static bool isCompact() {
+		return WEIGHT_TYPE::isCompact();
+	}
+
+    // 仅适用于nbest-lattice，即线性lattice，最大outdegree等于1
+    std::vector<double> acousticCostsPerFrame() const;
+
 
 private:
 
 };
+
+
+template<typename WEIGHT_TYPE>
+std::vector<double> KtLattice<WEIGHT_TYPE>::acousticCostsPerFrame() const
+{
+    assert(super_::initials().size() == 1);
+
+    std::vector<double> loglikes;
+    loglikes.reserve(super_::size());
+
+    auto cur_state = super_::initials().begin()->first;
+    double eps_acwt = 0.0; // 最开始的eps转移的累计ac权值
+    while (true) {
+        auto w = super_::weight_type::zero();
+        if (super_::isFinal(cur_state))
+            w = super_::finalWeight(cur_state);
+        if (w != super_::weight_type::zero()) {
+            assert(super_::outdegree(cur_state) == 0);
+            break;
+        }
+        else {
+            assert(super_::outdegree(cur_state) == 1);
+            auto iter = KtAdjIter(*this, cur_state);
+            auto& arc = iter.edge();
+            auto& wt = trans_traits_::weight(arc);
+            double acwt = 0;
+            if constexpr (isCompact())
+                acwt = wt.weight().value1();
+            else
+                acwt = wt.value1();
+
+            if (trans_traits_::isym(arc) != trans_traits_::eps) { // isym != eps
+                if (eps_acwt > 0) {
+                    assert(loglikes.empty());
+                    acwt += eps_acwt; 
+                    eps_acwt = 0.0;
+                }
+                loglikes.push_back(acwt); // 压入acwt
+            }
+            else if (acwt == acwt) { // isym == eps，且acwt != nan
+                if (loglikes.empty()) { // 是否前缀的eps转移
+                    eps_acwt += acwt; // 累加ac权值到临时变量eps_acwt
+                }
+                else { 
+                    loglikes.back() += acwt; // // 累加ac权值到前序帧
+                }
+            }
+            cur_state = iter.to();
+        }
+    }
+
+    return loglikes;
+}
 
 
 using kLatticed = KtLattice<KtLatWeight<double>>;

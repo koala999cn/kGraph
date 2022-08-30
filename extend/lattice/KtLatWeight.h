@@ -1,5 +1,6 @@
 #pragma once
 #include "../wfst/KtSemiring.h"
+#include <vector>
 
 
 // lattice-weight由2个浮点数构成，分别代表graph cost和acoustic cost
