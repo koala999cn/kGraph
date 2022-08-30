@@ -166,7 +166,7 @@ private:
 private:
 
 	/// 剪枝相关参数
-	typename weight_type::value_type beam_; // Decoding beam.  Larger->slower, more accurate
+	double beam_; // Decoding beam.  Larger->slower, more accurate
 	int maxActive_; // Decoder max active states.  Larger->slower; more accurate
 	int minActive_; // Decoder min active states (don't prune if #active less than this)
 };
