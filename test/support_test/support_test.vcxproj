@@ -166,6 +166,7 @@
     <ClCompile Include="decode_test.cpp" />
     <ClCompile Include="hmm_topo_test.cpp" />
     <ClCompile Include="kaldi_table_test.cpp" />
+    <ClCompile Include="lattice_test.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="transition_model_test.cpp" />
   </ItemGroup>

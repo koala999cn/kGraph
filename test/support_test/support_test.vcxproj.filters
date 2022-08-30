@@ -30,5 +30,8 @@
     <ClCompile Include="transition_model_test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="lattice_test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
