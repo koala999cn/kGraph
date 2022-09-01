@@ -5,21 +5,14 @@
 #include "../../graph/core/KtAdjIter.h"
 
 
-
-// Lattice是一个无环WFSA，结点可以是hmm状态、hmm（音素）、词，
+// Lattice通常作为音频解码的输出。
+// 
+// Lattice是一个无环WFSA，结点可以是hmm状态、hmm（音素）、词，边是转移概率.
 // 每个节点是一段音频在某个时间的对齐。
-
-// 用训练好的声学模型、现成的语言模型和发音字典构建解码网络（wfst），
-// 最后将提取的测试集的语音特征输入以上解码网络，得到网络结构（lattice）
-// 的语音识别结果。
-
+// 转录的结果是遍历Lattic后得到的最高得分词序列。
+//
 // for detail see https://www.danielpovey.com/files/2012_icassp_lattices.pdf
-
-/*
-	Lattice are used for all word-level networks
-*/
-
-// 结点是词，边是转移概率。转录的结果是遍历Lattic后得到的最高得分词序列。
+//
 
 template<typename WEIGHT_TYPE>
 class KtLattice : public StdWfst<WEIGHT_TYPE>
@@ -35,8 +28,15 @@ public:
 	}
 
     // 仅适用于nbest-lattice，即线性lattice，最大outdegree等于1
+    // 返回各帧的acoustic权值（对应lat-weight的value1），其元素个数等于this-lat中isym不等于eps的状态数量
+    // 对于isym等于eps的状态，其acoustic权值累计到前序状态；若无前序状态，则累计到下一个状态。
     std::vector<double> acousticCostsPerFrame() const;
 
+    // 仅适用于经过topo排序的lattice.
+    // 返回各节点的时间（以帧数表示）。
+    // 对于non-compact-lattice，返回的数组长度等于lattice的节点（状态）数
+    // 对于compact-lattice，返回的数组长度等于lattice的节点（状态）数 + 1，最后一个元素累加了终态的时间
+    std::vector<int> stateTimes() const;
 
 private:
 
@@ -46,6 +46,7 @@ private:
 template<typename WEIGHT_TYPE>
 std::vector<double> KtLattice<WEIGHT_TYPE>::acousticCostsPerFrame() const
 {
+    // TODO: assert(isLinear(*this));
     assert(super_::initials().size() == 1);
 
     std::vector<double> loglikes;
@@ -85,7 +86,7 @@ std::vector<double> KtLattice<WEIGHT_TYPE>::acousticCostsPerFrame() const
                     eps_acwt += acwt; // 累加ac权值到临时变量eps_acwt
                 }
                 else { 
-                    loglikes.back() += acwt; // // 累加ac权值到前序帧
+                    loglikes.back() += acwt; // 累加ac权值到前序帧
                 }
             }
             cur_state = iter.to();
@@ -93,6 +94,52 @@ std::vector<double> KtLattice<WEIGHT_TYPE>::acousticCostsPerFrame() const
     }
 
     return loglikes;
+}
+
+
+template<typename WEIGHT_TYPE>
+std::vector<int> KtLattice<WEIGHT_TYPE>::stateTimes() const
+{
+    // assert(isTopoSorted(*this));
+    assert(super_::initials().size() == 1);
+    assert(super_::initials().begin()->first == 0);
+
+    if (super_::isEmpty())
+        return {};
+
+    std::vector<int> times(super_::numStates(), -1);
+    if constexpr (isCompact())
+        times.push_back(-1); // 添加终态权值的string长度
+
+    times.front() = 0;
+
+    for (unsigned s = 0; s < super_::numStates(); s++) {
+        auto iter = KtAdjIter(*this, s);
+        for (; !iter.isEnd(); ++iter) {
+            auto& trans = iter.edge();
+            int delta;
+            if constexpr (!isCompact())
+                delta = trans_traits_::isym(trans) == trans_traits_::eps ? 0 : 1;
+            else
+                delta = trans_traits_::weight(trans).string().size();
+
+            auto to = iter.to();
+            if (times[to] == -1)
+                times[to] = times[s] + delta;
+            else
+                assert(times[to] == times[s] + delta);
+        }
+
+        if constexpr (isCompact()) {
+            if (super_::isFinal(s)) {
+                auto utt_len = times[s] + finalWeight(s).string().size();
+                if (times.back() == -1)
+                    times.back() = utt_len;
+                else
+                    assert(times.back() == utt_len); // TODO: 是否允许不一致？
+            }
+        }
+    }
 }
 
 
