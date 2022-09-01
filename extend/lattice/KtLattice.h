@@ -27,16 +27,23 @@ public:
 		return WEIGHT_TYPE::isCompact();
 	}
 
-    // 仅适用于nbest-lattice，即线性lattice，最大outdegree等于1
+    
     // 返回各帧的acoustic权值（对应lat-weight的value1），其元素个数等于this-lat中isym不等于eps的状态数量
     // 对于isym等于eps的状态，其acoustic权值累计到前序状态；若无前序状态，则累计到下一个状态。
+    // NOTE：仅适用于nbest-lattice，即线性lattice，最大outdegree等于1
     std::vector<double> acousticCostsPerFrame() const;
 
-    // 仅适用于经过topo排序的lattice.
+
     // 返回各节点的时间（以帧数表示）。
     // 对于non-compact-lattice，返回的数组长度等于lattice的节点（状态）数
     // 对于compact-lattice，返回的数组长度等于lattice的节点（状态）数 + 1，最后一个元素累加了终态的时间
+    // NOTE：仅适用于经过topo排序的lattice.
     std::vector<int> stateTimes() const;
+    
+
+    // 返回所有路径中，osym序列的最长尺寸
+    // NOTE：仅适用于经过topo排序的lattice.
+    int longestSentenceLength() const;
 
 private:
 
@@ -132,7 +139,7 @@ std::vector<int> KtLattice<WEIGHT_TYPE>::stateTimes() const
 
         if constexpr (isCompact()) {
             if (super_::isFinal(s)) {
-                auto utt_len = times[s] + finalWeight(s).string().size();
+                auto utt_len = times[s] + super_::finalWeight(s).string().size();
                 if (times.back() == -1)
                     times.back() = utt_len;
                 else
@@ -140,6 +147,35 @@ std::vector<int> KtLattice<WEIGHT_TYPE>::stateTimes() const
             }
         }
     }
+}
+
+
+template<typename WEIGHT_TYPE>
+int KtLattice<WEIGHT_TYPE>::longestSentenceLength() const
+{
+    // assert(isTopoSorted(*this));
+
+    std::vector<int> maxlen(super_::numStates(), 0);
+
+    int longestLength = 0;
+    for (unsigned s = 0; s < super_::numStates(); s++) {
+        auto iter = KtAdjIter(*this, s);
+        for (; !iter.isEnd(); ++iter) {
+            auto& trans = iter.edge();
+            bool arc_has_word = trans_traits_::isym(trans) != trans_traits_::eps;
+            auto nextstate = trans.to();
+            if (arc_has_word) {
+                assert(nextstate > s); // 确保无环，即topo-sorted
+                maxlen[nextstate] = std::max(maxlen[nextstate], maxlen[s] + 1);
+            }
+            else {
+                maxlen[nextstate] = std::max(maxlen[nextstate], maxlen[s]);
+            }
+        }
+        if (super_::isFinal(s))
+            longestLength = std::max(longestLength, maxlen[s]);
+    }
+    return longestLength;
 }
 
 
