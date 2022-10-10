@@ -34,7 +34,7 @@ public:
     std::vector<double> acousticCostsPerFrame() const;
 
 
-    // 返回各节点的时间（以帧数表示）。
+    // 返回各节点的时间值（以帧数表示）。
     // 对于non-compact-lattice，返回的数组长度等于lattice的节点（状态）数
     // 对于compact-lattice，返回的数组长度等于lattice的节点（状态）数 + 1，最后一个元素累加了终态的时间
     // NOTE：仅适用于经过topo排序的lattice.
